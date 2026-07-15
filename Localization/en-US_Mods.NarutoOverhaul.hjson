@@ -5,6 +5,11 @@ Buffs: {
 		DisplayName: Sage Mode Buff
 		Description: Mods.NarutoOverhaul.Buffs.SageModeBuff.Description
 	}
+
+	SharinganFocusBuff: {
+		DisplayName: Sharingan Focus Buff
+		Description: Mods.NarutoOverhaul.Buffs.SharinganFocusBuff.Description
+	}
 }
 
 Items: {
@@ -17,7 +22,22 @@ Items: {
 		DisplayName: Rasengan Item
 		Tooltip: ""
 	}
+
+	KunaiItem: {
+		DisplayName: Kunai Item
+		Tooltip: ""
+	}
 }
 
-NPCs.TailedBeastBoss.DisplayName: Tailed Beast Boss
-Projectiles.RasenganProjectile.DisplayName: Rasengan Projectile
+NPCs: {
+	TailedBeastBoss.DisplayName: Tailed Beast Boss
+	HakuBoss.DisplayName: Haku Boss
+}
+
+Projectiles: {
+	RasenganProjectile.DisplayName: Rasengan Projectile
+	KunaiProjectile.DisplayName: Kunai Projectile
+	SenbonProjectile.DisplayName: Senbon Projectile
+}
+
+DamageClasses.ShinobiDamageClass.DisplayName: Shinobi Damage Class

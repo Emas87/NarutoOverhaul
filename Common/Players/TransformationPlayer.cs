@@ -41,7 +41,7 @@ namespace NarutoOverhaul.Common.Players
 				return;
 			}
 
-			if (ActiveFormIndex != -1)
+			if (ActiveFormIndex != -1 || !form.IsUnlocked)
 			{
 				return;
 			}

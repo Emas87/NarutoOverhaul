@@ -88,6 +88,11 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			StateTimer = 0f;
 		}
 
+		public override void OnKill()
+		{
+			Common.Systems.StoryProgressSystem.DownedShukaku = true;
+		}
+
 		public override void AI()
 		{
 			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
@@ -141,12 +146,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		private void OnPhaseTransition()
 		{
 			NPC.velocity = Vector2.Zero;
-
-			for (int i = 0; i < 20; i++)
-			{
-				Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.BlueTorch, Scale: 1.5f);
-			}
-
+			Common.VFX.ChakraVFX.SpawnBurst(NPC.Center, DustID.BlueTorch, 20, 1.5f);
 			SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
 		}
 
@@ -188,10 +188,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		public override void HitEffect(NPC.HitInfo hit)
 		{
-			for (int i = 0; i < 3; i++)
-			{
-				Dust.NewDust(NPC.position, NPC.width, NPC.height, DustID.Blood);
-			}
+			Common.VFX.ChakraVFX.SpawnBurst(NPC.Center, DustID.Blood, 3, 1f, noGravity: false);
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

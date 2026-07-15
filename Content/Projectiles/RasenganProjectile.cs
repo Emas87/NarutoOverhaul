@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using NarutoOverhaul.Common.Systems;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -39,7 +40,7 @@ namespace NarutoOverhaul.Content.Projectiles
 			Projectile.aiStyle = -1;
 			Projectile.friendly = true;
 			Projectile.hostile = false;
-			Projectile.DamageType = DamageClass.Melee;
+			Projectile.DamageType = ModContent.GetInstance<ShinobiDamageClass>();
 			Projectile.penetrate = -1;
 			Projectile.timeLeft = WindupTicks + ActiveTicks + RetractTicks;
 			Projectile.tileCollide = false;
@@ -88,10 +89,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
-			for (int i = 0; i < 8; i++)
-			{
-				Dust.NewDust(target.position, target.width, target.height, DustID.BlueTorch, Scale: 1.2f);
-			}
+			Common.VFX.ChakraVFX.SpawnBurst(target.Center, DustID.BlueTorch, 8, 1.2f);
 		}
 	}
 }

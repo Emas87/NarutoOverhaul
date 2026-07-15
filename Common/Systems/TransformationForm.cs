@@ -12,6 +12,9 @@ namespace NarutoOverhaul.Common.Systems
 		public abstract int ActivationChakraCost { get; }
 		public abstract float ChakraDrainPerTick { get; }
 
+		// Story-gate for this form, e.g. "must have downed Pain" - default true for forms with no gate.
+		public virtual bool IsUnlocked => true;
+
 		public abstract void ApplyStatBoosts(Player player);
 	}
 }

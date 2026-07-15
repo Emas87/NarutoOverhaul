@@ -10,6 +10,7 @@ namespace NarutoOverhaul.Content.Buffs
 		public override int BuffType => ModContent.BuffType<SageModeBuff>();
 		public override int ActivationChakraCost => 30;
 		public override float ChakraDrainPerTick => 0.3f;
+		public override bool IsUnlocked => StoryProgressSystem.DownedPain;
 
 		public override void ApplyStatBoosts(Player player)
 		{

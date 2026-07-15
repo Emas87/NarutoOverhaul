@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NarutoOverhaul.Common.Players;
+using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Content.Projectiles;
 using Terraria;
 using Terraria.DataStructures;
@@ -17,7 +18,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			Item.width = 32;
 			Item.height = 32;
 			Item.damage = 45;
-			Item.DamageType = DamageClass.Melee;
+			Item.DamageType = ModContent.GetInstance<ShinobiDamageClass>();
 			Item.noMelee = true; // all damage comes from the projectile, not the swing
 			Item.knockBack = 6f;
 			Item.useStyle = ItemUseStyleID.Shoot;
@@ -33,7 +34,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		public override bool CanUseItem(Player player)
 		{
-			return player.GetModPlayer<ChakraPlayer>().Chakra >= ChakraCost;
+			return StoryProgressSystem.DownedOrochimaru && player.GetModPlayer<ChakraPlayer>().Chakra >= ChakraCost;
 		}
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Microsoft.Xna.Framework.Vector2 position, Microsoft.Xna.Framework.Vector2 velocity, int type, int damage, float knockback)
