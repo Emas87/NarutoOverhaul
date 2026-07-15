@@ -13,6 +13,7 @@ namespace NarutoOverhaul.Common.Systems
 			RegisteredForms.Clear();
 			RegisteredForms.Add(new SageModeForm());
 			RegisteredForms.Add(new TailedBeastModeForm());
+			RegisteredForms.Add(new SixPathsSageModeForm());
 		}
 	}
 }

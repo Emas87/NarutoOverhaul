@@ -1,6 +1,7 @@
 Keybinds: {
 	"Toggle Sage Mode.DisplayName": Toggle  Sage  Mode
 	"Toggle Tailed Beast Mode.DisplayName": Toggle  Tailed  Beast  Mode
+	"Toggle Six Paths Sage Mode.DisplayName": Toggle  Six  Paths  Sage  Mode
 }
 
 Buffs: {
@@ -17,6 +18,11 @@ Buffs: {
 	TailedBeastModeBuff: {
 		DisplayName: Tailed Beast Mode Buff
 		Description: Mods.NarutoOverhaul.Buffs.TailedBeastModeBuff.Description
+	}
+
+	SixPathsSageModeBuff: {
+		DisplayName: Six Paths Sage Mode Buff
+		Description: Mods.NarutoOverhaul.Buffs.SixPathsSageModeBuff.Description
 	}
 }
 
@@ -55,6 +61,11 @@ Items: {
 		DisplayName: Madara Summon Item
 		Tooltip: ""
 	}
+
+	KaguyaSummonItem: {
+		DisplayName: Kaguya Summon Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -64,6 +75,7 @@ NPCs: {
 	KakuzuBoss.DisplayName: Kakuzu Boss
 	PainBoss.DisplayName: Pain Boss
 	MadaraBoss.DisplayName: Madara Boss
+	KaguyaBoss.DisplayName: Kaguya Boss
 }
 
 Projectiles: {
