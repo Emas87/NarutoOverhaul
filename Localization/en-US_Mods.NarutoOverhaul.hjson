@@ -302,6 +302,76 @@ Items: {
 		DisplayName: Taijutsu Mastery Scroll Item
 		Tooltip: ""
 	}
+
+	ChakraScroll1Item: {
+		DisplayName: Chakra Scroll1 Item
+		Tooltip: ""
+	}
+
+	ChakraScroll2Item: {
+		DisplayName: Chakra Scroll2 Item
+		Tooltip: ""
+	}
+
+	ChakraScroll3Item: {
+		DisplayName: Chakra Scroll3 Item
+		Tooltip: ""
+	}
+
+	ChakraScroll4Item: {
+		DisplayName: Chakra Scroll4 Item
+		Tooltip: ""
+	}
+
+	ChakraScroll5Item: {
+		DisplayName: Chakra Scroll5 Item
+		Tooltip: ""
+	}
+
+	ChakraScroll6Item: {
+		DisplayName: Chakra Scroll6 Item
+		Tooltip: ""
+	}
+
+	ChakraScroll7Item: {
+		DisplayName: Chakra Scroll7 Item
+		Tooltip: ""
+	}
+
+	StaminaScroll1Item: {
+		DisplayName: Stamina Scroll1 Item
+		Tooltip: ""
+	}
+
+	StaminaScroll2Item: {
+		DisplayName: Stamina Scroll2 Item
+		Tooltip: ""
+	}
+
+	StaminaScroll3Item: {
+		DisplayName: Stamina Scroll3 Item
+		Tooltip: ""
+	}
+
+	StaminaScroll4Item: {
+		DisplayName: Stamina Scroll4 Item
+		Tooltip: ""
+	}
+
+	StaminaScroll5Item: {
+		DisplayName: Stamina Scroll5 Item
+		Tooltip: ""
+	}
+
+	StaminaScroll6Item: {
+		DisplayName: Stamina Scroll6 Item
+		Tooltip: ""
+	}
+
+	StaminaScroll7Item: {
+		DisplayName: Stamina Scroll7 Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {

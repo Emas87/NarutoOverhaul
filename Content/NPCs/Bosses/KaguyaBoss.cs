@@ -292,6 +292,8 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		public override void ModifyNPCLoot(NPCLoot npcLoot)
 		{
 			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<OtsutsukiChakraFragmentItem>(), 1, 1, 1));
+			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<ChakraScroll7Item>(), 1, 1, 1));
+			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<StaminaScroll7Item>(), 1, 1, 1));
 		}
 
 		public override void HitEffect(NPC.HitInfo hit)

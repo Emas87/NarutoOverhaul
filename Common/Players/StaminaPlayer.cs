@@ -17,9 +17,10 @@ namespace NarutoOverhaul.Common.Players
 
 		public float BaseMaxStamina = 100f;
 
-		// Caps how many Stamina Scrolls can ever be consumed by this character, mirroring vanilla's
-		// 10-Mana-Crystal cap. See Content/Items/Consumables/StaminaScrollItem.cs.
-		public const int MaxStaminaScrolls = 10;
+		// Tracks progress through the 7 story-order Stamina Scrolls (one per boss - see
+		// NumberedStaminaScrollItem). Doubles as the sequencing gate: scroll N requires this to
+		// equal N-1, so scrolls can only ever be consumed in order.
+		public const int MaxStaminaScrolls = 7;
 		public int ConsumedStaminaScrolls;
 
 		public const float BaseStaminaRegenRate = 1.2f;

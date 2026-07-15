@@ -4,6 +4,7 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
+using NarutoOverhaul.Content.Items.Consumables;
 using NarutoOverhaul.Content.Items.Materials;
 using Terraria.ModLoader;
 
@@ -97,6 +98,8 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		public override void ModifyNPCLoot(NPCLoot npcLoot)
 		{
 			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<SandCoreItem>(), 1, 3, 5));
+			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<ChakraScroll2Item>(), 1, 1, 1));
+			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<StaminaScroll2Item>(), 1, 1, 1));
 		}
 
 		public override void AI()

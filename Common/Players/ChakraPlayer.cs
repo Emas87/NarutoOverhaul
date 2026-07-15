@@ -17,9 +17,10 @@ namespace NarutoOverhaul.Common.Players
 		// Persisted across sessions; current Chakra is not persisted, matching vanilla mana-on-respawn behavior.
 		public float BaseMaxChakra = 100f;
 
-		// Caps how many Chakra Scrolls can ever be consumed by this character, mirroring vanilla's
-		// 10-Mana-Crystal cap. See Content/Items/Consumables/ChakraScrollItem.cs.
-		public const int MaxChakraScrolls = 10;
+		// Tracks progress through the 7 story-order Chakra Scrolls (one per boss - see
+		// NumberedChakraScrollItem). Doubles as the sequencing gate: scroll N requires this to
+		// equal N-1, so scrolls can only ever be consumed in order.
+		public const int MaxChakraScrolls = 7;
 		public int ConsumedChakraScrolls;
 
 		public const float BaseChakraRegenRate = 0.5f;
