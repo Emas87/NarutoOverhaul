@@ -2,6 +2,7 @@ Keybinds: {
 	"Toggle Sage Mode.DisplayName": Toggle  Sage  Mode
 	"Toggle Tailed Beast Mode.DisplayName": Toggle  Tailed  Beast  Mode
 	"Toggle Six Paths Sage Mode.DisplayName": Toggle  Six  Paths  Sage  Mode
+	"Toggle Eight Gates.DisplayName": Toggle  Eight  Gates
 }
 
 Buffs: {
@@ -23,6 +24,11 @@ Buffs: {
 	SixPathsSageModeBuff: {
 		DisplayName: Six Paths Sage Mode Buff
 		Description: Mods.NarutoOverhaul.Buffs.SixPathsSageModeBuff.Description
+	}
+
+	EightGatesBuff: {
+		DisplayName: Eight Gates Buff
+		Description: Mods.NarutoOverhaul.Buffs.EightGatesBuff.Description
 	}
 }
 
@@ -66,6 +72,16 @@ Items: {
 		DisplayName: Kaguya Summon Item
 		Tooltip: ""
 	}
+
+	FireballItem: {
+		DisplayName: Fireball Item
+		Tooltip: ""
+	}
+
+	GentleFistItem: {
+		DisplayName: Gentle Fist Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -84,6 +100,7 @@ Projectiles: {
 	SenbonProjectile.DisplayName: Senbon Projectile
 	SnakeProjectile.DisplayName: Snake Projectile
 	ElementalBoltProjectile.DisplayName: Elemental Bolt Projectile
+	FireballProjectile.DisplayName: Fireball Projectile
 }
 
 DamageClasses.ShinobiDamageClass.DisplayName: Shinobi Damage Class

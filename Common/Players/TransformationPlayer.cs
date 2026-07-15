@@ -10,6 +10,7 @@ namespace NarutoOverhaul.Common.Players
 		public static ModKeybind ToggleSageModeKeybind;
 		public static ModKeybind ToggleTailedBeastModeKeybind;
 		public static ModKeybind ToggleSixPathsSageModeKeybind;
+		public static ModKeybind ToggleEightGatesKeybind;
 
 		// -1 = no active form. Only one form active at a time for now; the registry design in
 		// TransformationSystem means supporting simultaneous/stacked forms later is additive, not a rewrite.
@@ -20,6 +21,7 @@ namespace NarutoOverhaul.Common.Players
 			ToggleSageModeKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Sage Mode", "OemPeriod");
 			ToggleTailedBeastModeKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Tailed Beast Mode", "OemQuestion");
 			ToggleSixPathsSageModeKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Six Paths Sage Mode", "OemComma");
+			ToggleEightGatesKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Eight Gates", "OemOpenBrackets");
 		}
 
 		public override void ProcessTriggers(TriggersSet triggersSet)
@@ -37,6 +39,11 @@ namespace NarutoOverhaul.Common.Players
 			if (ToggleSixPathsSageModeKeybind.JustPressed)
 			{
 				ToggleForm(2);
+			}
+
+			if (ToggleEightGatesKeybind.JustPressed)
+			{
+				ToggleForm(3);
 			}
 		}
 
@@ -108,6 +115,20 @@ namespace NarutoOverhaul.Common.Players
 			if (!chakraPlayer.TrySpendChakra(form.ChakraDrainPerTick))
 			{
 				DeactivateForm(form);
+				return;
+			}
+
+			// Forms like Eight Gates cost life instead of (or alongside) chakra - never let that
+			// actually kill the player, just force the form off once it gets dangerously low.
+			if (form.LifeDrainPerTick > 0f)
+			{
+				if (Player.statLife <= 1)
+				{
+					DeactivateForm(form);
+					return;
+				}
+
+				Player.statLife = System.Math.Max(1, Player.statLife - (int)form.LifeDrainPerTick);
 			}
 		}
 	}
