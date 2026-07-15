@@ -16,8 +16,9 @@ namespace NarutoOverhaul.Common.Systems
 		public virtual bool IsUnlocked => true;
 
 		// Most forms (Sage Mode, Tailed Beast Mode) only cost chakra. A form like Eight Gates
-		// needs a real bodily cost on top of that - default 0 so existing forms are unaffected.
-		public virtual float LifeDrainPerTick => 0f;
+		// needs a real bodily cost on top of that, scaled by per-player state (gate level) - hence
+		// a method taking Player rather than a static property. Default 0 so existing forms are unaffected.
+		public virtual float LifeDrainPerTick(Player player) => 0f;
 
 		public abstract void ApplyStatBoosts(Player player);
 	}

@@ -1,6 +1,9 @@
 using NarutoOverhaul.Common.Systems;
+using NarutoOverhaul.Common.VFX;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameInput;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Common.Players
@@ -12,9 +15,20 @@ namespace NarutoOverhaul.Common.Players
 		public static ModKeybind ToggleSixPathsSageModeKeybind;
 		public static ModKeybind ToggleEightGatesKeybind;
 
+		private const int EightGatesFormIndex = 3;
+		private const float EightGatesAdvanceChakraCost = 10f;
+		private const int EightGatesWindupTicks = 180; // ~3 seconds at 60 ticks/sec
+
 		// -1 = no active form. Only one form active at a time for now; the registry design in
 		// TransformationSystem means supporting simultaneous/stacked forms later is additive, not a rewrite.
 		public int ActiveFormIndex = -1;
+
+		// 0 = gates closed, 1-8 = current gate. Only meaningful while ActiveFormIndex == EightGatesFormIndex.
+		public int EightGatesLevel;
+
+		// -1 = not dying. Once gate 8 opens this counts up to EightGatesWindupTicks, then kills the player.
+		// There is deliberately no cancel/safety-net once this starts - reaching gate 8 is meant to be fatal.
+		private int eightGatesWindupTimer = -1;
 
 		public override void Load()
 		{
@@ -43,7 +57,7 @@ namespace NarutoOverhaul.Common.Players
 
 			if (ToggleEightGatesKeybind.JustPressed)
 			{
-				ToggleForm(3);
+				HandleEightGatesInput();
 			}
 		}
 
@@ -78,9 +92,67 @@ namespace NarutoOverhaul.Common.Players
 			ActiveFormIndex = formIndex;
 		}
 
+		// Eight Gates isn't a simple on/off toggle: the same keybind activates it at Gate 1, then
+		// each further press opens the next gate (up to 8) instead of deactivating - reaching 8 is
+		// a deliberate, repeated choice, not an accident.
+		private void HandleEightGatesInput()
+		{
+			if (eightGatesWindupTimer >= 0)
+			{
+				return; // already committed to dying - input no longer does anything
+			}
+
+			TransformationForm form = TransformationSystem.RegisteredForms[EightGatesFormIndex];
+
+			if (ActiveFormIndex != EightGatesFormIndex)
+			{
+				if (ActiveFormIndex != -1 || !form.IsUnlocked)
+				{
+					return;
+				}
+
+				ChakraPlayer chakraPlayer = Player.GetModPlayer<ChakraPlayer>();
+
+				if (!chakraPlayer.TrySpendChakra(form.ActivationChakraCost))
+				{
+					return;
+				}
+
+				Player.AddBuff(form.BuffType, 60 * 60 * 10);
+				ActiveFormIndex = EightGatesFormIndex;
+				EightGatesLevel = 1;
+				return;
+			}
+
+			if (EightGatesLevel >= 8)
+			{
+				return;
+			}
+
+			ChakraPlayer chakra = Player.GetModPlayer<ChakraPlayer>();
+
+			if (!chakra.TrySpendChakra(EightGatesAdvanceChakraCost))
+			{
+				return;
+			}
+
+			EightGatesLevel++;
+
+			if (EightGatesLevel >= 8)
+			{
+				eightGatesWindupTimer = 0;
+			}
+		}
+
 		private void DeactivateForm(TransformationForm form)
 		{
 			Player.DelBuff(Player.FindBuffIndex(form.BuffType));
+
+			if (ActiveFormIndex == EightGatesFormIndex)
+			{
+				EightGatesLevel = 0;
+			}
+
 			ActiveFormIndex = -1;
 		}
 
@@ -104,6 +176,12 @@ namespace NarutoOverhaul.Common.Players
 
 		public override void PostUpdateMiscEffects()
 		{
+			if (eightGatesWindupTimer >= 0)
+			{
+				UpdateEightGatesWindup();
+				return;
+			}
+
 			if (ActiveFormIndex == -1)
 			{
 				return;
@@ -118,9 +196,11 @@ namespace NarutoOverhaul.Common.Players
 				return;
 			}
 
-			// Forms like Eight Gates cost life instead of (or alongside) chakra - never let that
-			// actually kill the player, just force the form off once it gets dangerously low.
-			if (form.LifeDrainPerTick > 0f)
+			// Forms like Eight Gates (gates 1-7) cost life instead of/alongside chakra - capped so
+			// they can't kill the player. Gate 8 bypasses this entirely via the windup above.
+			float lifeDrain = form.LifeDrainPerTick(Player);
+
+			if (lifeDrain > 0f)
 			{
 				if (Player.statLife <= 1)
 				{
@@ -128,8 +208,31 @@ namespace NarutoOverhaul.Common.Players
 					return;
 				}
 
-				Player.statLife = System.Math.Max(1, Player.statLife - (int)form.LifeDrainPerTick);
+				Player.statLife = System.Math.Max(1, Player.statLife - (int)lifeDrain);
 			}
+		}
+
+		private void UpdateEightGatesWindup()
+		{
+			eightGatesWindupTimer++;
+
+			if (eightGatesWindupTimer % 10 == 0)
+			{
+				ChakraVFX.SpawnBurst(Player.Center, DustID.Torch, 8, 1.6f);
+			}
+
+			if (eightGatesWindupTimer < EightGatesWindupTicks)
+			{
+				return;
+			}
+
+			TransformationForm form = TransformationSystem.RegisteredForms[EightGatesFormIndex];
+			Player.DelBuff(Player.FindBuffIndex(form.BuffType));
+			ActiveFormIndex = -1;
+			EightGatesLevel = 0;
+			eightGatesWindupTimer = -1;
+
+			Player.KillMe(PlayerDeathReason.ByCustomReason(Terraria.Localization.NetworkText.FromLiteral($"{Player.name} pushed the Eighth Gate too far")), 99999, 0, false);
 		}
 	}
 }
