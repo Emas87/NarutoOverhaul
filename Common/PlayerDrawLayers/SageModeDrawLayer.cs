@@ -14,7 +14,7 @@ namespace NarutoOverhaul.Common.PlayerDrawLayers
 	// until the rest of the loop (chakra/jutsu/boss) is proven.
 	public class SageModeDrawLayer : PlayerDrawLayer
 	{
-		public override Position GetDefaultPosition() => new AfterParent(PlayerDrawLayers.Skin);
+		public override Position GetDefaultPosition() => new AfterParent(global::Terraria.DataStructures.PlayerDrawLayers.Skin);
 
 		public override bool GetDefaultVisibility(PlayerDrawSet drawInfo)
 		{

@@ -1,0 +1,23 @@
+"Keybinds.Toggle Sage Mode.DisplayName": Toggle  Sage  Mode
+
+Buffs: {
+	SageModeBuff: {
+		DisplayName: Sage Mode Buff
+		Description: Mods.NarutoOverhaul.Buffs.SageModeBuff.Description
+	}
+}
+
+Items: {
+	TailedBeastSummonItem: {
+		DisplayName: Tailed Beast Summon Item
+		Tooltip: ""
+	}
+
+	RasenganItem: {
+		DisplayName: Rasengan Item
+		Tooltip: ""
+	}
+}
+
+NPCs.TailedBeastBoss.DisplayName: Tailed Beast Boss
+Projectiles.RasenganProjectile.DisplayName: Rasengan Projectile
