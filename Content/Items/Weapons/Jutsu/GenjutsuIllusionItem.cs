@@ -9,32 +9,33 @@ using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 {
-	public class RasenganItem : ModItem
+	// Genjutsu's first ability, establishing the class: modest direct damage, but puppets the
+	// target's movement for a few seconds (see GenjutsuGlobalNPC) rather than relying on damage
+	// to carry the item like Taijutsu/Ninjutsu do.
+	public class GenjutsuIllusionItem : ModItem
 	{
-		public const float ChakraCost = 20f;
+		public const float ChakraCost = 18f;
 
 		public override void SetDefaults()
 		{
-			Item.width = 32;
-			Item.height = 32;
-			Item.damage = 45;
-			Item.DamageType = ModContent.GetInstance<NinjutsuDamageClass>();
-			Item.noMelee = true; // all damage comes from the projectile, not the swing
-			Item.knockBack = 6f;
+			Item.width = 22;
+			Item.height = 22;
+			Item.damage = 8;
+			Item.DamageType = ModContent.GetInstance<GenjutsuDamageClass>();
+			Item.noMelee = true;
 			Item.useStyle = ItemUseStyleID.Shoot;
-			Item.useAnimation = 20;
-			Item.useTime = 20;
-			Item.autoReuse = false;
-			Item.shoot = ModContent.ProjectileType<RasenganProjectile>();
-			Item.shootSpeed = 1f; // unused by the projectile's own AI, but required to be nonzero to fire
-			Item.value = Item.sellPrice(gold: 5);
+			Item.useAnimation = 24;
+			Item.useTime = 24;
+			Item.shoot = ModContent.ProjectileType<GenjutsuIllusionProjectile>();
+			Item.shootSpeed = 8f;
+			Item.value = Item.sellPrice(gold: 4);
 			Item.rare = ItemRarityID.LightRed;
-			Item.UseSound = SoundID.Item8;
+			Item.UseSound = SoundID.Item43;
 		}
 
 		public override bool CanUseItem(Player player)
 		{
-			return StoryProgressSystem.DownedOrochimaru && player.GetModPlayer<ChakraPlayer>().Chakra >= ChakraCost;
+			return StoryProgressSystem.DownedHaku && player.GetModPlayer<ChakraPlayer>().Chakra >= ChakraCost;
 		}
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Microsoft.Xna.Framework.Vector2 position, Microsoft.Xna.Framework.Vector2 velocity, int type, int damage, float knockback)
@@ -46,6 +47,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			tooltips.Add(new TooltipLine(Mod, "ChakraCost", $"Uses {ChakraCost} Chakra"));
+			tooltips.Add(new TooltipLine(Mod, "Control", "Traps the target in an illusion, seizing control of its movement"));
 		}
 	}
 }

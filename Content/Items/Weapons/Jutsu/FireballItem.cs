@@ -21,7 +21,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			Item.width = 24;
 			Item.height = 24;
 			Item.damage = 30;
-			Item.DamageType = ModContent.GetInstance<ShinobiDamageClass>();
+			Item.DamageType = ModContent.GetInstance<NinjutsuDamageClass>();
 			Item.noMelee = true;
 			Item.useStyle = ItemUseStyleID.Shoot;
 			Item.useAnimation = 24;

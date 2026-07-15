@@ -20,7 +20,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			Item.width = 20;
 			Item.height = 20;
 			Item.damage = 22;
-			Item.DamageType = ModContent.GetInstance<ShinobiDamageClass>();
+			Item.DamageType = ModContent.GetInstance<TaijutsuDamageClass>();
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.useAnimation = 18;
 			Item.useTime = 18;

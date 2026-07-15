@@ -16,7 +16,13 @@ namespace NarutoOverhaul.Common.Players
 		// Persisted across sessions; current Chakra is not persisted, matching vanilla mana-on-respawn behavior.
 		public float BaseMaxChakra = 100f;
 
-		public float ChakraRegenRate = 0.5f;
+		public const float BaseChakraRegenRate = 0.5f;
+		public float ChakraRegenRate;
+
+		// Accessory-driven bonus to Genjutsu control-debuff duration (in ticks) - lives here rather
+		// than a dedicated ModPlayer since this class already serves as the mod-wide per-player stat
+		// bag. Staged each frame like the fields above.
+		public int GenjutsuControlDurationBonus;
 
 		private int regenDelayCounter;
 
@@ -27,8 +33,11 @@ namespace NarutoOverhaul.Common.Players
 
 		public override void ResetEffects()
 		{
-			// Staged each frame so accessories/armor can add to MaxChakra later without persisting the bonus.
+			// Staged each frame (same pattern as MaxChakra) so accessories can add to either via
+			// UpdateEquip without the bonus compounding every tick.
 			MaxChakra = BaseMaxChakra;
+			ChakraRegenRate = BaseChakraRegenRate;
+			GenjutsuControlDurationBonus = 0;
 		}
 
 		public override void PostUpdateMiscEffects()

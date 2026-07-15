@@ -30,6 +30,11 @@ Buffs: {
 		DisplayName: Eight Gates Buff
 		Description: Mods.NarutoOverhaul.Buffs.EightGatesBuff.Description
 	}
+
+	GenjutsuControlDebuff: {
+		DisplayName: Genjutsu Control Debuff
+		Description: Mods.NarutoOverhaul.Buffs.GenjutsuControlDebuff.Description
+	}
 }
 
 Items: {
@@ -82,6 +87,26 @@ Items: {
 		DisplayName: Gentle Fist Item
 		Tooltip: ""
 	}
+
+	GenjutsuVeilItem: {
+		DisplayName: Genjutsu Veil Item
+		Tooltip: ""
+	}
+
+	NinjutsuFocusSealItem: {
+		DisplayName: Ninjutsu Focus Seal Item
+		Tooltip: ""
+	}
+
+	TaijutsuWrapsItem: {
+		DisplayName: Taijutsu Wraps Item
+		Tooltip: ""
+	}
+
+	GenjutsuIllusionItem: {
+		DisplayName: Genjutsu Illusion Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -101,6 +126,12 @@ Projectiles: {
 	SnakeProjectile.DisplayName: Snake Projectile
 	ElementalBoltProjectile.DisplayName: Elemental Bolt Projectile
 	FireballProjectile.DisplayName: Fireball Projectile
+	GenjutsuIllusionProjectile.DisplayName: Genjutsu Illusion Projectile
 }
 
-DamageClasses.ShinobiDamageClass.DisplayName: Shinobi Damage Class
+DamageClasses: {
+	ShinobiDamageClass.DisplayName: Shinobi Damage Class
+	GenjutsuDamageClass.DisplayName: Genjutsu Damage Class
+	NinjutsuDamageClass.DisplayName: Ninjutsu Damage Class
+	TaijutsuDamageClass.DisplayName: Taijutsu Damage Class
+}

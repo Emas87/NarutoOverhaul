@@ -2,13 +2,12 @@ using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Common.Systems
 {
-	// Jutsu scale off their own damage class instead of borrowing vanilla magic/summon damage,
-	// so gear/accessories can target "Shinobi damage" specifically as more jutsu are added.
-	public class ShinobiDamageClass : DamageClass
+	// Illusion/control techniques - low direct damage by design (see GenjutsuIllusionItem),
+	// the debuff/control-focused counterpart to Taijutsu and Ninjutsu.
+	public class GenjutsuDamageClass : DamageClass
 	{
 		public override StatInheritanceData GetModifierInheritance(DamageClass damageClass)
 		{
-			// Generic damage/crit boosts (most accessories) apply to Shinobi damage too.
 			if (damageClass == Generic)
 			{
 				return StatInheritanceData.Full;

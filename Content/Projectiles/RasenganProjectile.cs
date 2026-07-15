@@ -40,7 +40,7 @@ namespace NarutoOverhaul.Content.Projectiles
 			Projectile.aiStyle = -1;
 			Projectile.friendly = true;
 			Projectile.hostile = false;
-			Projectile.DamageType = ModContent.GetInstance<ShinobiDamageClass>();
+			Projectile.DamageType = ModContent.GetInstance<NinjutsuDamageClass>();
 			Projectile.penetrate = -1;
 			Projectile.timeLeft = WindupTicks + ActiveTicks + RetractTicks;
 			Projectile.tileCollide = false;

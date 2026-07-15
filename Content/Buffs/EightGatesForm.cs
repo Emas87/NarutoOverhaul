@@ -29,7 +29,9 @@ namespace NarutoOverhaul.Content.Buffs
 		{
 			int level = player.GetModPlayer<TransformationPlayer>().EightGatesLevel;
 
-			player.GetDamage(DamageClass.Generic) += 0.2f * level;
+			// Eight Gates is specifically a taijutsu technique, unlike Sage Mode/Tailed Beast Mode/
+			// Six Paths Sage Mode which stay Generic (whole-body chakra enhancement, not class-specific).
+			player.GetDamage(ModContent.GetInstance<TaijutsuDamageClass>()) += 0.2f * level;
 			player.moveSpeed += 0.15f * level;
 			player.statDefense -= 2 * level; // the body is being pushed past safe limits, not protected
 		}
