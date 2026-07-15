@@ -5,28 +5,51 @@ using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Common.GlobalNPCs
 {
-	// The mod's first GlobalNPC. While an NPC has GenjutsuControlDebuff, its own AI (targeting,
-	// attacks, pathing) never runs - PreAI returning false skips it entirely - and instead its
-	// movement is puppeted directly from the casting player's own movement input each tick.
-	// Movement only for now, per the user's explicit scope: no forcing the puppeted NPC to deal
-	// damage to other NPCs (would need a custom NPC-vs-NPC collision check) and it can't attack
-	// the player either, since its AI is fully skipped while controlled.
+	// The mod's first GlobalNPC. Handles all 3 of Genjutsu's control effects - each is its own
+	// debuff, checked independently, all sharing the same underlying trick: PreAI returning false
+	// skips the NPC's own AI (targeting/attacks/pathing) entirely, and this hook drives its
+	// movement directly instead:
+	//   - GenjutsuControlDebuff (puppet): mirrors the casting player's own movement input.
+	//   - GenjutsuSleepDebuff (sleep): total immobilization, zero velocity.
+	//   - GenjutsuFearDebuff (nightmare): flees directly away from the caster.
+	// Movement only for now, per the user's explicit scope: no forcing the NPC to deal damage to
+	// other NPCs (would need a custom NPC-vs-NPC collision check) and it can't attack the player
+	// either, since its AI is fully skipped in all 3 modes.
 	public class GenjutsuGlobalNPC : GlobalNPC
 	{
 		public override bool InstancePerEntity => true;
 
 		private const float PuppetSpeed = 4f;
+		private const float FleeSpeed = 5f;
 
+		// The player who cast the effect - used by both the puppet (reads their input) and the
+		// fear (flees from their position) modes. Unused/ignored by the sleep debuff.
 		public int ControllingPlayerIndex = -1;
 
 		public override bool PreAI(NPC npc)
 		{
-			if (!npc.HasBuff(ModContent.BuffType<GenjutsuControlDebuff>()))
+			if (npc.HasBuff(ModContent.BuffType<GenjutsuSleepDebuff>()))
 			{
-				ControllingPlayerIndex = -1;
-				return true;
+				npc.velocity = Vector2.Zero;
+				return false;
 			}
 
+			if (npc.HasBuff(ModContent.BuffType<GenjutsuControlDebuff>()))
+			{
+				return PuppetMovement(npc);
+			}
+
+			if (npc.HasBuff(ModContent.BuffType<GenjutsuFearDebuff>()))
+			{
+				return FleeMovement(npc);
+			}
+
+			ControllingPlayerIndex = -1;
+			return true;
+		}
+
+		private bool PuppetMovement(NPC npc)
+		{
 			if (ControllingPlayerIndex < 0 || !Main.player[ControllingPlayerIndex].active || Main.player[ControllingPlayerIndex].dead)
 			{
 				return true; // debuff present but no valid controller - let normal AI run this tick
@@ -44,6 +67,21 @@ namespace NarutoOverhaul.Common.GlobalNPCs
 			{
 				npc.spriteDirection = npc.velocity.X > 0 ? 1 : -1;
 			}
+
+			return false;
+		}
+
+		private bool FleeMovement(NPC npc)
+		{
+			if (ControllingPlayerIndex < 0 || !Main.player[ControllingPlayerIndex].active)
+			{
+				return true;
+			}
+
+			Vector2 away = (npc.Center - Main.player[ControllingPlayerIndex].Center).SafeNormalize(Vector2.UnitX);
+			npc.velocity = away * FleeSpeed;
+			npc.position += npc.velocity;
+			npc.spriteDirection = npc.velocity.X > 0 ? 1 : -1;
 
 			return false;
 		}

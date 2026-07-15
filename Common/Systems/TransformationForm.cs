@@ -9,7 +9,7 @@ namespace NarutoOverhaul.Common.Systems
 	{
 		public abstract string DisplayName { get; }
 		public abstract int BuffType { get; }
-		public abstract int ActivationChakraCost { get; }
+		public abstract int ActivationCost { get; }
 		public abstract float ChakraDrainPerTick { get; }
 
 		// Story-gate for this form, e.g. "must have downed Pain" - default true for forms with no gate.

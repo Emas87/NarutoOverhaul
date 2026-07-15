@@ -16,7 +16,7 @@ namespace NarutoOverhaul.Common.Players
 		public static ModKeybind ToggleEightGatesKeybind;
 
 		private const int EightGatesFormIndex = 3;
-		private const float EightGatesAdvanceChakraCost = 10f;
+		private const float EightGatesAdvanceStaminaCost = 10f;
 		private const int EightGatesWindupTicks = 180; // ~3 seconds at 60 ticks/sec
 
 		// -1 = no active form. Only one form active at a time for now; the registry design in
@@ -83,7 +83,7 @@ namespace NarutoOverhaul.Common.Players
 
 			ChakraPlayer chakraPlayer = Player.GetModPlayer<ChakraPlayer>();
 
-			if (!chakraPlayer.TrySpendChakra(form.ActivationChakraCost))
+			if (!chakraPlayer.TrySpendChakra(form.ActivationCost))
 			{
 				return;
 			}
@@ -94,7 +94,8 @@ namespace NarutoOverhaul.Common.Players
 
 		// Eight Gates isn't a simple on/off toggle: the same keybind activates it at Gate 1, then
 		// each further press opens the next gate (up to 8) instead of deactivating - reaching 8 is
-		// a deliberate, repeated choice, not an accident.
+		// a deliberate, repeated choice, not an accident. It's Taijutsu, so it costs Stamina, not
+		// Chakra like the other 3 forms.
 		private void HandleEightGatesInput()
 		{
 			if (eightGatesWindupTimer >= 0)
@@ -111,9 +112,9 @@ namespace NarutoOverhaul.Common.Players
 					return;
 				}
 
-				ChakraPlayer chakraPlayer = Player.GetModPlayer<ChakraPlayer>();
+				StaminaPlayer staminaPlayer = Player.GetModPlayer<StaminaPlayer>();
 
-				if (!chakraPlayer.TrySpendChakra(form.ActivationChakraCost))
+				if (!staminaPlayer.TrySpendStamina(form.ActivationCost))
 				{
 					return;
 				}
@@ -129,9 +130,9 @@ namespace NarutoOverhaul.Common.Players
 				return;
 			}
 
-			ChakraPlayer chakra = Player.GetModPlayer<ChakraPlayer>();
+			StaminaPlayer stamina = Player.GetModPlayer<StaminaPlayer>();
 
-			if (!chakra.TrySpendChakra(EightGatesAdvanceChakraCost))
+			if (!stamina.TrySpendStamina(EightGatesAdvanceStaminaCost))
 			{
 				return;
 			}
@@ -188,12 +189,19 @@ namespace NarutoOverhaul.Common.Players
 			}
 
 			TransformationForm form = TransformationSystem.RegisteredForms[ActiveFormIndex];
-			ChakraPlayer chakraPlayer = Player.GetModPlayer<ChakraPlayer>();
 
-			if (!chakraPlayer.TrySpendChakra(form.ChakraDrainPerTick))
+			// Eight Gates costs 0 chakra per tick (it costs Stamina to open/advance instead) - skip
+			// the chakra spend entirely rather than calling TrySpendChakra(0), which would otherwise
+			// keep resetting Chakra's regen-delay every tick for a form that never touches chakra.
+			if (form.ChakraDrainPerTick > 0f)
 			{
-				DeactivateForm(form);
-				return;
+				ChakraPlayer chakraPlayer = Player.GetModPlayer<ChakraPlayer>();
+
+				if (!chakraPlayer.TrySpendChakra(form.ChakraDrainPerTick))
+				{
+					DeactivateForm(form);
+					return;
+				}
 			}
 
 			// Forms like Eight Gates (gates 1-7) cost life instead of/alongside chakra - capped so

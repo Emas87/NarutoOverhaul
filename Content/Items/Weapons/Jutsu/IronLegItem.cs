@@ -7,26 +7,23 @@ using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 {
-	// Neji's fighting style, unlocked from the Chunin Exams arc (Shukaku fight). A direct melee
-	// strike (not a projectile jutsu like Rasengan) that ignores a chunk of the target's defense -
-	// chakra-guided precision strikes to the target's tenketsu points rather than raw damage.
-	public class GentleFistItem : ModItem
+	// A single heavy kick - high damage/knockback, cheap stamina cost, small hitbox. The
+	// power-over-reach counterpart to Leaf Hurricane's reach-over-power.
+	public class IronLegItem : ModItem
 	{
-		public const float StaminaCost = 8f;
-		public const float ArmorPenetration = 40f;
+		public const float StaminaCost = 6f;
 
 		public override void SetDefaults()
 		{
-			Item.width = 20;
-			Item.height = 20;
-			Item.damage = 22;
+			Item.width = 24;
+			Item.height = 24;
+			Item.damage = 40;
 			Item.DamageType = ModContent.GetInstance<TaijutsuDamageClass>();
 			Item.useStyle = ItemUseStyleID.Swing;
-			Item.useAnimation = 18;
-			Item.useTime = 18;
-			Item.autoReuse = true;
-			Item.knockBack = 3f;
-			Item.value = Item.sellPrice(gold: 3);
+			Item.useAnimation = 20;
+			Item.useTime = 20;
+			Item.knockBack = 8f;
+			Item.value = Item.sellPrice(gold: 4);
 			Item.rare = ItemRarityID.LightRed;
 			Item.UseSound = SoundID.Item1;
 		}
@@ -43,13 +40,12 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		public override void ModifyHitNPC(Player player, NPC target, ref NPC.HitModifiers modifiers)
 		{
-			modifiers.ArmorPenetration += ArmorPenetration;
+			modifiers.Knockback *= 1.5f;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			tooltips.Add(new TooltipLine(Mod, "StaminaCost", $"Uses {StaminaCost} Stamina"));
-			tooltips.Add(new TooltipLine(Mod, "ArmorPen", $"Strikes ignore {ArmorPenetration} defense"));
 		}
 	}
 }
