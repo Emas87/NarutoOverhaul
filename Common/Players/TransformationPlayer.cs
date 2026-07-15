@@ -14,8 +14,10 @@ namespace NarutoOverhaul.Common.Players
 		public static ModKeybind ToggleTailedBeastModeKeybind;
 		public static ModKeybind ToggleSixPathsSageModeKeybind;
 		public static ModKeybind ToggleEightGatesKeybind;
+		public static ModKeybind ToggleChakraControlKeybind;
 
 		private const int EightGatesFormIndex = 3;
+		private const int ChakraControlFormIndex = 4;
 		private const float EightGatesAdvanceStaminaCost = 10f;
 		private const int EightGatesWindupTicks = 180; // ~3 seconds at 60 ticks/sec
 
@@ -36,6 +38,7 @@ namespace NarutoOverhaul.Common.Players
 			ToggleTailedBeastModeKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Tailed Beast Mode", "OemQuestion");
 			ToggleSixPathsSageModeKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Six Paths Sage Mode", "OemComma");
 			ToggleEightGatesKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Eight Gates", "OemOpenBrackets");
+			ToggleChakraControlKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Chakra Control", "OemCloseBrackets");
 		}
 
 		public override void ProcessTriggers(TriggersSet triggersSet)
@@ -58,6 +61,11 @@ namespace NarutoOverhaul.Common.Players
 			if (ToggleEightGatesKeybind.JustPressed)
 			{
 				HandleEightGatesInput();
+			}
+
+			if (ToggleChakraControlKeybind.JustPressed)
+			{
+				ToggleForm(ChakraControlFormIndex);
 			}
 		}
 
@@ -173,6 +181,16 @@ namespace NarutoOverhaul.Common.Players
 			}
 
 			form.ApplyStatBoosts(Player);
+		}
+
+		public override void PreUpdateMovement()
+		{
+			if (ActiveFormIndex == -1)
+			{
+				return;
+			}
+
+			TransformationSystem.RegisteredForms[ActiveFormIndex].PreUpdateMovement(Player);
 		}
 
 		public override void PostUpdateMiscEffects()

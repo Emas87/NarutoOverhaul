@@ -1,3 +1,4 @@
+using NarutoOverhaul.Content.Items.Accessories;
 using NarutoOverhaul.Content.Items.Weapons;
 using NarutoOverhaul.Content.Items.Weapons.Jutsu;
 using Terraria;
@@ -59,7 +60,8 @@ namespace NarutoOverhaul.Content.NPCs.Town
 				.Add(ModContent.ItemType<ToadSummonScrollItem>())
 				.Add(ModContent.ItemType<NinjaHoundSummonScrollItem>())
 				.Add(ModContent.ItemType<SnakeSummonScrollItem>())
-				.Add(ModContent.ItemType<SlugSummonScrollItem>());
+				.Add(ModContent.ItemType<SlugSummonScrollItem>())
+				.Add(ModContent.ItemType<MonstrousStrengthGlovesItem>());
 
 			shop.Register();
 		}

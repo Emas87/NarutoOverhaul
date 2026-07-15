@@ -21,5 +21,12 @@ namespace NarutoOverhaul.Common.Systems
 		public virtual float LifeDrainPerTick(Player player) => 0f;
 
 		public abstract void ApplyStatBoosts(Player player);
+
+		// Most forms only need passive stats (ApplyStatBoosts, applied from ResetEffects - fine for
+		// things like moveSpeed since vanilla's own movement code reads them later in the frame).
+		// Chakra Control's wall-climb needs to override velocity/gravity directly, which has to
+		// happen from ModPlayer.PreUpdateMovement (before vanilla's own movement/gravity resolves)
+		// or it gets overwritten - hence a separate hook. Default no-op so existing forms are unaffected.
+		public virtual void PreUpdateMovement(Player player) { }
 	}
 }

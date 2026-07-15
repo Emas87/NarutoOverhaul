@@ -3,6 +3,7 @@ Keybinds: {
 	"Toggle Tailed Beast Mode.DisplayName": Toggle  Tailed  Beast  Mode
 	"Toggle Six Paths Sage Mode.DisplayName": Toggle  Six  Paths  Sage  Mode
 	"Toggle Eight Gates.DisplayName": Toggle  Eight  Gates
+	"Toggle Chakra Control.DisplayName": Toggle  Chakra  Control
 }
 
 Buffs: {
@@ -74,6 +75,11 @@ Buffs: {
 	StaminaRegenBuff: {
 		DisplayName: Stamina Regen Buff
 		Description: Mods.NarutoOverhaul.Buffs.StaminaRegenBuff.Description
+	}
+
+	ChakraControlBuff: {
+		DisplayName: Chakra Control Buff
+		Description: Mods.NarutoOverhaul.Buffs.ChakraControlBuff.Description
 	}
 }
 
@@ -370,6 +376,11 @@ Items: {
 
 	StaminaScroll7Item: {
 		DisplayName: Stamina Scroll7 Item
+		Tooltip: ""
+	}
+
+	MonstrousStrengthGlovesItem: {
+		DisplayName: Monstrous Strength Gloves Item
 		Tooltip: ""
 	}
 }
