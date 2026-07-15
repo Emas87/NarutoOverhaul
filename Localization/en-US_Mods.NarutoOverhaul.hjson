@@ -37,6 +37,11 @@ Items: {
 		DisplayName: Kakuzu Summon Item
 		Tooltip: ""
 	}
+
+	PainSummonItem: {
+		DisplayName: Pain Summon Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -44,6 +49,7 @@ NPCs: {
 	HakuBoss.DisplayName: Haku Boss
 	OrochimaruBoss.DisplayName: Orochimaru Boss
 	KakuzuBoss.DisplayName: Kakuzu Boss
+	PainBoss.DisplayName: Pain Boss
 }
 
 Projectiles: {
