@@ -8,6 +8,7 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
+using NarutoOverhaul.Content.Items.Materials;
 using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.NPCs.Bosses
@@ -39,6 +40,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		private const int RecoverTicks = 45;
 		private const float DevaRepelRadius = 220f;
 		private const float PretaDrainRadius = 260f;
+		public const float TownNpcDetectionRadius = 2500f;
 
 		private Path CurrentPath
 		{
@@ -88,6 +90,40 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			SubCounter = 0f;
 		}
 
+		// "Pain levels the Hidden Leaf Village" - prefers hunting the nearest Town NPC over the
+		// player whenever one is in range, matching that beat instead of just being a player-only
+		// fight. Falls back to the player once no Town NPC remains nearby.
+		public static NPC FindNearestTownNPC(Vector2 position, float radius)
+		{
+			NPC closest = null;
+			float closestDistance = radius;
+
+			for (int i = 0; i < Main.maxNPCs; i++)
+			{
+				NPC npc = Main.npc[i];
+
+				if (!npc.active || !npc.townNPC)
+				{
+					continue;
+				}
+
+				float distance = Vector2.Distance(npc.Center, position);
+
+				if (distance <= closestDistance)
+				{
+					closest = npc;
+					closestDistance = distance;
+				}
+			}
+
+			return closest;
+		}
+
+		public static bool IsNearTownNPC(Vector2 position, float radius)
+		{
+			return FindNearestTownNPC(position, radius) != null;
+		}
+
 		public override void AI()
 		{
 			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
@@ -104,16 +140,19 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				return;
 			}
 
+			NPC townTarget = FindNearestTownNPC(NPC.Center, TownNpcDetectionRadius);
+			Vector2 aimCenter = townTarget?.Center ?? target.Center;
+
 			UpdatePathPhase();
-			NPC.spriteDirection = target.Center.X < NPC.Center.X ? -1 : 1;
+			NPC.spriteDirection = aimCenter.X < NPC.Center.X ? -1 : 1;
 
 			switch (CurrentAttack)
 			{
 				case AttackState.Attack:
-					DoAttack(target);
+					DoAttack(target, townTarget, aimCenter);
 					break;
 				case AttackState.Recover:
-					DoRecover(target);
+					DoRecover();
 					break;
 			}
 
@@ -144,21 +183,21 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 		}
 
-		private void DoAttack(Player target)
+		private void DoAttack(Player target, NPC townTarget, Vector2 aimCenter)
 		{
 			switch (CurrentPath)
 			{
 				case Path.Deva:
-					DoDeva(target);
+					DoDeva(target, townTarget, aimCenter);
 					break;
 				case Path.Asura:
-					DoAsura(target);
+					DoAsura(aimCenter);
 					break;
 				case Path.Human:
-					DoHuman(target);
+					DoHuman(aimCenter);
 					break;
 				case Path.Animal:
-					DoAnimal(target);
+					DoAnimal(aimCenter);
 					break;
 				case Path.Preta:
 					DoPreta(target);
@@ -169,14 +208,26 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 		}
 
-		private void DoDeva(Player target)
+		// townTarget is null when there's no Town NPC in range - the repel then hits the player,
+		// same as before this change.
+		private void DoDeva(Player target, NPC townTarget, Vector2 aimCenter)
 		{
 			NPC.velocity *= 0.9f;
 
-			if (StateTimer == 20 && NPC.Distance(target.Center) <= DevaRepelRadius)
+			if (StateTimer == 20 && NPC.Distance(aimCenter) <= DevaRepelRadius)
 			{
-				Vector2 pushDirection = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitX);
-				target.velocity += pushDirection * 14f;
+				Vector2 pushDirection = (aimCenter - NPC.Center).SafeNormalize(Vector2.UnitX);
+				Vector2 push = pushDirection * 14f;
+
+				if (townTarget != null)
+				{
+					townTarget.velocity += push;
+				}
+				else
+				{
+					target.velocity += push;
+				}
+
 				ChakraVFX.SpawnDirectionalBurst(NPC.Center, pushDirection, DustID.PurpleTorch, 16, 6f);
 				SoundEngine.PlaySound(SoundID.Item14, NPC.Center);
 			}
@@ -188,13 +239,13 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 		}
 
-		private void DoAsura(Player target)
+		private void DoAsura(Vector2 aimCenter)
 		{
 			NPC.velocity *= 0.9f;
 
 			if (StateTimer % 8 == 0 && SubCounter < 4)
 			{
-				Vector2 shotVelocity = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitY) * 9f;
+				Vector2 shotVelocity = (aimCenter - NPC.Center).SafeNormalize(Vector2.UnitY) * 9f;
 				int index = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shotVelocity, ModContent.ProjectileType<ElementalBoltProjectile>(), 15, 1f);
 
 				if (Main.projectile[index].ModProjectile is ElementalBoltProjectile bolt)
@@ -212,9 +263,9 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 		}
 
-		private void DoHuman(Player target)
+		private void DoHuman(Vector2 aimCenter)
 		{
-			Vector2 toTarget = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitX);
+			Vector2 toTarget = (aimCenter - NPC.Center).SafeNormalize(Vector2.UnitX);
 			NPC.velocity = toTarget * 13f;
 
 			if (StateTimer >= 24)
@@ -224,13 +275,13 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 		}
 
-		private void DoAnimal(Player target)
+		private void DoAnimal(Vector2 aimCenter)
 		{
 			NPC.velocity *= 0.9f;
 
 			if (StateTimer == 0)
 			{
-				Vector2 baseDirection = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitY);
+				Vector2 baseDirection = (aimCenter - NPC.Center).SafeNormalize(Vector2.UnitY);
 				float[] spreadAngles = { -0.4f, 0f, 0.4f };
 
 				foreach (float angle in spreadAngles)
@@ -286,7 +337,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 		}
 
-		private void DoRecover(Player target)
+		private void DoRecover()
 		{
 			NPC.velocity *= 0.9f;
 
@@ -310,6 +361,11 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		public override void OnKill()
 		{
 			StoryProgressSystem.DownedPain = true;
+		}
+
+		public override void ModifyNPCLoot(NPCLoot npcLoot)
+		{
+			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<RinneganFragmentItem>(), 1, 3, 5));
 		}
 
 		public override void HitEffect(NPC.HitInfo hit)

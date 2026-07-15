@@ -1,3 +1,4 @@
+using NarutoOverhaul.Content.Items.Materials;
 using NarutoOverhaul.Content.NPCs.Bosses;
 using Terraria;
 using Terraria.ID;
@@ -24,8 +25,9 @@ namespace NarutoOverhaul.Content.Items.Consumables
 
 		public override bool CanUseItem(Player player)
 		{
-			// guard against double-summoning while the boss is already alive
-			return !NPC.AnyNPCs(ModContent.NPCType<TailedBeastBoss>());
+			// Gaara's One-Tail transformation happens during the Chunin Exams invasion, Sand
+			// Village territory - Desert is the explicit biome match.
+			return player.ZoneDesert && !NPC.AnyNPCs(ModContent.NPCType<TailedBeastBoss>());
 		}
 
 		public override bool? UseItem(Player player)
@@ -36,6 +38,14 @@ namespace NarutoOverhaul.Content.Items.Consumables
 			}
 
 			return true;
+		}
+
+		public override void AddRecipes()
+		{
+			CreateRecipe(1)
+				.AddIngredient(ModContent.ItemType<IceMirrorShardItem>(), 3)
+				.AddTile(TileID.Anvils)
+				.Register();
 		}
 	}
 }

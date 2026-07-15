@@ -162,6 +162,41 @@ Items: {
 		DisplayName: Water Dragon Item
 		Tooltip: ""
 	}
+
+	HakuSummonItem: {
+		DisplayName: Haku Summon Item
+		Tooltip: ""
+	}
+
+	CursedSnakeFangItem: {
+		DisplayName: Cursed Snake Fang Item
+		Tooltip: ""
+	}
+
+	IceMirrorShardItem: {
+		DisplayName: Ice Mirror Shard Item
+		Tooltip: ""
+	}
+
+	KakuzuHeartItem: {
+		DisplayName: Kakuzu Heart Item
+		Tooltip: ""
+	}
+
+	RinneganFragmentItem: {
+		DisplayName: Rinnegan Fragment Item
+		Tooltip: ""
+	}
+
+	SandCoreItem: {
+		DisplayName: Sand Core Item
+		Tooltip: ""
+	}
+
+	SusanooCoreItem: {
+		DisplayName: Susanoo Core Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {

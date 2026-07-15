@@ -1,4 +1,3 @@
-using NarutoOverhaul.Content.Items.Materials;
 using NarutoOverhaul.Content.NPCs.Bosses;
 using Terraria;
 using Terraria.ID;
@@ -6,8 +5,9 @@ using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Items.Consumables
 {
-	// Konoha village / Forest of Death - no distinctive vanilla biome match, so no biome gate.
-	public class OrochimaruSummonItem : ModItem
+	// First boss in the story roster - craftable from common early-game materials rather than
+	// gated behind another boss's drop, since nothing precedes Haku in the chain.
+	public class HakuSummonItem : ModItem
 	{
 		public override void SetDefaults()
 		{
@@ -26,14 +26,15 @@ namespace NarutoOverhaul.Content.Items.Consumables
 
 		public override bool CanUseItem(Player player)
 		{
-			return !NPC.AnyNPCs(ModContent.NPCType<OrochimaruBoss>());
+			// Land of Waves is a misty coastal region - Beach is the closest vanilla biome match.
+			return player.ZoneBeach && !NPC.AnyNPCs(ModContent.NPCType<HakuBoss>());
 		}
 
 		public override bool? UseItem(Player player)
 		{
 			if (player.whoAmI == Main.myPlayer)
 			{
-				NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<OrochimaruBoss>());
+				NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<HakuBoss>());
 			}
 
 			return true;
@@ -42,7 +43,8 @@ namespace NarutoOverhaul.Content.Items.Consumables
 		public override void AddRecipes()
 		{
 			CreateRecipe(1)
-				.AddIngredient(ModContent.ItemType<SandCoreItem>(), 3)
+				.AddIngredient(ItemID.IceBlock, 10)
+				.AddIngredient(ItemID.IronBar, 5)
 				.AddTile(TileID.Anvils)
 				.Register();
 		}

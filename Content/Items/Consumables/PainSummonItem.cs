@@ -1,3 +1,4 @@
+using NarutoOverhaul.Content.Items.Materials;
 using NarutoOverhaul.Content.NPCs.Bosses;
 using Terraria;
 using Terraria.ID;
@@ -5,8 +6,12 @@ using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Items.Consumables
 {
+	// "Pain levels the Hidden Leaf Village" - requires being near your own town, mirroring that
+	// the fight is meant to threaten a settlement, not just the player.
 	public class PainSummonItem : ModItem
 	{
+		public const float TownRequirementRadius = PainBoss.TownNpcDetectionRadius;
+
 		public override void SetDefaults()
 		{
 			Item.width = 24;
@@ -24,7 +29,9 @@ namespace NarutoOverhaul.Content.Items.Consumables
 
 		public override bool CanUseItem(Player player)
 		{
-			return !NPC.AnyNPCs(ModContent.NPCType<PainBoss>());
+			return Main.hardMode
+				&& PainBoss.IsNearTownNPC(player.Center, TownRequirementRadius)
+				&& !NPC.AnyNPCs(ModContent.NPCType<PainBoss>());
 		}
 
 		public override bool? UseItem(Player player)
@@ -35,6 +42,14 @@ namespace NarutoOverhaul.Content.Items.Consumables
 			}
 
 			return true;
+		}
+
+		public override void AddRecipes()
+		{
+			CreateRecipe(1)
+				.AddIngredient(ModContent.ItemType<KakuzuHeartItem>(), 3)
+				.AddTile(TileID.Anvils)
+				.Register();
 		}
 	}
 }

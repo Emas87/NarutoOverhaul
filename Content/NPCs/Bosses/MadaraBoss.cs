@@ -7,6 +7,7 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
+using NarutoOverhaul.Content.Items.Materials;
 using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.NPCs.Bosses
@@ -193,6 +194,11 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		public override void OnKill()
 		{
 			StoryProgressSystem.DownedMadara = true;
+		}
+
+		public override void ModifyNPCLoot(NPCLoot npcLoot)
+		{
+			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<SusanooCoreItem>(), 1, 3, 5));
 		}
 
 		public override void HitEffect(NPC.HitInfo hit)
