@@ -55,17 +55,19 @@ worst first. One focused netcode pass closes almost all of it.
 
 ### 1c. Unobtainable content (quick wins — shop/recipe wiring only)
 
-- [ ] **`ShadowCloneItem`** — Naruto's signature jutsu, fully implemented, obtainable nowhere.
+- [x] **`ShadowCloneItem`** — Naruto's signature jutsu, fully implemented, obtainable nowhere.
   → Kakashi's shop, ungated (its own design comment says it's meant to be pre-boss).
-- [ ] **All 4 resource potions** (`ChakraPotionItem`, `ChakraRegenPotionItem`, `StaminaPotionItem`,
+- [x] **All 4 resource potions** (`ChakraPotionItem`, `ChakraRegenPotionItem`, `StaminaPotionItem`,
   `StaminaRegenPotionItem`) — no recipe, no shop, no drop, despite being the natural counter to
   running dry mid-fight. → Tenten's shop (or cheap recipes; shop is simpler).
-- [ ] **3 orphaned accessories**: `NinjutsuFocusSealItem` → Kakashi, `TaijutsuWrapsItem` → Guy,
+- [x] **3 orphaned accessories**: `NinjutsuFocusSealItem` → Kakashi, `TaijutsuWrapsItem` → Guy,
   `GenjutsuVeilItem` → Itachi. Each class currently has only 1 obtainable accessory.
-- [ ] **`GenjutsuVeilItem` duplicates `IllusionCharmItem`** (both +10% dmg / +1s debuff duration) —
+- [x] **`GenjutsuVeilItem` duplicates `IllusionCharmItem`** (both +10% dmg / +1s debuff duration) —
   differentiate the Veil (e.g. reduced aggro or chakra-cost reduction) when adding it to the shop.
-- [ ] **Dead localization keys** `ChakraScrollItem`/`StaminaScrollItem` in
+  *Done: Veil now reduces `player.aggro` (stealth) instead of duplicating the Charm's effect.*
+- [x] **Dead localization keys** `ChakraScrollItem`/`StaminaScrollItem` in
   `Localization/en-US_Mods.NarutoOverhaul.hjson` — leftovers from the numbered-scroll rename.
+  *Done: also removed the `ShinobiDamageClass` dead key found during the pass.*
 
 ### Verified non-issues (checked during audit; don't re-investigate)
 
@@ -93,7 +95,7 @@ Ranked by impact. Each entry has a sketch that reuses established patterns in th
     knockback burst).
   - *Ōtsutsuki-tier weapon* — post-Kaguya capstone, crafted from her drop.
   - Plus one Hardmode-tier Taijutsu weapon (Taijutsu currently ends at boss 2 unlocks).
-- [ ] **Localization pass.** 100% of player-facing text is auto-generated: every DisplayName ends in
+- [x] **Localization pass.** 100% of player-facing text is auto-generated: every DisplayName ends in
   "Item/Boss/Buff/Projectile" (`Chakra Scroll1 Item`, `Shinobi Vendor N P C`), every tooltip is
   `""`, every buff description renders as a raw key, keybind names show double spaces. One
   hjson-editing pass fixes all of it; no code changes.
@@ -117,8 +119,9 @@ Ranked by impact. Each entry has a sketch that reuses established patterns in th
 
 ## 3. Suggested batch order
 
-1. **Unobtainable-content quick wins + localization pass** — pure value, zero gameplay risk, makes
-   everything already built actually reachable and readable (1c + localization from section 2).
+1. **[DONE] Unobtainable-content quick wins + localization pass** — pure value, zero gameplay risk,
+   makes everything already built actually reachable and readable (1c + localization from
+   section 2). Landed 2026-07-15.
 2. **Endgame weapons for bosses 5-7** — fills the biggest gameplay hole; the materials and gates
    already exist, so it's mostly new `ModItem`s following `RasenganItem`'s shape.
 3. **Class armor sets** — the next-largest expectation gap; establishes the armor pattern for
