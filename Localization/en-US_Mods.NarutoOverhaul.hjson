@@ -277,6 +277,31 @@ Items: {
 		DisplayName: Otsutsuki Chakra Fragment Item
 		Tooltip: ""
 	}
+
+	ChakraScrollItem: {
+		DisplayName: Chakra Scroll Item
+		Tooltip: ""
+	}
+
+	GenjutsuMasteryScrollItem: {
+		DisplayName: Genjutsu Mastery Scroll Item
+		Tooltip: ""
+	}
+
+	NinjutsuMasteryScrollItem: {
+		DisplayName: Ninjutsu Mastery Scroll Item
+		Tooltip: ""
+	}
+
+	StaminaScrollItem: {
+		DisplayName: Stamina Scroll Item
+		Tooltip: ""
+	}
+
+	TaijutsuMasteryScrollItem: {
+		DisplayName: Taijutsu Mastery Scroll Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {

@@ -17,6 +17,11 @@ namespace NarutoOverhaul.Common.Players
 		// Persisted across sessions; current Chakra is not persisted, matching vanilla mana-on-respawn behavior.
 		public float BaseMaxChakra = 100f;
 
+		// Caps how many Chakra Scrolls can ever be consumed by this character, mirroring vanilla's
+		// 10-Mana-Crystal cap. See Content/Items/Consumables/ChakraScrollItem.cs.
+		public const int MaxChakraScrolls = 10;
+		public int ConsumedChakraScrolls;
+
 		public const float BaseChakraRegenRate = 0.5f;
 		public float ChakraRegenRate;
 
@@ -86,11 +91,13 @@ namespace NarutoOverhaul.Common.Players
 		public override void SaveData(TagCompound tag)
 		{
 			tag["baseMaxChakra"] = BaseMaxChakra;
+			tag["consumedChakraScrolls"] = ConsumedChakraScrolls;
 		}
 
 		public override void LoadData(TagCompound tag)
 		{
 			BaseMaxChakra = tag.GetFloat("baseMaxChakra");
+			ConsumedChakraScrolls = tag.GetInt("consumedChakraScrolls");
 
 			if (BaseMaxChakra <= 0f)
 			{

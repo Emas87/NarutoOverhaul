@@ -17,6 +17,11 @@ namespace NarutoOverhaul.Common.Players
 
 		public float BaseMaxStamina = 100f;
 
+		// Caps how many Stamina Scrolls can ever be consumed by this character, mirroring vanilla's
+		// 10-Mana-Crystal cap. See Content/Items/Consumables/StaminaScrollItem.cs.
+		public const int MaxStaminaScrolls = 10;
+		public int ConsumedStaminaScrolls;
+
 		public const float BaseStaminaRegenRate = 1.2f;
 		public float StaminaRegenRate;
 
@@ -78,11 +83,13 @@ namespace NarutoOverhaul.Common.Players
 		public override void SaveData(TagCompound tag)
 		{
 			tag["baseMaxStamina"] = BaseMaxStamina;
+			tag["consumedStaminaScrolls"] = ConsumedStaminaScrolls;
 		}
 
 		public override void LoadData(TagCompound tag)
 		{
 			BaseMaxStamina = tag.GetFloat("baseMaxStamina");
+			ConsumedStaminaScrolls = tag.GetInt("consumedStaminaScrolls");
 
 			if (BaseMaxStamina <= 0f)
 			{
