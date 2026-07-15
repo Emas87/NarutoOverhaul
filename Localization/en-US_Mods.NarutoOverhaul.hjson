@@ -1,4 +1,7 @@
-"Keybinds.Toggle Sage Mode.DisplayName": Toggle  Sage  Mode
+Keybinds: {
+	"Toggle Sage Mode.DisplayName": Toggle  Sage  Mode
+	"Toggle Tailed Beast Mode.DisplayName": Toggle  Tailed  Beast  Mode
+}
 
 Buffs: {
 	SageModeBuff: {
@@ -9,6 +12,11 @@ Buffs: {
 	SharinganFocusBuff: {
 		DisplayName: Sharingan Focus Buff
 		Description: Mods.NarutoOverhaul.Buffs.SharinganFocusBuff.Description
+	}
+
+	TailedBeastModeBuff: {
+		DisplayName: Tailed Beast Mode Buff
+		Description: Mods.NarutoOverhaul.Buffs.TailedBeastModeBuff.Description
 	}
 }
 
@@ -42,6 +50,11 @@ Items: {
 		DisplayName: Pain Summon Item
 		Tooltip: ""
 	}
+
+	MadaraSummonItem: {
+		DisplayName: Madara Summon Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -50,6 +63,7 @@ NPCs: {
 	OrochimaruBoss.DisplayName: Orochimaru Boss
 	KakuzuBoss.DisplayName: Kakuzu Boss
 	PainBoss.DisplayName: Pain Boss
+	MadaraBoss.DisplayName: Madara Boss
 }
 
 Projectiles: {

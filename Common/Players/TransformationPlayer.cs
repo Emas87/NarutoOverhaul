@@ -8,6 +8,7 @@ namespace NarutoOverhaul.Common.Players
 	public class TransformationPlayer : ModPlayer
 	{
 		public static ModKeybind ToggleSageModeKeybind;
+		public static ModKeybind ToggleTailedBeastModeKeybind;
 
 		// -1 = no active form. Only one form active at a time for now; the registry design in
 		// TransformationSystem means supporting simultaneous/stacked forms later is additive, not a rewrite.
@@ -16,6 +17,7 @@ namespace NarutoOverhaul.Common.Players
 		public override void Load()
 		{
 			ToggleSageModeKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Sage Mode", "OemPeriod");
+			ToggleTailedBeastModeKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Tailed Beast Mode", "OemQuestion");
 		}
 
 		public override void ProcessTriggers(TriggersSet triggersSet)
@@ -23,6 +25,11 @@ namespace NarutoOverhaul.Common.Players
 			if (ToggleSageModeKeybind.JustPressed)
 			{
 				ToggleForm(0);
+			}
+
+			if (ToggleTailedBeastModeKeybind.JustPressed)
+			{
+				ToggleForm(1);
 			}
 		}
 
