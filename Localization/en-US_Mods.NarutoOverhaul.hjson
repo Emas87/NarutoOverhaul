@@ -27,17 +27,24 @@ Items: {
 		DisplayName: Kunai Item
 		Tooltip: ""
 	}
+
+	OrochimaruSummonItem: {
+		DisplayName: Orochimaru Summon Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {
 	TailedBeastBoss.DisplayName: Tailed Beast Boss
 	HakuBoss.DisplayName: Haku Boss
+	OrochimaruBoss.DisplayName: Orochimaru Boss
 }
 
 Projectiles: {
 	RasenganProjectile.DisplayName: Rasengan Projectile
 	KunaiProjectile.DisplayName: Kunai Projectile
 	SenbonProjectile.DisplayName: Senbon Projectile
+	SnakeProjectile.DisplayName: Snake Projectile
 }
 
 DamageClasses.ShinobiDamageClass.DisplayName: Shinobi Damage Class
