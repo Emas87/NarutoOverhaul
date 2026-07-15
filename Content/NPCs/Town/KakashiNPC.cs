@@ -57,11 +57,13 @@ namespace NarutoOverhaul.Content.NPCs.Town
 			var downedKakuzu = new Condition("NarutoOverhaul.DownedKakuzu", () => StoryProgressSystem.DownedKakuzu);
 
 			new NPCShop(Type, "Shop")
+				.Add(ModContent.ItemType<ShadowCloneItem>())
 				.Add(ModContent.ItemType<RasenganItem>(), downedOrochimaru)
 				.Add(ModContent.ItemType<FireballItem>(), downedKakuzu)
 				.Add(ModContent.ItemType<GreatBreakthroughItem>(), downedKakuzu)
 				.Add(ModContent.ItemType<WaterDragonItem>(), downedKakuzu)
 				.Add(ModContent.ItemType<ChakraPaperItem>(), downedKakuzu)
+				.Add(ModContent.ItemType<NinjutsuFocusSealItem>(), downedKakuzu)
 				.Register();
 		}
 	}

@@ -1,4 +1,5 @@
 using NarutoOverhaul.Content.Items.Accessories;
+using NarutoOverhaul.Content.Items.Consumables;
 using NarutoOverhaul.Content.Items.Weapons;
 using NarutoOverhaul.Content.Items.Weapons.Jutsu;
 using Terraria;
@@ -61,7 +62,11 @@ namespace NarutoOverhaul.Content.NPCs.Town
 				.Add(ModContent.ItemType<NinjaHoundSummonScrollItem>())
 				.Add(ModContent.ItemType<SnakeSummonScrollItem>())
 				.Add(ModContent.ItemType<SlugSummonScrollItem>())
-				.Add(ModContent.ItemType<MonstrousStrengthGlovesItem>());
+				.Add(ModContent.ItemType<MonstrousStrengthGlovesItem>())
+				.Add(ModContent.ItemType<ChakraPotionItem>())
+				.Add(ModContent.ItemType<ChakraRegenPotionItem>())
+				.Add(ModContent.ItemType<StaminaPotionItem>())
+				.Add(ModContent.ItemType<StaminaRegenPotionItem>());
 
 			shop.Register();
 		}

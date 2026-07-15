@@ -1,481 +1,470 @@
 Keybinds: {
-	"Toggle Sage Mode.DisplayName": Toggle  Sage  Mode
-	"Toggle Tailed Beast Mode.DisplayName": Toggle  Tailed  Beast  Mode
-	"Toggle Six Paths Sage Mode.DisplayName": Toggle  Six  Paths  Sage  Mode
-	"Toggle Eight Gates.DisplayName": Toggle  Eight  Gates
-	"Toggle Chakra Control.DisplayName": Toggle  Chakra  Control
+	"Toggle Sage Mode.DisplayName": Toggle Sage Mode
+	"Toggle Tailed Beast Mode.DisplayName": Toggle Tailed Beast Mode
+	"Toggle Six Paths Sage Mode.DisplayName": Toggle Six Paths Sage Mode
+	"Toggle Eight Gates.DisplayName": Toggle Eight Gates
+	"Toggle Chakra Control.DisplayName": Toggle Chakra Control
 }
 
 Buffs: {
 	SageModeBuff: {
-		DisplayName: Sage Mode Buff
-		Description: Mods.NarutoOverhaul.Buffs.SageModeBuff.Description
+		DisplayName: Sage Mode
+		Description: Drawing on natural energy - boosted damage and movement speed while it lasts
 	}
 
 	SharinganFocusBuff: {
-		DisplayName: Sharingan Focus Buff
-		Description: Mods.NarutoOverhaul.Buffs.SharinganFocusBuff.Description
+		DisplayName: Sharingan Focus
+		Description: Your eyes see the attack coming before it lands
 	}
 
 	TailedBeastModeBuff: {
-		DisplayName: Tailed Beast Mode Buff
-		Description: Mods.NarutoOverhaul.Buffs.TailedBeastModeBuff.Description
+		DisplayName: Tailed Beast Mode
+		Description: Cloaked in the Tailed Beast's chakra - immense power at a steady cost
 	}
 
 	SixPathsSageModeBuff: {
-		DisplayName: Six Paths Sage Mode Buff
-		Description: Mods.NarutoOverhaul.Buffs.SixPathsSageModeBuff.Description
+		DisplayName: Six Paths Sage Mode
+		Description: The strength of the Sage of the Six Paths flows through you
 	}
 
 	EightGatesBuff: {
-		DisplayName: Eight Gates Buff
-		Description: Mods.NarutoOverhaul.Buffs.EightGatesBuff.Description
+		DisplayName: Eight Gates
+		Description: Each gate opened trades more of your body for more of your power - the eighth gate is fatal
 	}
 
 	GenjutsuControlDebuff: {
-		DisplayName: Genjutsu Control Debuff
-		Description: Mods.NarutoOverhaul.Buffs.GenjutsuControlDebuff.Description
+		DisplayName: Puppeted
+		Description: An illusion has seized control of your movement
 	}
 
 	GenjutsuFearDebuff: {
-		DisplayName: Genjutsu Fear Debuff
-		Description: Mods.NarutoOverhaul.Buffs.GenjutsuFearDebuff.Description
+		DisplayName: Terrified
+		Description: Fleeing in blind panic from an illusion
 	}
 
 	GenjutsuSleepDebuff: {
-		DisplayName: Genjutsu Sleep Debuff
-		Description: Mods.NarutoOverhaul.Buffs.GenjutsuSleepDebuff.Description
+		DisplayName: Genjutsu Slumber
+		Description: Trapped in an unbreakable dream
 	}
 
 	NinjaHoundMinionBuff: {
-		DisplayName: Ninja Hound Minion Buff
-		Description: Mods.NarutoOverhaul.Buffs.NinjaHoundMinionBuff.Description
+		DisplayName: Ninja Hound
+		Description: A summoned ninja hound is fighting for you
 	}
 
 	SlugMinionBuff: {
-		DisplayName: Slug Minion Buff
-		Description: Mods.NarutoOverhaul.Buffs.SlugMinionBuff.Description
+		DisplayName: Slug Summon
+		Description: A summoned slug is fighting for you
 	}
 
 	SnakeMinionBuff: {
-		DisplayName: Snake Minion Buff
-		Description: Mods.NarutoOverhaul.Buffs.SnakeMinionBuff.Description
+		DisplayName: Snake Summon
+		Description: A summoned snake is fighting for you
 	}
 
 	ToadMinionBuff: {
-		DisplayName: Toad Minion Buff
-		Description: Mods.NarutoOverhaul.Buffs.ToadMinionBuff.Description
+		DisplayName: Toad Summon
+		Description: A summoned toad is fighting for you
 	}
 
 	ChakraRegenBuff: {
-		DisplayName: Chakra Regen Buff
-		Description: Mods.NarutoOverhaul.Buffs.ChakraRegenBuff.Description
+		DisplayName: Chakra Focus
+		Description: Chakra regenerates faster than usual
 	}
 
 	StaminaRegenBuff: {
-		DisplayName: Stamina Regen Buff
-		Description: Mods.NarutoOverhaul.Buffs.StaminaRegenBuff.Description
+		DisplayName: Second Wind
+		Description: Stamina regenerates faster than usual
 	}
 
 	ChakraControlBuff: {
-		DisplayName: Chakra Control Buff
-		Description: Mods.NarutoOverhaul.Buffs.ChakraControlBuff.Description
+		DisplayName: Chakra Control
+		Description: Walking on water and clinging to walls, at a steady chakra cost
 	}
 }
 
 Items: {
 	TailedBeastSummonItem: {
-		DisplayName: Tailed Beast Summon Item
-		Tooltip: ""
+		DisplayName: Sand Village Forehead Protector
+		Tooltip: "Summons Shukaku the One-Tail\nRight click to summon"
 	}
 
 	RasenganItem: {
-		DisplayName: Rasengan Item
-		Tooltip: ""
+		DisplayName: Rasengan
+		Tooltip: A spiraling sphere of pure chakra, ground into the enemy at point-blank range
 	}
 
 	KunaiItem: {
-		DisplayName: Kunai Item
-		Tooltip: ""
+		DisplayName: Kunai
+		Tooltip: A basic shinobi throwing blade - reliable at any range
 	}
 
 	OrochimaruSummonItem: {
-		DisplayName: Orochimaru Summon Item
-		Tooltip: ""
+		DisplayName: Cursed Seal Scroll
+		Tooltip: "Summons Orochimaru\nRight click to summon"
 	}
 
 	KakuzuSummonItem: {
-		DisplayName: Kakuzu Summon Item
-		Tooltip: ""
+		DisplayName: Bounty Contract
+		Tooltip: "Summons Kakuzu\nRight click to summon"
 	}
 
 	PainSummonItem: {
-		DisplayName: Pain Summon Item
-		Tooltip: ""
+		DisplayName: Deva Path Seal
+		Tooltip: "Summons Pain - only usable near a Town NPC\nRight click to summon"
 	}
 
 	MadaraSummonItem: {
-		DisplayName: Madara Summon Item
-		Tooltip: ""
+		DisplayName: Reanimation Seal
+		Tooltip: "Summons the reanimated Madara Uchiha\nRight click to summon"
 	}
 
 	KaguyaSummonItem: {
-		DisplayName: Kaguya Summon Item
-		Tooltip: ""
+		DisplayName: Dimensional Rift Shard
+		Tooltip: "Summons Kaguya Otsutsuki\nRight click to summon"
 	}
 
 	FireballItem: {
-		DisplayName: Fireball Item
-		Tooltip: ""
+		DisplayName: Fireball Jutsu
+		Tooltip: Katon - a bursting fireball hurled at the enemy
 	}
 
 	GentleFistItem: {
-		DisplayName: Gentle Fist Item
-		Tooltip: ""
+		DisplayName: Gentle Fist
+		Tooltip: Strikes the enemy's chakra points with precise, piercing blows
 	}
 
 	GenjutsuVeilItem: {
-		DisplayName: Genjutsu Veil Item
-		Tooltip: ""
+		DisplayName: Genjutsu Veil
+		Tooltip: A concealing illusion that keeps enemies from noticing you as easily
 	}
 
 	NinjutsuFocusSealItem: {
-		DisplayName: Ninjutsu Focus Seal Item
-		Tooltip: ""
+		DisplayName: Ninjutsu Focus Seal
+		Tooltip: Sharpens chakra flow, quickening your jutsu regeneration
 	}
 
 	TaijutsuWrapsItem: {
-		DisplayName: Taijutsu Wraps Item
-		Tooltip: ""
+		DisplayName: Taijutsu Training Wraps
+		Tooltip: Weighted bandages that sharpen every physical strike
 	}
 
 	GenjutsuIllusionItem: {
-		DisplayName: Genjutsu Illusion Item
-		Tooltip: ""
+		DisplayName: Genjutsu: Illusion
+		Tooltip: Traps the target in an illusion, seizing control of its movement
 	}
 
 	ChakraPaperItem: {
-		DisplayName: Chakra Paper Item
-		Tooltip: ""
+		DisplayName: Chakra Paper
+		Tooltip: A simple test of chakra affinity, worn as a focus for ninjutsu
 	}
 
 	IllusionCharmItem: {
-		DisplayName: Illusion Charm Item
-		Tooltip: ""
+		DisplayName: Illusion Charm
+		Tooltip: Strengthens genjutsu and prolongs the illusions it casts
 	}
 
 	WeightedLegWarmersItem: {
-		DisplayName: Weighted Leg Warmers Item
-		Tooltip: ""
+		DisplayName: Weighted Leg Warmers
+		Tooltip: Training weights in the style of Might Guy - remove them and feel the difference
 	}
 
 	GenjutsuNightmareItem: {
-		DisplayName: Genjutsu Nightmare Item
-		Tooltip: ""
+		DisplayName: "Genjutsu: Nightmare"
+		Tooltip: Plunges the target into a waking nightmare, leaving them frozen in terror
 	}
 
 	GenjutsuSleepItem: {
-		DisplayName: Genjutsu Sleep Item
-		Tooltip: ""
+		DisplayName: "Genjutsu: Sleep"
+		Tooltip: Lulls the target into an unbreakable slumber
 	}
 
 	GreatBreakthroughItem: {
-		DisplayName: Great Breakthrough Item
-		Tooltip: ""
+		DisplayName: Great Breakthrough
+		Tooltip: Fuuton - a cutting gale that tears through everything in its path
 	}
 
 	IronLegItem: {
-		DisplayName: Iron Leg Item
-		Tooltip: ""
+		DisplayName: Iron Leg Sweep
+		Tooltip: A heavy, low sweeping kick that staggers on impact
 	}
 
 	LeafHurricaneItem: {
-		DisplayName: Leaf Hurricane Item
-		Tooltip: ""
+		DisplayName: Leaf Hurricane
+		Tooltip: A spinning heel drop that batters everything nearby
 	}
 
 	WaterDragonItem: {
-		DisplayName: Water Dragon Item
-		Tooltip: ""
+		DisplayName: Water Dragon Jutsu
+		Tooltip: Suiton - summons a serpentine dragon of water to crash into the enemy
 	}
 
 	HakuSummonItem: {
-		DisplayName: Haku Summon Item
-		Tooltip: ""
+		DisplayName: Ice Mirror Shard Charm
+		Tooltip: "Summons Haku - usable on the beach\nRight click to summon"
 	}
 
 	CursedSnakeFangItem: {
-		DisplayName: Cursed Snake Fang Item
-		Tooltip: ""
+		DisplayName: Cursed Snake Fang
+		Tooltip: A venomous fang, still humming with Orochimaru's chakra
 	}
 
 	IceMirrorShardItem: {
-		DisplayName: Ice Mirror Shard Item
-		Tooltip: ""
+		DisplayName: Ice Mirror Shard
+		Tooltip: A shard of unnaturally solid ice, cold to the touch
 	}
 
 	KakuzuHeartItem: {
-		DisplayName: Kakuzu Heart Item
-		Tooltip: ""
+		DisplayName: Kakuzu's Heart
+		Tooltip: One of five - still beating with stolen chakra
 	}
 
 	RinneganFragmentItem: {
-		DisplayName: Rinnegan Fragment Item
-		Tooltip: ""
+		DisplayName: Rinnegan Fragment
+		Tooltip: A fragment of the eye that sees all worlds
 	}
 
 	SandCoreItem: {
-		DisplayName: Sand Core Item
-		Tooltip: ""
+		DisplayName: Sand Core
+		Tooltip: Compacted sand, dense with the One-Tail's chakra
 	}
 
 	SusanooCoreItem: {
-		DisplayName: Susanoo Core Item
-		Tooltip: ""
+		DisplayName: Susanoo Core
+		Tooltip: The condensed heart of a titanic chakra avatar
 	}
 
 	NinjaHoundSummonScrollItem: {
-		DisplayName: Ninja Hound Summon Scroll Item
-		Tooltip: ""
+		DisplayName: Ninja Hound Summoning Scroll
+		Tooltip: "Kuchiyose - summons a ninja hound to fight at your side\nRight click to summon"
 	}
 
 	SlugSummonScrollItem: {
-		DisplayName: Slug Summon Scroll Item
-		Tooltip: ""
+		DisplayName: Slug Summoning Scroll
+		Tooltip: "Kuchiyose - summons a slug to fight at your side\nRight click to summon"
 	}
 
 	SnakeSummonScrollItem: {
-		DisplayName: Snake Summon Scroll Item
-		Tooltip: ""
+		DisplayName: Snake Summoning Scroll
+		Tooltip: "Kuchiyose - summons a snake to fight at your side\nRight click to summon"
 	}
 
 	ToadSummonScrollItem: {
-		DisplayName: Toad Summon Scroll Item
-		Tooltip: ""
+		DisplayName: Toad Summoning Scroll
+		Tooltip: "Kuchiyose - summons a toad to fight at your side\nRight click to summon"
 	}
 
 	ChakraPotionItem: {
-		DisplayName: Chakra Potion Item
-		Tooltip: ""
+		DisplayName: Chakra Potion
+		Tooltip: Instantly restores a portion of your Chakra
 	}
 
 	ChakraRegenPotionItem: {
-		DisplayName: Chakra Regen Potion Item
-		Tooltip: ""
+		DisplayName: Chakra Regeneration Potion
+		Tooltip: Chakra regenerates faster for a short time
 	}
 
 	StaminaPotionItem: {
-		DisplayName: Stamina Potion Item
-		Tooltip: ""
+		DisplayName: Stamina Potion
+		Tooltip: Instantly restores a portion of your Stamina
 	}
 
 	StaminaRegenPotionItem: {
-		DisplayName: Stamina Regen Potion Item
-		Tooltip: ""
+		DisplayName: Stamina Regeneration Potion
+		Tooltip: Stamina regenerates faster for a short time
 	}
 
 	ShadowCloneItem: {
-		DisplayName: Shadow Clone Item
-		Tooltip: ""
+		DisplayName: Shadow Clone Jutsu
+		Tooltip: Kage Bunshin - summons clones of yourself to fight for a short time
 	}
 
 	OtsutsukiChakraFragmentItem: {
-		DisplayName: Otsutsuki Chakra Fragment Item
-		Tooltip: ""
-	}
-
-	ChakraScrollItem: {
-		DisplayName: Chakra Scroll Item
-		Tooltip: ""
+		DisplayName: Otsutsuki Chakra Fragment
+		Tooltip: "The progenitor of chakra itself, condensed into a single dose - the Moon Lord's power pales before hers\nCan only be consumed once - its blessing is permanent"
 	}
 
 	GenjutsuMasteryScrollItem: {
-		DisplayName: Genjutsu Mastery Scroll Item
-		Tooltip: ""
+		DisplayName: Genjutsu Mastery Scroll
+		Tooltip: "A permanent record of genjutsu mastery, sealed with the essence of two fallen foes\nCan only be consumed once - its blessing is permanent"
 	}
 
 	NinjutsuMasteryScrollItem: {
-		DisplayName: Ninjutsu Mastery Scroll Item
-		Tooltip: ""
-	}
-
-	StaminaScrollItem: {
-		DisplayName: Stamina Scroll Item
-		Tooltip: ""
+		DisplayName: Ninjutsu Mastery Scroll
+		Tooltip: "A permanent record of ninjutsu mastery, sealed with the essence of two fallen foes\nCan only be consumed once - its blessing is permanent"
 	}
 
 	TaijutsuMasteryScrollItem: {
-		DisplayName: Taijutsu Mastery Scroll Item
-		Tooltip: ""
+		DisplayName: Taijutsu Mastery Scroll
+		Tooltip: "A permanent record of taijutsu mastery, sealed with the essence of two fallen foes\nCan only be consumed once - its blessing is permanent"
 	}
 
 	ChakraScroll1Item: {
-		DisplayName: Chakra Scroll1 Item
-		Tooltip: ""
+		DisplayName: "Chakra Scroll I: First Steps"
+		Tooltip: "Haku's legacy - permanently increases max Chakra\nMust be read before any later Chakra Scroll"
 	}
 
 	ChakraScroll2Item: {
-		DisplayName: Chakra Scroll2 Item
-		Tooltip: ""
+		DisplayName: "Chakra Scroll II: Sand and Sacrifice"
+		Tooltip: "Shukaku's legacy - permanently increases max Chakra\nRequires Chakra Scroll I"
 	}
 
 	ChakraScroll3Item: {
-		DisplayName: Chakra Scroll3 Item
-		Tooltip: ""
+		DisplayName: "Chakra Scroll III: The Sannin's Curse"
+		Tooltip: "Orochimaru's legacy - permanently increases max Chakra\nRequires Chakra Scroll II"
 	}
 
 	ChakraScroll4Item: {
-		DisplayName: Chakra Scroll4 Item
-		Tooltip: ""
+		DisplayName: "Chakra Scroll IV: Bounty of Hearts"
+		Tooltip: "Kakuzu's legacy - permanently increases max Chakra\nRequires Chakra Scroll III"
 	}
 
 	ChakraScroll5Item: {
-		DisplayName: Chakra Scroll5 Item
-		Tooltip: ""
+		DisplayName: "Chakra Scroll V: Rinnegan's Toll"
+		Tooltip: "Pain's legacy - permanently increases max Chakra\nRequires Chakra Scroll IV"
 	}
 
 	ChakraScroll6Item: {
-		DisplayName: Chakra Scroll6 Item
-		Tooltip: ""
+		DisplayName: "Chakra Scroll VI: Reanimator's Will"
+		Tooltip: "Madara's legacy - permanently increases max Chakra\nRequires Chakra Scroll V"
 	}
 
 	ChakraScroll7Item: {
-		DisplayName: Chakra Scroll7 Item
-		Tooltip: ""
+		DisplayName: "Chakra Scroll VII: Progenitor's Gift"
+		Tooltip: "Kaguya's legacy - permanently increases max Chakra\nRequires Chakra Scroll VI"
 	}
 
 	StaminaScroll1Item: {
-		DisplayName: Stamina Scroll1 Item
-		Tooltip: ""
+		DisplayName: "Stamina Scroll I: First Steps"
+		Tooltip: "Haku's legacy - permanently increases max Stamina\nMust be read before any later Stamina Scroll"
 	}
 
 	StaminaScroll2Item: {
-		DisplayName: Stamina Scroll2 Item
-		Tooltip: ""
+		DisplayName: "Stamina Scroll II: Sand and Sacrifice"
+		Tooltip: "Shukaku's legacy - permanently increases max Stamina\nRequires Stamina Scroll I"
 	}
 
 	StaminaScroll3Item: {
-		DisplayName: Stamina Scroll3 Item
-		Tooltip: ""
+		DisplayName: "Stamina Scroll III: The Sannin's Curse"
+		Tooltip: "Orochimaru's legacy - permanently increases max Stamina\nRequires Stamina Scroll II"
 	}
 
 	StaminaScroll4Item: {
-		DisplayName: Stamina Scroll4 Item
-		Tooltip: ""
+		DisplayName: "Stamina Scroll IV: Bounty of Hearts"
+		Tooltip: "Kakuzu's legacy - permanently increases max Stamina\nRequires Stamina Scroll III"
 	}
 
 	StaminaScroll5Item: {
-		DisplayName: Stamina Scroll5 Item
-		Tooltip: ""
+		DisplayName: "Stamina Scroll V: Rinnegan's Toll"
+		Tooltip: "Pain's legacy - permanently increases max Stamina\nRequires Stamina Scroll IV"
 	}
 
 	StaminaScroll6Item: {
-		DisplayName: Stamina Scroll6 Item
-		Tooltip: ""
+		DisplayName: "Stamina Scroll VI: Reanimator's Will"
+		Tooltip: "Madara's legacy - permanently increases max Stamina\nRequires Stamina Scroll V"
 	}
 
 	StaminaScroll7Item: {
-		DisplayName: Stamina Scroll7 Item
-		Tooltip: ""
+		DisplayName: "Stamina Scroll VII: Progenitor's Gift"
+		Tooltip: "Kaguya's legacy - permanently increases max Stamina\nRequires Stamina Scroll VI"
 	}
 
 	MonstrousStrengthGlovesItem: {
-		DisplayName: Monstrous Strength Gloves Item
-		Tooltip: ""
+		DisplayName: Monstrous Strength Gloves
+		Tooltip: "Channel chakra into your fists, Tsunade-style - quicker mining and a longer reach"
 	}
 }
 
 NPCs: {
-	TailedBeastBoss.DisplayName: Tailed Beast Boss
-	HakuBoss.DisplayName: Haku Boss
-	OrochimaruBoss.DisplayName: Orochimaru Boss
-	KakuzuBoss.DisplayName: Kakuzu Boss
-	PainBoss.DisplayName: Pain Boss
-	MadaraBoss.DisplayName: Madara Boss
-	KaguyaBoss.DisplayName: Kaguya Boss
+	TailedBeastBoss.DisplayName: Shukaku
+	HakuBoss.DisplayName: Haku
+	OrochimaruBoss.DisplayName: Orochimaru
+	KakuzuBoss.DisplayName: Kakuzu
+	PainBoss.DisplayName: Pain
+	MadaraBoss.DisplayName: Madara
+	KaguyaBoss.DisplayName: Kaguya
 
 	ShinobiVendorNPC: {
-		DisplayName: Shinobi Vendor N P C
+		DisplayName: Tenten
 
 		TownNPCMood: {
-			Content: I am content.
-			NoHome: I hate not having a home.
-			FarFromHome: I am too far from home.
-			LoveSpace: I love having so much space.
-			DislikeCrowded: I dislike how crowded I am.
-			HateCrowded: I hate how crowded I am.
-			LikeNPC_Princess: I like {NPCName}.
-			Princess_LovesNPC: I like {NPCName}.
+			Content: My tools are all in order. Can't complain.
+			NoHome: A shinobi needs a real workshop, not the open road.
+			FarFromHome: I'm too far from my tool shop for comfort.
+			LoveSpace: Plenty of room to lay out my whole arsenal.
+			DislikeCrowded: A bit too crowded to spread my tools out.
+			HateCrowded: I can barely swing a kunai in here.
+			LikeNPC_Princess: {NPCName} appreciates good craftsmanship.
+			Princess_LovesNPC: {NPCName} says my tools are the finest around.
 		}
 	}
 
 	GuySenseiNPC: {
-		DisplayName: Guy Sensei N P C
+		DisplayName: Might Guy
 
 		TownNPCMood: {
-			Content: I am content.
-			NoHome: I hate not having a home.
-			FarFromHome: I am too far from home.
-			LoveSpace: I love having so much space.
-			DislikeCrowded: I dislike how crowded I am.
-			HateCrowded: I hate how crowded I am.
-			LikeNPC_Princess: I like {NPCName}.
-			Princess_LovesNPC: I like {NPCName}.
+			Content: The flames of youth burn bright today!
+			NoHome: Even the flames of youth need a place to rest!
+			FarFromHome: Too far from home dims the flames of youth.
+			LoveSpace: Plenty of room for youthful training here!
+			DislikeCrowded: A little cramped for proper training.
+			HateCrowded: No room to unleash the flames of youth in here!
+			LikeNPC_Princess: {NPCName} shares my burning youthful spirit!
+			Princess_LovesNPC: {NPCName} says my youthful energy is inspiring!
 		}
 	}
 
 	ItachiNPC: {
-		DisplayName: Itachi N P C
+		DisplayName: Itachi Uchiha
 
 		TownNPCMood: {
-			Content: I am content.
-			NoHome: I hate not having a home.
-			FarFromHome: I am too far from home.
-			LoveSpace: I love having so much space.
-			DislikeCrowded: I dislike how crowded I am.
-			HateCrowded: I hate how crowded I am.
-			LikeNPC_Princess: I like {NPCName}.
-			Princess_LovesNPC: I like {NPCName}.
+			Content: Peaceful enough, for now.
+			NoHome: A shinobi without shelter is a liability.
+			FarFromHome: Too far from where I need to be.
+			LoveSpace: Room enough to watch every approach.
+			DislikeCrowded: Too many eyes in too little space.
+			HateCrowded: Far too crowded to keep watch properly.
+			LikeNPC_Princess: {NPCName} understands the weight I carry.
+			Princess_LovesNPC: {NPCName} trusts me more than most do.
 		}
 	}
 
 	KakashiNPC: {
-		DisplayName: Kakashi N P C
+		DisplayName: Kakashi Hatake
 
 		TownNPCMood: {
-			Content: I am content.
-			NoHome: I hate not having a home.
-			FarFromHome: I am too far from home.
-			LoveSpace: I love having so much space.
-			DislikeCrowded: I dislike how crowded I am.
-			HateCrowded: I hate how crowded I am.
-			LikeNPC_Princess: I like {NPCName}.
-			Princess_LovesNPC: I like {NPCName}.
+			Content: Just another page in my book, really.
+			NoHome: Even I need somewhere to read in peace.
+			FarFromHome: A bit far from home for my taste.
+			LoveSpace: Plenty of room to copy a jutsu or two.
+			DislikeCrowded: A little too crowded to concentrate.
+			HateCrowded: Can't even open my book in this crowd.
+			LikeNPC_Princess: {NPCName} is surprisingly good company.
+			Princess_LovesNPC: {NPCName} says I'm always fashionably late.
 		}
 	}
 }
 
 Projectiles: {
-	RasenganProjectile.DisplayName: Rasengan Projectile
-	KunaiProjectile.DisplayName: Kunai Projectile
-	SenbonProjectile.DisplayName: Senbon Projectile
-	SnakeProjectile.DisplayName: Snake Projectile
-	ElementalBoltProjectile.DisplayName: Elemental Bolt Projectile
-	FireballProjectile.DisplayName: Fireball Projectile
-	GenjutsuIllusionProjectile.DisplayName: Genjutsu Illusion Projectile
-	GenjutsuSleepProjectile.DisplayName: Genjutsu Sleep Projectile
-	GreatBreakthroughProjectile.DisplayName: Great Breakthrough Projectile
-	WaterDragonProjectile.DisplayName: Water Dragon Projectile
-	NinjaHoundMinionProjectile.DisplayName: Ninja Hound Minion Projectile
-	SlugMinionProjectile.DisplayName: Slug Minion Projectile
-	SnakeMinionProjectile.DisplayName: Snake Minion Projectile
-	ToadMinionProjectile.DisplayName: Toad Minion Projectile
-	ShadowCloneProjectile.DisplayName: Shadow Clone Projectile
+	RasenganProjectile.DisplayName: Rasengan
+	KunaiProjectile.DisplayName: Kunai
+	SenbonProjectile.DisplayName: Senbon
+	SnakeProjectile.DisplayName: Snake
+	ElementalBoltProjectile.DisplayName: Elemental Bolt
+	FireballProjectile.DisplayName: Fireball
+	GenjutsuIllusionProjectile.DisplayName: Illusion
+	GenjutsuSleepProjectile.DisplayName: Sleeping Genjutsu
+	GreatBreakthroughProjectile.DisplayName: Great Breakthrough
+	WaterDragonProjectile.DisplayName: Water Dragon
+	NinjaHoundMinionProjectile.DisplayName: Ninja Hound
+	SlugMinionProjectile.DisplayName: Slug
+	SnakeMinionProjectile.DisplayName: Snake Summon
+	ToadMinionProjectile.DisplayName: Toad
+	ShadowCloneProjectile.DisplayName: Shadow Clone
 }
 
 DamageClasses: {
-	ShinobiDamageClass.DisplayName: Shinobi Damage Class
-	GenjutsuDamageClass.DisplayName: Genjutsu Damage Class
-	NinjutsuDamageClass.DisplayName: Ninjutsu Damage Class
-	TaijutsuDamageClass.DisplayName: Taijutsu Damage Class
+	GenjutsuDamageClass.DisplayName: Genjutsu
+	NinjutsuDamageClass.DisplayName: Ninjutsu
+	TaijutsuDamageClass.DisplayName: Taijutsu
 }

@@ -60,6 +60,7 @@ namespace NarutoOverhaul.Content.NPCs.Town
 				.Add(ModContent.ItemType<LeafHurricaneItem>(), downedShukaku)
 				.Add(ModContent.ItemType<IronLegItem>(), downedShukaku)
 				.Add(ModContent.ItemType<WeightedLegWarmersItem>(), downedShukaku)
+				.Add(ModContent.ItemType<TaijutsuWrapsItem>(), downedShukaku)
 				.Register();
 		}
 	}

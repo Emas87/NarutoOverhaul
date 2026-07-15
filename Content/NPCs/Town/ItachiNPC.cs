@@ -62,6 +62,7 @@ namespace NarutoOverhaul.Content.NPCs.Town
 				.Add(ModContent.ItemType<GenjutsuSleepItem>(), downedHaku)
 				.Add(ModContent.ItemType<GenjutsuNightmareItem>(), downedHaku)
 				.Add(ModContent.ItemType<IllusionCharmItem>(), downedHaku)
+				.Add(ModContent.ItemType<GenjutsuVeilItem>(), downedHaku)
 				.Register();
 		}
 	}

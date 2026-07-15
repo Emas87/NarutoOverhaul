@@ -1,11 +1,12 @@
-using NarutoOverhaul.Common.Players;
-using NarutoOverhaul.Common.Systems;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Items.Accessories
 {
+	// Distinct from IllusionCharmItem (damage + control duration): the Veil is about concealment
+	// rather than potency - it reduces enemy aggro via the vanilla stealth-camo stat (same field
+	// Shroomite armor uses), fitting "veil" more literally than a second copy of Illusion Charm's effect.
 	public class GenjutsuVeilItem : ModItem
 	{
 		public override void SetDefaults()
@@ -19,8 +20,7 @@ namespace NarutoOverhaul.Content.Items.Accessories
 
 		public override void UpdateEquip(Player player)
 		{
-			player.GetDamage(ModContent.GetInstance<GenjutsuDamageClass>()) += 0.1f;
-			player.GetModPlayer<ChakraPlayer>().GenjutsuControlDurationBonus += 60; // +1 second
+			player.aggro -= 400;
 		}
 	}
 }
