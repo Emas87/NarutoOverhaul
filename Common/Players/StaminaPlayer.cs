@@ -1,3 +1,4 @@
+using NarutoOverhaul.Content.Buffs;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -30,6 +31,11 @@ namespace NarutoOverhaul.Common.Players
 		{
 			MaxStamina = BaseMaxStamina;
 			StaminaRegenRate = BaseStaminaRegenRate;
+
+			if (Player.HasBuff(ModContent.BuffType<StaminaRegenBuff>()))
+			{
+				StaminaRegenRate += 2f;
+			}
 		}
 
 		public override void PostUpdateMiscEffects()

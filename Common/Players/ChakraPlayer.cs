@@ -1,3 +1,4 @@
+using NarutoOverhaul.Content.Buffs;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -38,6 +39,11 @@ namespace NarutoOverhaul.Common.Players
 			MaxChakra = BaseMaxChakra;
 			ChakraRegenRate = BaseChakraRegenRate;
 			GenjutsuControlDurationBonus = 0;
+
+			if (Player.HasBuff(ModContent.BuffType<ChakraRegenBuff>()))
+			{
+				ChakraRegenRate += 1f;
+			}
 		}
 
 		public override void PostUpdateMiscEffects()

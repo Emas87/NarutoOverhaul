@@ -65,6 +65,16 @@ Buffs: {
 		DisplayName: Toad Minion Buff
 		Description: Mods.NarutoOverhaul.Buffs.ToadMinionBuff.Description
 	}
+
+	ChakraRegenBuff: {
+		DisplayName: Chakra Regen Buff
+		Description: Mods.NarutoOverhaul.Buffs.ChakraRegenBuff.Description
+	}
+
+	StaminaRegenBuff: {
+		DisplayName: Stamina Regen Buff
+		Description: Mods.NarutoOverhaul.Buffs.StaminaRegenBuff.Description
+	}
 }
 
 Items: {
@@ -237,6 +247,31 @@ Items: {
 		DisplayName: Toad Summon Scroll Item
 		Tooltip: ""
 	}
+
+	ChakraPotionItem: {
+		DisplayName: Chakra Potion Item
+		Tooltip: ""
+	}
+
+	ChakraRegenPotionItem: {
+		DisplayName: Chakra Regen Potion Item
+		Tooltip: ""
+	}
+
+	StaminaPotionItem: {
+		DisplayName: Stamina Potion Item
+		Tooltip: ""
+	}
+
+	StaminaRegenPotionItem: {
+		DisplayName: Stamina Regen Potion Item
+		Tooltip: ""
+	}
+
+	ShadowCloneItem: {
+		DisplayName: Shadow Clone Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -324,6 +359,7 @@ Projectiles: {
 	SlugMinionProjectile.DisplayName: Slug Minion Projectile
 	SnakeMinionProjectile.DisplayName: Snake Minion Projectile
 	ToadMinionProjectile.DisplayName: Toad Minion Projectile
+	ShadowCloneProjectile.DisplayName: Shadow Clone Projectile
 }
 
 DamageClasses: {
