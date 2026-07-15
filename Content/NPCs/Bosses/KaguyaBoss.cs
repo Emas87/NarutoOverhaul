@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
-using NarutoOverhaul.Content.Items.Accessories;
+using NarutoOverhaul.Content.Items.Consumables;
 using NarutoOverhaul.Content.Projectiles;
 using Terraria;
 using Terraria.Audio;
