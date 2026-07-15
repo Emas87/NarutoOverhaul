@@ -91,6 +91,17 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			CurrentAttack = AttackState.Recover;
 			StateTimer = 0f;
 			SnakesFired = 0f;
+
+			// Soft vanilla-tier scaling, not a hard gate: Orochimaru is meant to loosely track
+			// Skeletron as the pre-Hardmode "wall," so fighting him before that point is still
+			// allowed but noticeably harder - a nudge toward the intended order, not a block.
+			if (!NPC.downedBoss3)
+			{
+				NPC.lifeMax = (int)(NPC.lifeMax * 1.5f);
+				NPC.life = NPC.lifeMax;
+				NPC.damage = (int)(NPC.damage * 1.3f);
+				NPC.defense = (int)(NPC.defense * 1.2f);
+			}
 		}
 
 		public override void AI()

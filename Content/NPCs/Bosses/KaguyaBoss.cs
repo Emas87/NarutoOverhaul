@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
+using NarutoOverhaul.Content.Items.Accessories;
 using NarutoOverhaul.Content.Projectiles;
 using Terraria;
 using Terraria.Audio;
@@ -93,6 +94,18 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			CurrentAttack = AttackState.Recover;
 			StateTimer = 0f;
 			SubCounter = 0f;
+
+			// Soft vanilla-tier scaling, not a hard gate: Kaguya is meant to be fought before
+			// Moon Lord (one tier earlier than Lunatic Cultist, for a bit of buffer) - not
+			// literally gated on Moon Lord himself, which would mean "always harder" until the
+			// game's basically over. Still fightable early, just noticeably tougher.
+			if (!NPC.downedGolemBoss)
+			{
+				NPC.lifeMax = (int)(NPC.lifeMax * 1.5f);
+				NPC.life = NPC.lifeMax;
+				NPC.damage = (int)(NPC.damage * 1.3f);
+				NPC.defense = (int)(NPC.defense * 1.2f);
+			}
 		}
 
 		public override void AI()
@@ -274,6 +287,11 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		public override void OnKill()
 		{
 			StoryProgressSystem.DownedKaguya = true;
+		}
+
+		public override void ModifyNPCLoot(NPCLoot npcLoot)
+		{
+			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<OtsutsukiChakraFragmentItem>(), 1, 1, 1));
 		}
 
 		public override void HitEffect(NPC.HitInfo hit)

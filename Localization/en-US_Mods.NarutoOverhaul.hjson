@@ -272,6 +272,11 @@ Items: {
 		DisplayName: Shadow Clone Item
 		Tooltip: ""
 	}
+
+	OtsutsukiChakraFragmentItem: {
+		DisplayName: Otsutsuki Chakra Fragment Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {
