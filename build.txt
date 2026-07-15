@@ -1,0 +1,7 @@
+displayName = Naruto Overhaul
+author = ema
+version = 0.1
+side = Both
+modReferences =
+sortAfter =
+sortBefore =

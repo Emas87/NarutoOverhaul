@@ -1,0 +1,5 @@
+Naruto Overhaul is a free, non-commercial fan mod for tModLoader. It adds a chakra resource system,
+jutsu-style weapons, custom bosses, and transformation states inspired by the Naruto series.
+
+This mod is a fan work and is not affiliated with or endorsed by Shueisha, VIZ Media, Studio Pierrot,
+or TV Tokyo. Not for commercial use.
