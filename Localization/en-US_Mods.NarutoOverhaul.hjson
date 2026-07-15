@@ -45,6 +45,26 @@ Buffs: {
 		DisplayName: Genjutsu Sleep Debuff
 		Description: Mods.NarutoOverhaul.Buffs.GenjutsuSleepDebuff.Description
 	}
+
+	NinjaHoundMinionBuff: {
+		DisplayName: Ninja Hound Minion Buff
+		Description: Mods.NarutoOverhaul.Buffs.NinjaHoundMinionBuff.Description
+	}
+
+	SlugMinionBuff: {
+		DisplayName: Slug Minion Buff
+		Description: Mods.NarutoOverhaul.Buffs.SlugMinionBuff.Description
+	}
+
+	SnakeMinionBuff: {
+		DisplayName: Snake Minion Buff
+		Description: Mods.NarutoOverhaul.Buffs.SnakeMinionBuff.Description
+	}
+
+	ToadMinionBuff: {
+		DisplayName: Toad Minion Buff
+		Description: Mods.NarutoOverhaul.Buffs.ToadMinionBuff.Description
+	}
 }
 
 Items: {
@@ -197,6 +217,26 @@ Items: {
 		DisplayName: Susanoo Core Item
 		Tooltip: ""
 	}
+
+	NinjaHoundSummonScrollItem: {
+		DisplayName: Ninja Hound Summon Scroll Item
+		Tooltip: ""
+	}
+
+	SlugSummonScrollItem: {
+		DisplayName: Slug Summon Scroll Item
+		Tooltip: ""
+	}
+
+	SnakeSummonScrollItem: {
+		DisplayName: Snake Summon Scroll Item
+		Tooltip: ""
+	}
+
+	ToadSummonScrollItem: {
+		DisplayName: Toad Summon Scroll Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {
@@ -207,6 +247,21 @@ NPCs: {
 	PainBoss.DisplayName: Pain Boss
 	MadaraBoss.DisplayName: Madara Boss
 	KaguyaBoss.DisplayName: Kaguya Boss
+
+	ShinobiVendorNPC: {
+		DisplayName: Shinobi Vendor N P C
+
+		TownNPCMood: {
+			Content: I am content.
+			NoHome: I hate not having a home.
+			FarFromHome: I am too far from home.
+			LoveSpace: I love having so much space.
+			DislikeCrowded: I dislike how crowded I am.
+			HateCrowded: I hate how crowded I am.
+			LikeNPC_Princess: I like {NPCName}.
+			Princess_LovesNPC: I like {NPCName}.
+		}
+	}
 }
 
 Projectiles: {
@@ -220,6 +275,10 @@ Projectiles: {
 	GenjutsuSleepProjectile.DisplayName: Genjutsu Sleep Projectile
 	GreatBreakthroughProjectile.DisplayName: Great Breakthrough Projectile
 	WaterDragonProjectile.DisplayName: Water Dragon Projectile
+	NinjaHoundMinionProjectile.DisplayName: Ninja Hound Minion Projectile
+	SlugMinionProjectile.DisplayName: Slug Minion Projectile
+	SnakeMinionProjectile.DisplayName: Snake Minion Projectile
+	ToadMinionProjectile.DisplayName: Toad Minion Projectile
 }
 
 DamageClasses: {
