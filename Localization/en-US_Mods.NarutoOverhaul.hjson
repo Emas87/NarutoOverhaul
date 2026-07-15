@@ -32,12 +32,18 @@ Items: {
 		DisplayName: Orochimaru Summon Item
 		Tooltip: ""
 	}
+
+	KakuzuSummonItem: {
+		DisplayName: Kakuzu Summon Item
+		Tooltip: ""
+	}
 }
 
 NPCs: {
 	TailedBeastBoss.DisplayName: Tailed Beast Boss
 	HakuBoss.DisplayName: Haku Boss
 	OrochimaruBoss.DisplayName: Orochimaru Boss
+	KakuzuBoss.DisplayName: Kakuzu Boss
 }
 
 Projectiles: {
@@ -45,6 +51,7 @@ Projectiles: {
 	KunaiProjectile.DisplayName: Kunai Projectile
 	SenbonProjectile.DisplayName: Senbon Projectile
 	SnakeProjectile.DisplayName: Snake Projectile
+	ElementalBoltProjectile.DisplayName: Elemental Bolt Projectile
 }
 
 DamageClasses.ShinobiDamageClass.DisplayName: Shinobi Damage Class
