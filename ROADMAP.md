@@ -111,9 +111,11 @@ Ranked by impact. Each entry has a sketch that reuses established patterns in th
   *Done: sold by each class vendor once `DownedKakuzu`. Equip textures are placeholder-sized
   (verified to load without exceptions, but real frame-accurate art is unverified visually -
   same standing deferral as everything else in this mod).*
-- [ ] **Keybind onboarding.** 5 keybinds exist (`.` `/` `,` `[` `]`) but nothing in-game reveals
+- [x] **Keybind onboarding.** 5 keybinds exist (`.` `/` `,` `[` `]`) but nothing in-game reveals
   them. Cheapest fix: mention the keybind in each unlock's item tooltip and in vendor chat lines;
   optionally a "Shinobi Handbook" starter item whose tooltip lists all keybinds.
+  *Done: `ShinobiHandbookItem` (lists all 5 keybinds) placed in every new character's starting
+  inventory via `StarterItemPlayer.ModifyStartingInventory`.*
 - [x] **Expert/Master support.** No boss bags, trophies, relics, or boss music. Boss bags first
   (`ItemDropRule` + `BossBag` items), trophies/relics after; music is optional/art-dependent.
   *Done (scoped): all 7 bosses now drop an Expert-mode `BossBag` (`Content/Items/Consumables/
@@ -129,11 +131,21 @@ Ranked by impact. Each entry has a sketch that reuses established patterns in th
   Spread the unlocks across bosses and add the Susanoo/Rinnegan items above so the class grows.
   *Done as part of the endgame-weapons batch: Shinra Tensei (DownedPain) and Susanoo
   (DownedMadara) give Genjutsu two more tiers beyond its original Haku-only unlock.*
-- [ ] **Mobility endgame.** No wings equivalent. "Chakra Wings" (Six Paths-themed, post-Madara,
+- [x] **Mobility endgame.** No wings equivalent. "Chakra Wings" (Six Paths-themed, post-Madara,
   standard `wings` accessory stats) fits both canon and the vanilla progression expectation.
-- [ ] **Smaller items:** ModConfig (toggle HUD positions, drain rates); Ramen healing food (potion-
+  *Done: `ChakraWingsItem`, sold by Tenten once `DownedMadara`. `[AutoloadEquip(EquipType.Wings)]`
+  + `ArmorIDs.Wing.Sets.Stats[wingSlot]` registration verified via reflection before writing;
+  loads without exceptions, actual flight feel unverified (see checklist below).*
+- [x] **Smaller items:** ModConfig (toggle HUD positions, drain rates); Ramen healing food (potion-
   sickness food buff, sold by Tenten); headband vanity items per village; shuriken thrown-weapon
   variety; recipe-discoverability hints (vendor chat pointing at the anvil recipes).
+  *Done, with two deliberate scope reductions: `NarutoOverhaulConfig` covers soft-boss-scaling and
+  HUD-indicator toggles rather than raw HUD position/drain-rate numbers (more useful as on/off
+  switches than numeric tuning knobs nobody asked for); one single `LeafVillageHeadbandItem`
+  instead of a full per-village vanity set (same reduced-scope reasoning as trophies/relics -
+  decorative-only, low value for the added art scope). `ShurikenItem`+`ShurikenProjectile` and
+  `RamenItem` (vanilla `WellFed` buff, no custom mechanic needed) both landed as designed. Recipe
+  discoverability: Tenten's `GetChat()` now alternates in a line pointing at anvil-crafted scrolls.*
 
 ---
 
@@ -155,7 +167,8 @@ Ranked by impact. Each entry has a sketch that reuses established patterns in th
    so this stays on the first-playtest checklist below same as everything else unverified.
 5. **[DONE, scoped] Boss polish** — bags/trophies/relics (Expert/Master incentive layer). Landed
    2026-07-15 as boss bags only; trophies/relics/music explicitly descoped (see section 2 entry).
-6. **Onboarding + ModConfig + small items** — polish once the content is in place.
+6. **[DONE] Onboarding + ModConfig + small items** — polish once the content is in place. Landed
+   2026-07-15.
 
 ---
 
@@ -180,3 +193,20 @@ render or simulate them). Check these first when real playtesting starts:
    single biggest unverified surface added this session - actual multiplayer testing (two clients,
    at minimum: fight a boss together, have one player cast Genjutsu on an enemy, have one player
    join mid-session after another already downed a boss) is required before trusting it.
+8. **Class armor set bonuses + equip texture frames** (batch 3) — `IsArmorSet`/`UpdateArmorSet`
+   compile and load, but the actual visual frame alignment on `_Body`/`_Arms`/`_Legs` equip
+   textures was never confirmed against a real player animation (no way to verify headlessly).
+9. **Chakra Wings flight feel** (batch 6) — `WingStats`/`VerticalWingSpeeds`/`HorizontalWingSpeeds`
+   values were chosen to sit between two vanilla wing tiers by eyeballing the numbers, not tuned
+   against real flight; likely needs adjustment once someone actually flies with them.
+
+---
+
+## Status: all sections addressed as of 2026-07-15
+
+Every item in sections 1, 2, and 3 is checked off (some via explicit, documented scope reductions
+rather than full builds - see the *Done* notes above for trophies/relics/music and the ModConfig/
+headband scope calls). Nothing in this document is still open. The real remaining work is entirely
+in section 4: an actual human playtest (ideally multiplayer, given how much of this pass was
+netcode) to work through the checklist above and iterate on anything that doesn't hold up once
+someone can actually see and play it.
