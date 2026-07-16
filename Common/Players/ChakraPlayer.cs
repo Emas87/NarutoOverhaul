@@ -1,5 +1,8 @@
+using System.IO;
+using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Content.Buffs;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -100,15 +103,49 @@ namespace NarutoOverhaul.Common.Players
 			BaseMaxChakra = tag.GetFloat("baseMaxChakra");
 			ConsumedChakraScrolls = tag.GetInt("consumedChakraScrolls");
 
+			// A legacy/partially-corrupt save could have baseMaxChakra missing/<=0 while the scroll
+			// counter is still intact - reconstruct from the counter instead of flattening to the
+			// bare default, or the scroll bonus is lost forever (the sequencing gate blocks
+			// re-consuming scrolls already "used" according to the counter).
 			if (BaseMaxChakra <= 0f)
 			{
-				BaseMaxChakra = 100f;
+				BaseMaxChakra = 100f + (ConsumedChakraScrolls * NumberedChakraScrollItemIncreasePerScroll);
 			}
 		}
 
 		public override void OnRespawn()
 		{
 			Chakra = MaxChakra;
+		}
+
+		// Named to avoid a circular reference to Content.Items.Consumables.NumberedChakraScrollItem
+		// (which itself lives in a different assembly-load-order-sensitive namespace) - kept as a
+		// local constant mirroring that item's ChakraIncreasePerScroll instead.
+		private const float NumberedChakraScrollItemIncreasePerScroll = 20f;
+
+		// PainBoss's Preta Path drains chakra server-side from AI(), which only ever touches the
+		// server's own authoritative copy - without this, the client never learns their chakra was
+		// spent. A one-off correction push (not continuous sync, which would spam every regen tick)
+		// triggered right after the drain is the minimal correct fix.
+		public static void SendCorrection(Player player)
+		{
+			if (Main.netMode != NetmodeID.Server)
+			{
+				return;
+			}
+
+			ModPacket packet = ModContent.GetInstance<NarutoOverhaul>().GetPacket();
+			packet.Write((byte)NetMessageType.SyncChakraCorrection);
+			packet.Write((byte)player.whoAmI);
+			packet.Write(player.GetModPlayer<ChakraPlayer>().Chakra);
+			packet.Send(player.whoAmI);
+		}
+
+		public static void HandleCorrectionPacket(BinaryReader reader)
+		{
+			byte playerIndex = reader.ReadByte();
+			float chakra = reader.ReadSingle();
+			Main.player[playerIndex].GetModPlayer<ChakraPlayer>().Chakra = chakra;
 		}
 	}
 }

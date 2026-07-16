@@ -246,12 +246,10 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 			if (StateTimer % 8 == 0 && SubCounter < 4)
 			{
-				Vector2 shotVelocity = (aimCenter - NPC.Center).SafeNormalize(Vector2.UnitY) * 9f;
-				int index = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shotVelocity, ModContent.ProjectileType<ElementalBoltProjectile>(), 15, 1f);
-
-				if (Main.projectile[index].ModProjectile is ElementalBoltProjectile bolt)
+				if (Main.netMode != NetmodeID.MultiplayerClient)
 				{
-					bolt.BoltElement = ElementalBoltProjectile.Element.Core;
+					Vector2 shotVelocity = (aimCenter - NPC.Center).SafeNormalize(Vector2.UnitY) * 9f;
+					Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shotVelocity, ModContent.ProjectileType<ElementalBoltProjectile>(), 15, 1f, ai0: (float)ElementalBoltProjectile.Element.Core);
 				}
 
 				SubCounter++;
@@ -282,17 +280,15 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 			if (StateTimer == 0)
 			{
-				Vector2 baseDirection = (aimCenter - NPC.Center).SafeNormalize(Vector2.UnitY);
-				float[] spreadAngles = { -0.4f, 0f, 0.4f };
-
-				foreach (float angle in spreadAngles)
+				if (Main.netMode != NetmodeID.MultiplayerClient)
 				{
-					Vector2 shotVelocity = baseDirection.RotatedBy(angle) * 7f;
-					int index = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shotVelocity, ModContent.ProjectileType<ElementalBoltProjectile>(), 14, 1f);
+					Vector2 baseDirection = (aimCenter - NPC.Center).SafeNormalize(Vector2.UnitY);
+					float[] spreadAngles = { -0.4f, 0f, 0.4f };
 
-					if (Main.projectile[index].ModProjectile is ElementalBoltProjectile bolt)
+					foreach (float angle in spreadAngles)
 					{
-						bolt.BoltElement = ElementalBoltProjectile.Element.Wind;
+						Vector2 shotVelocity = baseDirection.RotatedBy(angle) * 7f;
+						Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shotVelocity, ModContent.ProjectileType<ElementalBoltProjectile>(), 14, 1f, ai0: (float)ElementalBoltProjectile.Element.Wind);
 					}
 				}
 			}
@@ -311,6 +307,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			if (NPC.Distance(target.Center) <= PretaDrainRadius && StateTimer % 10 == 0)
 			{
 				target.GetModPlayer<ChakraPlayer>().TrySpendChakra(8f);
+				ChakraPlayer.SendCorrection(target); // server-only drain - tell the owning client
 				ChakraVFX.SpawnBurst(target.Center, DustID.PurpleTorch, 3, 0.8f);
 			}
 
@@ -362,6 +359,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		public override void OnKill()
 		{
 			StoryProgressSystem.DownedPain = true;
+			StoryProgressSystem.SyncToClients();
 		}
 
 		public override void ModifyNPCLoot(NPCLoot npcLoot)

@@ -1,7 +1,9 @@
+using System.IO;
 using Microsoft.Xna.Framework;
 using NarutoOverhaul.Content.Buffs;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace NarutoOverhaul.Common.GlobalNPCs
 {
@@ -84,6 +86,23 @@ namespace NarutoOverhaul.Common.GlobalNPCs
 			npc.spriteDirection = npc.velocity.X > 0 ? 1 : -1;
 
 			return false;
+		}
+
+		// ControllingPlayerIndex is InstancePerEntity (one copy per NPC instance) - without this,
+		// only whichever machine set it (the projectile owner's client, via OnHitNPC) actually
+		// knows who's controlling the puppet; the server's own authoritative NPC instance (and
+		// every other client) never finds out, so the puppet/flee movement silently does nothing
+		// for anyone but the caster. GenjutsuIllusionProjectile.OnHitNPC sets npc.netUpdate = true
+		// whenever it changes this, forcing an immediate sync instead of waiting on the natural
+		// throttled NPC-sync interval.
+		public override void SendExtraAI(NPC npc, BitWriter bitWriter, BinaryWriter binaryWriter)
+		{
+			binaryWriter.Write(ControllingPlayerIndex);
+		}
+
+		public override void ReceiveExtraAI(NPC npc, BitReader bitReader, BinaryReader binaryReader)
+		{
+			ControllingPlayerIndex = binaryReader.ReadInt32();
 		}
 	}
 }

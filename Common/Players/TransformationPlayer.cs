@@ -1,3 +1,4 @@
+using System.IO;
 using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
 using Terraria;
@@ -259,6 +260,59 @@ namespace NarutoOverhaul.Common.Players
 			eightGatesWindupTimer = -1;
 
 			Player.KillMe(PlayerDeathReason.ByCustomReason(Terraria.Localization.NetworkText.FromLiteral($"{Player.name} pushed the Eighth Gate too far")), 99999, 0, false);
+		}
+
+		// Without sync, ActiveFormIndex/EightGatesLevel only exist on the owning client - the
+		// SageModeDrawLayer aura (which reads ActiveFormIndex off the *drawn* player, not just the
+		// local one) never shows for anyone else, and other players can't tell someone's mid-Eight-
+		// Gates. Both are small, rarely-changing ints, so the standard diff-on-tick
+		// SendClientChanges pattern (cheap here, unlike a constantly-regenerating float) is a good fit.
+		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
+		{
+			ModPacket packet = Mod.GetPacket();
+			packet.Write((byte)NetMessageType.SyncTransformation);
+			packet.Write((byte)Player.whoAmI);
+			packet.Write((sbyte)ActiveFormIndex);
+			packet.Write((byte)EightGatesLevel);
+			packet.Send(toWho, fromWho);
+		}
+
+		public override void SendClientChanges(ModPlayer clientPlayer)
+		{
+			var clone = (TransformationPlayer)clientPlayer;
+
+			if (clone.ActiveFormIndex != ActiveFormIndex || clone.EightGatesLevel != EightGatesLevel)
+			{
+				SyncPlayer(-1, Player.whoAmI, false);
+			}
+		}
+
+		public override void CopyClientState(ModPlayer targetCopy)
+		{
+			var clone = (TransformationPlayer)targetCopy;
+			clone.ActiveFormIndex = ActiveFormIndex;
+			clone.EightGatesLevel = EightGatesLevel;
+		}
+
+		public static void HandlePacket(BinaryReader reader, int whoAmI)
+		{
+			byte playerIndex = reader.ReadByte();
+			int activeFormIndex = reader.ReadSByte();
+			int eightGatesLevel = reader.ReadByte();
+
+			TransformationPlayer transformationPlayer = Main.player[playerIndex].GetModPlayer<TransformationPlayer>();
+			transformationPlayer.ActiveFormIndex = activeFormIndex;
+			transformationPlayer.EightGatesLevel = eightGatesLevel;
+
+			if (Main.netMode == NetmodeID.Server)
+			{
+				ModPacket relay = ModContent.GetInstance<NarutoOverhaul>().GetPacket();
+				relay.Write((byte)NetMessageType.SyncTransformation);
+				relay.Write(playerIndex);
+				relay.Write((sbyte)activeFormIndex);
+				relay.Write((byte)eightGatesLevel);
+				relay.Send(-1, whoAmI);
+			}
 		}
 	}
 }

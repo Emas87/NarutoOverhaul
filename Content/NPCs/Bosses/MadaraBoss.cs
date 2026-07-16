@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
@@ -144,6 +145,20 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			ShotsFired = 0f;
 		}
 
+		// NPC.scale isn't part of the standard sync packet, and a player joining mid-fight after
+		// the Susanoo transition already happened would never run the transition code path at all
+		// (it only fires once, off the phase-change check) - without this they'd see a full-size
+		// boss forever. Syncing it directly sidesteps both problems.
+		public override void SendExtraAI(BinaryWriter writer)
+		{
+			writer.Write(NPC.scale);
+		}
+
+		public override void ReceiveExtraAI(BinaryReader reader)
+		{
+			NPC.scale = reader.ReadSingle();
+		}
+
 		private void DoLunge(Player target)
 		{
 			Vector2 toTarget = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitX);
@@ -162,12 +177,10 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 			if (StateTimer % 12 == 0 && ShotsFired < BurstShots)
 			{
-				Vector2 shotVelocity = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitY) * 8f;
-				int index = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shotVelocity, ModContent.ProjectileType<ElementalBoltProjectile>(), 18, 1f);
-
-				if (Main.projectile[index].ModProjectile is ElementalBoltProjectile bolt)
+				if (Main.netMode != NetmodeID.MultiplayerClient)
 				{
-					bolt.BoltElement = ElementalBoltProjectile.Element.Fire;
+					Vector2 shotVelocity = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitY) * 8f;
+					Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shotVelocity, ModContent.ProjectileType<ElementalBoltProjectile>(), 18, 1f, ai0: (float)ElementalBoltProjectile.Element.Fire);
 				}
 
 				ShotsFired++;
@@ -195,6 +208,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		public override void OnKill()
 		{
 			StoryProgressSystem.DownedMadara = true;
+			StoryProgressSystem.SyncToClients();
 		}
 
 		public override void ModifyNPCLoot(NPCLoot npcLoot)

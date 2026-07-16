@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
@@ -108,6 +109,18 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 		}
 
+		// See OrochimaruBoss.SendExtraAI - lifeMax isn't part of the standard NPC sync packet, so
+		// without this a scaled-up Kaguya shows a client-side HP bar above 100%.
+		public override void SendExtraAI(BinaryWriter writer)
+		{
+			writer.Write(NPC.lifeMax);
+		}
+
+		public override void ReceiveExtraAI(BinaryReader reader)
+		{
+			NPC.lifeMax = reader.ReadInt32();
+		}
+
 		public override void AI()
 		{
 			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
@@ -201,12 +214,14 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 			if (StateTimer % 8 == 0 && SubCounter < shotsWanted)
 			{
-				Vector2 shotVelocity = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitY) * 9f;
-				int index = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shotVelocity, ModContent.ProjectileType<ElementalBoltProjectile>(), 20, 1f);
-
-				if (Main.projectile[index].ModProjectile is ElementalBoltProjectile bolt)
+				if (Main.netMode != NetmodeID.MultiplayerClient)
 				{
-					bolt.BoltElement = ElementalBoltProjectile.Element.Core;
+					Vector2 shotVelocity = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitY) * 9f;
+
+					// Element passed via ai0 at spawn time (not set after via a post-spawn cast) so
+					// the spawn packet itself carries the right value - clients never see a stale
+					// default element like they would from a same-tick-but-after mutation.
+					Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shotVelocity, ModContent.ProjectileType<ElementalBoltProjectile>(), 20, 1f, ai0: (float)ElementalBoltProjectile.Element.Core);
 				}
 
 				SubCounter++;
@@ -241,10 +256,13 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 					ChakraVFX.SpawnBurst(portal, DustID.WhiteTorch, 14, 1.6f);
 					SoundEngine.PlaySound(SoundID.Item14, portal);
 
-					for (int i = 0; i < 4; i++)
+					if (Main.netMode != NetmodeID.MultiplayerClient)
 					{
-						Vector2 shotVelocity = new Vector2(0f, -1f).RotatedBy(MathHelper.PiOver2 * i) * 6f;
-						Projectile.NewProjectile(NPC.GetSource_FromAI(), portal, shotVelocity, ModContent.ProjectileType<ElementalBoltProjectile>(), 18, 1f);
+						for (int i = 0; i < 4; i++)
+						{
+							Vector2 shotVelocity = new Vector2(0f, -1f).RotatedBy(MathHelper.PiOver2 * i) * 6f;
+							Projectile.NewProjectile(NPC.GetSource_FromAI(), portal, shotVelocity, ModContent.ProjectileType<ElementalBoltProjectile>(), 18, 1f, ai0: (float)ElementalBoltProjectile.Element.Core);
+						}
 					}
 				}
 			}
@@ -287,6 +305,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		public override void OnKill()
 		{
 			StoryProgressSystem.DownedKaguya = true;
+			StoryProgressSystem.SyncToClients();
 		}
 
 		public override void ModifyNPCLoot(NPCLoot npcLoot)

@@ -93,6 +93,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		public override void OnKill()
 		{
 			Common.Systems.StoryProgressSystem.DownedShukaku = true;
+			Common.Systems.StoryProgressSystem.SyncToClients();
 		}
 
 		public override void ModifyNPCLoot(NPCLoot npcLoot)

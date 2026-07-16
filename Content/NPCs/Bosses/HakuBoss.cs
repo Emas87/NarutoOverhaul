@@ -165,8 +165,12 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 			if (StateTimer % 10 == 0 && VolleyShotsFired < VolleyShotCount)
 			{
-				Vector2 toTarget = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitY) * 9f;
-				Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, toTarget, ModContent.ProjectileType<SenbonProjectile>(), 14, 1f);
+				if (Main.netMode != NetmodeID.MultiplayerClient)
+				{
+					Vector2 toTarget = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitY) * 9f;
+					Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, toTarget, ModContent.ProjectileType<SenbonProjectile>(), 14, 1f);
+				}
+
 				VolleyShotsFired++;
 			}
 
@@ -191,6 +195,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		public override void OnKill()
 		{
 			StoryProgressSystem.DownedHaku = true;
+			StoryProgressSystem.SyncToClients();
 		}
 
 		public override void ModifyNPCLoot(NPCLoot npcLoot)

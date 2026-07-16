@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
@@ -105,6 +106,20 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 		}
 
+		// OnSpawn runs server-side only; lifeMax isn't part of the standard NPC sync packet (only
+		// life is), so without this a scaled-up Orochimaru shows a client-side HP bar that reads
+		// well above 100% (client keeps the unscaled SetDefaults value while receiving the scaled
+		// life). Damage/defense are already fine since combat resolution itself is server-authoritative.
+		public override void SendExtraAI(BinaryWriter writer)
+		{
+			writer.Write(NPC.lifeMax);
+		}
+
+		public override void ReceiveExtraAI(BinaryReader reader)
+		{
+			NPC.lifeMax = reader.ReadInt32();
+		}
+
 		public override void AI()
 		{
 			if (NPC.target < 0 || NPC.target == 255 || Main.player[NPC.target].dead || !Main.player[NPC.target].active)
@@ -191,13 +206,16 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 			if (StateTimer == 0)
 			{
-				Vector2 baseDirection = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitY);
-				float[] spreadAngles = { -0.35f, 0f, 0.35f };
-
-				foreach (float angle in spreadAngles)
+				if (Main.netMode != NetmodeID.MultiplayerClient)
 				{
-					Vector2 shotVelocity = baseDirection.RotatedBy(angle) * 8f;
-					Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shotVelocity, ModContent.ProjectileType<SnakeProjectile>(), 16, 1f);
+					Vector2 baseDirection = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitY);
+					float[] spreadAngles = { -0.35f, 0f, 0.35f };
+
+					foreach (float angle in spreadAngles)
+					{
+						Vector2 shotVelocity = baseDirection.RotatedBy(angle) * 8f;
+						Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, shotVelocity, ModContent.ProjectileType<SnakeProjectile>(), 16, 1f);
+					}
 				}
 
 				SnakesFired++;
@@ -225,6 +243,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		public override void OnKill()
 		{
 			StoryProgressSystem.DownedOrochimaru = true;
+			StoryProgressSystem.SyncToClients();
 		}
 
 		public override void ModifyNPCLoot(NPCLoot npcLoot)

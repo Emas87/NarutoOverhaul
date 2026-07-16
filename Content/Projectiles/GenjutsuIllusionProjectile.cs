@@ -44,6 +44,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 			target.AddBuff(ModContent.BuffType<GenjutsuControlDebuff>(), duration);
 			target.GetGlobalNPC<GenjutsuGlobalNPC>().ControllingPlayerIndex = Projectile.owner;
+			target.netUpdate = true; // force an immediate sync so the server/other clients learn who's controlling this puppet
 			ChakraVFX.SpawnBurst(target.Center, DustID.PurpleTorch, 10, 1.2f);
 		}
 

@@ -1,3 +1,6 @@
+using System.IO;
+using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -47,6 +50,48 @@ namespace NarutoOverhaul.Common.Systems
 			DownedPain = false;
 			DownedMadara = false;
 			DownedKaguya = false;
+		}
+
+		// These flags are read client-side by every jutsu's CanUseItem, every transformation's
+		// IsUnlocked, and every class vendor's shop condition - without netcode, a non-host client
+		// never learns a boss died and stays locked out of everything that boss unlocks forever.
+		// NetSend/NetReceive cover join-time sync (tModLoader calls these as part of the standard
+		// mod-world-data handshake); SyncToClients must be called manually from each boss's OnKill
+		// so already-connected clients pick up the change mid-session too.
+		public override void NetSend(BinaryWriter writer)
+		{
+			var flags = new BitsByte
+			{
+				[0] = DownedHaku,
+				[1] = DownedShukaku,
+				[2] = DownedOrochimaru,
+				[3] = DownedKakuzu,
+				[4] = DownedPain,
+				[5] = DownedMadara,
+				[6] = DownedKaguya,
+			};
+
+			writer.Write(flags);
+		}
+
+		public override void NetReceive(BinaryReader reader)
+		{
+			BitsByte flags = reader.ReadByte();
+			DownedHaku = flags[0];
+			DownedShukaku = flags[1];
+			DownedOrochimaru = flags[2];
+			DownedKakuzu = flags[3];
+			DownedPain = flags[4];
+			DownedMadara = flags[5];
+			DownedKaguya = flags[6];
+		}
+
+		public static void SyncToClients()
+		{
+			if (Main.netMode == NetmodeID.Server)
+			{
+				NetMessage.SendData(MessageID.WorldData);
+			}
 		}
 	}
 }

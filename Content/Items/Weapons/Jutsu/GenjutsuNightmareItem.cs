@@ -48,6 +48,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 			target.AddBuff(ModContent.BuffType<GenjutsuFearDebuff>(), duration);
 			target.GetGlobalNPC<GenjutsuGlobalNPC>().ControllingPlayerIndex = player.whoAmI;
+			target.netUpdate = true; // force an immediate sync so the server/other clients learn who's controlling this flee
 			ChakraVFX.SpawnBurst(target.Center, DustID.PurpleTorch, 10, 1.2f);
 		}
 

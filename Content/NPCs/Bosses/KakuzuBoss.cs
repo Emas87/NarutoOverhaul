@@ -138,13 +138,11 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 			if (StateTimer % 15 == 0 && ShotsFired < BurstShots)
 			{
-				Vector2 toTarget = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitY) * 7f;
-				int type = ModContent.ProjectileType<ElementalBoltProjectile>();
-				int index = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, toTarget, type, 15, 1f);
-
-				if (Main.projectile[index].ModProjectile is ElementalBoltProjectile bolt)
+				if (Main.netMode != NetmodeID.MultiplayerClient)
 				{
-					bolt.BoltElement = CurrentElement;
+					Vector2 toTarget = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitY) * 7f;
+					int type = ModContent.ProjectileType<ElementalBoltProjectile>();
+					Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, toTarget, type, 15, 1f, ai0: (float)CurrentElement);
 				}
 
 				ShotsFired++;
@@ -175,6 +173,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		public override void OnKill()
 		{
 			StoryProgressSystem.DownedKakuzu = true;
+			StoryProgressSystem.SyncToClients();
 		}
 
 		public override void ModifyNPCLoot(NPCLoot npcLoot)

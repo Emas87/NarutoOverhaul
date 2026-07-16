@@ -1,5 +1,8 @@
+using System.IO;
+using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Content.Buffs;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -92,15 +95,42 @@ namespace NarutoOverhaul.Common.Players
 			BaseMaxStamina = tag.GetFloat("baseMaxStamina");
 			ConsumedStaminaScrolls = tag.GetInt("consumedStaminaScrolls");
 
+			// See ChakraPlayer.LoadData for why this reconstructs from the scroll counter instead
+			// of flattening to the bare default on a legacy/partially-corrupt save.
 			if (BaseMaxStamina <= 0f)
 			{
-				BaseMaxStamina = 100f;
+				BaseMaxStamina = 100f + (ConsumedStaminaScrolls * NumberedStaminaScrollItemIncreasePerScroll);
 			}
 		}
 
 		public override void OnRespawn()
 		{
 			Stamina = MaxStamina;
+		}
+
+		private const float NumberedStaminaScrollItemIncreasePerScroll = 20f;
+
+		// No server-side Stamina drain exists yet (unlike Pain's Chakra drain), but this keeps
+		// Stamina symmetric with Chakra's correction-packet mechanism for whenever one is added.
+		public static void SendCorrection(Player player)
+		{
+			if (Main.netMode != NetmodeID.Server)
+			{
+				return;
+			}
+
+			ModPacket packet = ModContent.GetInstance<NarutoOverhaul>().GetPacket();
+			packet.Write((byte)NetMessageType.SyncStaminaCorrection);
+			packet.Write((byte)player.whoAmI);
+			packet.Write(player.GetModPlayer<StaminaPlayer>().Stamina);
+			packet.Send(player.whoAmI);
+		}
+
+		public static void HandleCorrectionPacket(BinaryReader reader)
+		{
+			byte playerIndex = reader.ReadByte();
+			float stamina = reader.ReadSingle();
+			Main.player[playerIndex].GetModPlayer<StaminaPlayer>().Stamina = stamina;
 		}
 	}
 }
