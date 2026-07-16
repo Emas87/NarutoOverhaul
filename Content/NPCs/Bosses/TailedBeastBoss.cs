@@ -101,6 +101,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<SandCoreItem>(), 1, 3, 5));
 			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<ChakraScroll2Item>(), 1, 1, 1));
 			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<StaminaScroll2Item>(), 1, 1, 1));
+			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.BossBag(ModContent.ItemType<ShukakuBossBagItem>()));
 		}
 
 		public override void AI()

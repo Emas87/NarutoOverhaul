@@ -313,6 +313,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<OtsutsukiChakraFragmentItem>(), 1, 1, 1));
 			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<ChakraScroll7Item>(), 1, 1, 1));
 			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<StaminaScroll7Item>(), 1, 1, 1));
+			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.BossBag(ModContent.ItemType<KaguyaBossBagItem>()));
 		}
 
 		public override void HitEffect(NPC.HitInfo hit)

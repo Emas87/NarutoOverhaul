@@ -203,6 +203,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<IceMirrorShardItem>(), 1, 3, 5));
 			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<ChakraScroll1Item>(), 1, 1, 1));
 			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<StaminaScroll1Item>(), 1, 1, 1));
+			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.BossBag(ModContent.ItemType<HakuBossBagItem>()));
 		}
 
 		public override void HitEffect(NPC.HitInfo hit)

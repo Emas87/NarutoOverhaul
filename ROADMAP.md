@@ -114,8 +114,17 @@ Ranked by impact. Each entry has a sketch that reuses established patterns in th
 - [ ] **Keybind onboarding.** 5 keybinds exist (`.` `/` `,` `[` `]`) but nothing in-game reveals
   them. Cheapest fix: mention the keybind in each unlock's item tooltip and in vendor chat lines;
   optionally a "Shinobi Handbook" starter item whose tooltip lists all keybinds.
-- [ ] **Expert/Master support.** No boss bags, trophies, relics, or boss music. Boss bags first
+- [x] **Expert/Master support.** No boss bags, trophies, relics, or boss music. Boss bags first
   (`ItemDropRule` + `BossBag` items), trophies/relics after; music is optional/art-dependent.
+  *Done (scoped): all 7 bosses now drop an Expert-mode `BossBag` (`Content/Items/Consumables/
+  BossBagItem.cs` abstract base + 7 subclasses) containing bonus coins + extra crafting material
+  - the priority sub-item, since it's the actual gameplay incentive layer. Trophies/relics/music
+  explicitly descoped: they're decorative-only, and trophies specifically would need this mod's
+  first `ModTile` (placement styles, `TileObjectData`, map icons - a new infrastructure surface
+  with no way to visually verify placement/frames headlessly, similar risk profile to the armor
+  equip-texture work but with no established precedent in this repo to lean on). Not worth the risk
+  for wall-decoration value alone; revisit if/when real art + a real graphical client are both
+  available to verify against.*
 - [x] **Genjutsu intra-class progression.** All 3 Genjutsu weapons unlock at boss 1 with 6-8 damage.
   Spread the unlocks across bosses and add the Susanoo/Rinnegan items above so the class grows.
   *Done as part of the endgame-weapons batch: Shinra Tensei (DownedPain) and Susanoo
@@ -144,7 +153,8 @@ Ranked by impact. Each entry has a sketch that reuses established patterns in th
    clients to verify feel/correctness end-to-end - a headless single-server smoke test can only
    confirm content still loads cleanly, not that packets actually reach a second client correctly,
    so this stays on the first-playtest checklist below same as everything else unverified.
-5. **Boss polish** — bags/trophies/relics (Expert/Master incentive layer).
+5. **[DONE, scoped] Boss polish** — bags/trophies/relics (Expert/Master incentive layer). Landed
+   2026-07-15 as boss bags only; trophies/relics/music explicitly descoped (see section 2 entry).
 6. **Onboarding + ModConfig + small items** — polish once the content is in place.
 
 ---

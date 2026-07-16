@@ -559,6 +559,41 @@ Items: {
 		DisplayName: Genjutsu Illusionist's Pants
 		Tooltip: ""
 	}
+
+	HakuBossBagItem: {
+		DisplayName: Haku's Satchel
+		Tooltip: ""
+	}
+
+	ShukakuBossBagItem: {
+		DisplayName: Shukaku's Satchel
+		Tooltip: ""
+	}
+
+	OrochimaruBossBagItem: {
+		DisplayName: Orochimaru's Satchel
+		Tooltip: ""
+	}
+
+	KakuzuBossBagItem: {
+		DisplayName: Kakuzu's Satchel
+		Tooltip: ""
+	}
+
+	PainBossBagItem: {
+		DisplayName: Pain's Satchel
+		Tooltip: ""
+	}
+
+	MadaraBossBagItem: {
+		DisplayName: Madara's Satchel
+		Tooltip: ""
+	}
+
+	KaguyaBossBagItem: {
+		DisplayName: Kaguya's Satchel
+		Tooltip: ""
+	}
 }
 
 NPCs: {

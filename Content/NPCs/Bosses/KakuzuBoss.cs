@@ -181,6 +181,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<KakuzuHeartItem>(), 1, 3, 5));
 			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<ChakraScroll4Item>(), 1, 1, 1));
 			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.Common(ModContent.ItemType<StaminaScroll4Item>(), 1, 1, 1));
+			npcLoot.Add(Terraria.GameContent.ItemDropRules.ItemDropRule.BossBag(ModContent.ItemType<KakuzuBossBagItem>()));
 		}
 
 		public override void HitEffect(NPC.HitInfo hit)
