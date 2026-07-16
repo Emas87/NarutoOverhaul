@@ -97,7 +97,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			// Soft vanilla-tier scaling, not a hard gate: Orochimaru is meant to loosely track
 			// Skeletron as the pre-Hardmode "wall," so fighting him before that point is still
 			// allowed but noticeably harder - a nudge toward the intended order, not a block.
-			if (!NPC.downedBoss3)
+			if (ModContent.GetInstance<NarutoOverhaulConfig>().EnableSoftBossScaling && !NPC.downedBoss3)
 			{
 				NPC.lifeMax = (int)(NPC.lifeMax * 1.5f);
 				NPC.life = NPC.lifeMax;

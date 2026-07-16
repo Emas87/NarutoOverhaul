@@ -1,4 +1,6 @@
+using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Content.Items.Accessories;
+using NarutoOverhaul.Content.Items.Armor;
 using NarutoOverhaul.Content.Items.Consumables;
 using NarutoOverhaul.Content.Items.Weapons;
 using NarutoOverhaul.Content.Items.Weapons.Jutsu;
@@ -38,7 +40,9 @@ namespace NarutoOverhaul.Content.NPCs.Town
 
 		public override string GetChat()
 		{
-			return "Need kunai or a summoning scroll? I've got what a shinobi needs.";
+			return Main.rand.NextBool()
+				? "Need kunai or a summoning scroll? I've got what a shinobi needs."
+				: "Some of the finer jutsu scrolls aren't bought - they're crafted at an anvil, from what a boss leaves behind.";
 		}
 
 		public override void SetChatButtons(ref string button, ref string button2)
@@ -56,6 +60,8 @@ namespace NarutoOverhaul.Content.NPCs.Town
 
 		public override void AddShops()
 		{
+			var downedMadara = new Condition("NarutoOverhaul.DownedMadara", () => StoryProgressSystem.DownedMadara);
+
 			NPCShop shop = new NPCShop(Type, "Shop")
 				.Add(ModContent.ItemType<KunaiItem>())
 				.Add(ModContent.ItemType<ToadSummonScrollItem>())
@@ -66,7 +72,11 @@ namespace NarutoOverhaul.Content.NPCs.Town
 				.Add(ModContent.ItemType<ChakraPotionItem>())
 				.Add(ModContent.ItemType<ChakraRegenPotionItem>())
 				.Add(ModContent.ItemType<StaminaPotionItem>())
-				.Add(ModContent.ItemType<StaminaRegenPotionItem>());
+				.Add(ModContent.ItemType<StaminaRegenPotionItem>())
+				.Add(ModContent.ItemType<ShurikenItem>())
+				.Add(ModContent.ItemType<RamenItem>())
+				.Add(ModContent.ItemType<LeafVillageHeadbandItem>())
+				.Add(ModContent.ItemType<ChakraWingsItem>(), downedMadara);
 
 			shop.Register();
 		}

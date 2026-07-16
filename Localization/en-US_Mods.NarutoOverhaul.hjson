@@ -6,6 +6,35 @@ Keybinds: {
 	"Toggle Chakra Control.DisplayName": Toggle Chakra Control
 }
 
+Configs: {
+	NarutoOverhaulConfig: {
+		DisplayName: NarutoOverhaul Settings
+
+		EnableSoftBossScaling: {
+			Label: Enable Soft Boss Scaling
+			Tooltip:
+				'''
+				Orochimaru and Kaguya hit harder if you haven't yet beaten the vanilla boss they're
+				meant to loosely track (Skeletron/Golem). Turn off to always fight them at base stats.
+				'''
+		}
+
+		ShowActiveFormIndicator: {
+			Label: Show Active Form Indicator
+			Tooltip:
+				'''
+				Shows the name of your active transformation (Sage Mode, Chakra Control, ...) below
+				the Chakra/Stamina bars.
+				'''
+		}
+
+		Headers: {
+			Difficulty: Difficulty
+			HUD: HUD
+		}
+	}
+}
+
 Buffs: {
 	SageModeBuff: {
 		DisplayName: Sage Mode
@@ -594,6 +623,31 @@ Items: {
 		DisplayName: Kaguya's Satchel
 		Tooltip: ""
 	}
+
+	ShinobiHandbookItem: {
+		DisplayName: Shinobi Handbook
+		Tooltip: ""
+	}
+
+	RamenItem: {
+		DisplayName: Bowl of Ramen
+		Tooltip: A steaming bowl from Ichiraku - a shinobi's favorite meal
+	}
+
+	ShurikenItem: {
+		DisplayName: Shuriken
+		Tooltip: A spinning throwing star that cuts through multiple enemies
+	}
+
+	LeafVillageHeadbandItem: {
+		DisplayName: Leaf Village Headband
+		Tooltip: A forehead protector bearing the Leaf's insignia - purely for show
+	}
+
+	ChakraWingsItem: {
+		DisplayName: Chakra Wings
+		Tooltip: Wings woven from raw chakra, in the manner of the Sage of the Six Paths
+	}
 }
 
 NPCs: {
@@ -686,6 +740,7 @@ Projectiles: {
 	SusanooProjectile.DisplayName: Susanoo
 	ShinraTenseiProjectile.DisplayName: Shinra Tensei
 	AshBoneProjectile.DisplayName: Ash Bone
+	ShurikenProjectile.DisplayName: Shuriken Projectile
 }
 
 DamageClasses: {

@@ -100,7 +100,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			// Moon Lord (one tier earlier than Lunatic Cultist, for a bit of buffer) - not
 			// literally gated on Moon Lord himself, which would mean "always harder" until the
 			// game's basically over. Still fightable early, just noticeably tougher.
-			if (!NPC.downedGolemBoss)
+			if (ModContent.GetInstance<NarutoOverhaulConfig>().EnableSoftBossScaling && !NPC.downedGolemBoss)
 			{
 				NPC.lifeMax = (int)(NPC.lifeMax * 1.5f);
 				NPC.life = NPC.lifeMax;
