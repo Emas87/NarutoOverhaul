@@ -86,7 +86,11 @@ Buffs: {
 Items: {
 	TailedBeastSummonItem: {
 		DisplayName: Sand Village Forehead Protector
-		Tooltip: "Summons Shukaku the One-Tail\nRight click to summon"
+		Tooltip:
+			'''
+			Summons Shukaku the One-Tail
+			Right click to summon
+			'''
 	}
 
 	RasenganItem: {
@@ -101,27 +105,47 @@ Items: {
 
 	OrochimaruSummonItem: {
 		DisplayName: Cursed Seal Scroll
-		Tooltip: "Summons Orochimaru\nRight click to summon"
+		Tooltip:
+			'''
+			Summons Orochimaru
+			Right click to summon
+			'''
 	}
 
 	KakuzuSummonItem: {
 		DisplayName: Bounty Contract
-		Tooltip: "Summons Kakuzu\nRight click to summon"
+		Tooltip:
+			'''
+			Summons Kakuzu
+			Right click to summon
+			'''
 	}
 
 	PainSummonItem: {
 		DisplayName: Deva Path Seal
-		Tooltip: "Summons Pain - only usable near a Town NPC\nRight click to summon"
+		Tooltip:
+			'''
+			Summons Pain - only usable near a Town NPC
+			Right click to summon
+			'''
 	}
 
 	MadaraSummonItem: {
 		DisplayName: Reanimation Seal
-		Tooltip: "Summons the reanimated Madara Uchiha\nRight click to summon"
+		Tooltip:
+			'''
+			Summons the reanimated Madara Uchiha
+			Right click to summon
+			'''
 	}
 
 	KaguyaSummonItem: {
 		DisplayName: Dimensional Rift Shard
-		Tooltip: "Summons Kaguya Otsutsuki\nRight click to summon"
+		Tooltip:
+			'''
+			Summons Kaguya Otsutsuki
+			Right click to summon
+			'''
 	}
 
 	FireballItem: {
@@ -170,12 +194,12 @@ Items: {
 	}
 
 	GenjutsuNightmareItem: {
-		DisplayName: "Genjutsu: Nightmare"
+		DisplayName: Genjutsu: Nightmare
 		Tooltip: Plunges the target into a waking nightmare, leaving them frozen in terror
 	}
 
 	GenjutsuSleepItem: {
-		DisplayName: "Genjutsu: Sleep"
+		DisplayName: Genjutsu: Sleep
 		Tooltip: Lulls the target into an unbreakable slumber
 	}
 
@@ -201,7 +225,11 @@ Items: {
 
 	HakuSummonItem: {
 		DisplayName: Ice Mirror Shard Charm
-		Tooltip: "Summons Haku - usable on the beach\nRight click to summon"
+		Tooltip:
+			'''
+			Summons Haku - usable on the beach
+			Right click to summon
+			'''
 	}
 
 	CursedSnakeFangItem: {
@@ -236,22 +264,38 @@ Items: {
 
 	NinjaHoundSummonScrollItem: {
 		DisplayName: Ninja Hound Summoning Scroll
-		Tooltip: "Kuchiyose - summons a ninja hound to fight at your side\nRight click to summon"
+		Tooltip:
+			'''
+			Kuchiyose - summons a ninja hound to fight at your side
+			Right click to summon
+			'''
 	}
 
 	SlugSummonScrollItem: {
 		DisplayName: Slug Summoning Scroll
-		Tooltip: "Kuchiyose - summons a slug to fight at your side\nRight click to summon"
+		Tooltip:
+			'''
+			Kuchiyose - summons a slug to fight at your side
+			Right click to summon
+			'''
 	}
 
 	SnakeSummonScrollItem: {
 		DisplayName: Snake Summoning Scroll
-		Tooltip: "Kuchiyose - summons a snake to fight at your side\nRight click to summon"
+		Tooltip:
+			'''
+			Kuchiyose - summons a snake to fight at your side
+			Right click to summon
+			'''
 	}
 
 	ToadSummonScrollItem: {
 		DisplayName: Toad Summoning Scroll
-		Tooltip: "Kuchiyose - summons a toad to fight at your side\nRight click to summon"
+		Tooltip:
+			'''
+			Kuchiyose - summons a toad to fight at your side
+			Right click to summon
+			'''
 	}
 
 	ChakraPotionItem: {
@@ -281,102 +325,174 @@ Items: {
 
 	OtsutsukiChakraFragmentItem: {
 		DisplayName: Otsutsuki Chakra Fragment
-		Tooltip: "The progenitor of chakra itself, condensed into a single dose - the Moon Lord's power pales before hers\nCan only be consumed once - its blessing is permanent"
+		Tooltip:
+			'''
+			The progenitor of chakra itself, condensed into a single dose - the Moon Lord's power pales before hers
+			Can only be consumed once - its blessing is permanent
+			'''
 	}
 
 	GenjutsuMasteryScrollItem: {
 		DisplayName: Genjutsu Mastery Scroll
-		Tooltip: "A permanent record of genjutsu mastery, sealed with the essence of two fallen foes\nCan only be consumed once - its blessing is permanent"
+		Tooltip:
+			'''
+			A permanent record of genjutsu mastery, sealed with the essence of two fallen foes
+			Can only be consumed once - its blessing is permanent
+			'''
 	}
 
 	NinjutsuMasteryScrollItem: {
 		DisplayName: Ninjutsu Mastery Scroll
-		Tooltip: "A permanent record of ninjutsu mastery, sealed with the essence of two fallen foes\nCan only be consumed once - its blessing is permanent"
+		Tooltip:
+			'''
+			A permanent record of ninjutsu mastery, sealed with the essence of two fallen foes
+			Can only be consumed once - its blessing is permanent
+			'''
 	}
 
 	TaijutsuMasteryScrollItem: {
 		DisplayName: Taijutsu Mastery Scroll
-		Tooltip: "A permanent record of taijutsu mastery, sealed with the essence of two fallen foes\nCan only be consumed once - its blessing is permanent"
+		Tooltip:
+			'''
+			A permanent record of taijutsu mastery, sealed with the essence of two fallen foes
+			Can only be consumed once - its blessing is permanent
+			'''
 	}
 
 	ChakraScroll1Item: {
-		DisplayName: "Chakra Scroll I: First Steps"
-		Tooltip: "Haku's legacy - permanently increases max Chakra\nMust be read before any later Chakra Scroll"
+		DisplayName: Chakra Scroll I: First Steps
+		Tooltip:
+			'''
+			Haku's legacy - permanently increases max Chakra
+			Must be read before any later Chakra Scroll
+			'''
 	}
 
 	ChakraScroll2Item: {
-		DisplayName: "Chakra Scroll II: Sand and Sacrifice"
-		Tooltip: "Shukaku's legacy - permanently increases max Chakra\nRequires Chakra Scroll I"
+		DisplayName: Chakra Scroll II: Sand and Sacrifice
+		Tooltip:
+			'''
+			Shukaku's legacy - permanently increases max Chakra
+			Requires Chakra Scroll I
+			'''
 	}
 
 	ChakraScroll3Item: {
-		DisplayName: "Chakra Scroll III: The Sannin's Curse"
-		Tooltip: "Orochimaru's legacy - permanently increases max Chakra\nRequires Chakra Scroll II"
+		DisplayName: Chakra Scroll III: The Sannin's Curse
+		Tooltip:
+			'''
+			Orochimaru's legacy - permanently increases max Chakra
+			Requires Chakra Scroll II
+			'''
 	}
 
 	ChakraScroll4Item: {
-		DisplayName: "Chakra Scroll IV: Bounty of Hearts"
-		Tooltip: "Kakuzu's legacy - permanently increases max Chakra\nRequires Chakra Scroll III"
+		DisplayName: Chakra Scroll IV: Bounty of Hearts
+		Tooltip:
+			'''
+			Kakuzu's legacy - permanently increases max Chakra
+			Requires Chakra Scroll III
+			'''
 	}
 
 	ChakraScroll5Item: {
-		DisplayName: "Chakra Scroll V: Rinnegan's Toll"
-		Tooltip: "Pain's legacy - permanently increases max Chakra\nRequires Chakra Scroll IV"
+		DisplayName: Chakra Scroll V: Rinnegan's Toll
+		Tooltip:
+			'''
+			Pain's legacy - permanently increases max Chakra
+			Requires Chakra Scroll IV
+			'''
 	}
 
 	ChakraScroll6Item: {
-		DisplayName: "Chakra Scroll VI: Reanimator's Will"
-		Tooltip: "Madara's legacy - permanently increases max Chakra\nRequires Chakra Scroll V"
+		DisplayName: Chakra Scroll VI: Reanimator's Will
+		Tooltip:
+			'''
+			Madara's legacy - permanently increases max Chakra
+			Requires Chakra Scroll V
+			'''
 	}
 
 	ChakraScroll7Item: {
-		DisplayName: "Chakra Scroll VII: Progenitor's Gift"
-		Tooltip: "Kaguya's legacy - permanently increases max Chakra\nRequires Chakra Scroll VI"
+		DisplayName: Chakra Scroll VII: Progenitor's Gift
+		Tooltip:
+			'''
+			Kaguya's legacy - permanently increases max Chakra
+			Requires Chakra Scroll VI
+			'''
 	}
 
 	StaminaScroll1Item: {
-		DisplayName: "Stamina Scroll I: First Steps"
-		Tooltip: "Haku's legacy - permanently increases max Stamina\nMust be read before any later Stamina Scroll"
+		DisplayName: Stamina Scroll I: First Steps
+		Tooltip:
+			'''
+			Haku's legacy - permanently increases max Stamina
+			Must be read before any later Stamina Scroll
+			'''
 	}
 
 	StaminaScroll2Item: {
-		DisplayName: "Stamina Scroll II: Sand and Sacrifice"
-		Tooltip: "Shukaku's legacy - permanently increases max Stamina\nRequires Stamina Scroll I"
+		DisplayName: Stamina Scroll II: Sand and Sacrifice
+		Tooltip:
+			'''
+			Shukaku's legacy - permanently increases max Stamina
+			Requires Stamina Scroll I
+			'''
 	}
 
 	StaminaScroll3Item: {
-		DisplayName: "Stamina Scroll III: The Sannin's Curse"
-		Tooltip: "Orochimaru's legacy - permanently increases max Stamina\nRequires Stamina Scroll II"
+		DisplayName: Stamina Scroll III: The Sannin's Curse
+		Tooltip:
+			'''
+			Orochimaru's legacy - permanently increases max Stamina
+			Requires Stamina Scroll II
+			'''
 	}
 
 	StaminaScroll4Item: {
-		DisplayName: "Stamina Scroll IV: Bounty of Hearts"
-		Tooltip: "Kakuzu's legacy - permanently increases max Stamina\nRequires Stamina Scroll III"
+		DisplayName: Stamina Scroll IV: Bounty of Hearts
+		Tooltip:
+			'''
+			Kakuzu's legacy - permanently increases max Stamina
+			Requires Stamina Scroll III
+			'''
 	}
 
 	StaminaScroll5Item: {
-		DisplayName: "Stamina Scroll V: Rinnegan's Toll"
-		Tooltip: "Pain's legacy - permanently increases max Stamina\nRequires Stamina Scroll IV"
+		DisplayName: Stamina Scroll V: Rinnegan's Toll
+		Tooltip:
+			'''
+			Pain's legacy - permanently increases max Stamina
+			Requires Stamina Scroll IV
+			'''
 	}
 
 	StaminaScroll6Item: {
-		DisplayName: "Stamina Scroll VI: Reanimator's Will"
-		Tooltip: "Madara's legacy - permanently increases max Stamina\nRequires Stamina Scroll V"
+		DisplayName: Stamina Scroll VI: Reanimator's Will
+		Tooltip:
+			'''
+			Madara's legacy - permanently increases max Stamina
+			Requires Stamina Scroll V
+			'''
 	}
 
 	StaminaScroll7Item: {
-		DisplayName: "Stamina Scroll VII: Progenitor's Gift"
-		Tooltip: "Kaguya's legacy - permanently increases max Stamina\nRequires Stamina Scroll VI"
+		DisplayName: Stamina Scroll VII: Progenitor's Gift
+		Tooltip:
+			'''
+			Kaguya's legacy - permanently increases max Stamina
+			Requires Stamina Scroll VI
+			'''
 	}
 
 	MonstrousStrengthGlovesItem: {
 		DisplayName: Monstrous Strength Gloves
-		Tooltip: "Channel chakra into your fists, Tsunade-style - quicker mining and a longer reach"
+		Tooltip: Channel chakra into your fists, Tsunade-style - quicker mining and a longer reach
 	}
 
 	ChidoriItem: {
 		DisplayName: Chidori
-		Tooltip: "Raikiri - a lightning-charged thrust fast enough to outrun the eye"
+		Tooltip: Raikiri - a lightning-charged thrust fast enough to outrun the eye
 	}
 
 	SusanooItem: {
@@ -385,7 +501,7 @@ Items: {
 	}
 
 	ShinraTenseiItem: {
-		DisplayName: "Shinra Tensei"
+		DisplayName: Shinra Tensei
 		Tooltip: Almighty Push - a repulsive shockwave that hurls everything nearby away from you
 	}
 
@@ -397,6 +513,51 @@ Items: {
 	FrontLotusItem: {
 		DisplayName: Front Lotus
 		Tooltip: An inner-gate assisted strike that shatters the target's defenses
+	}
+
+	TaijutsuHelmetItem: {
+		DisplayName: Taijutsu Headband
+		Tooltip: ""
+	}
+
+	TaijutsuBodyItem: {
+		DisplayName: Taijutsu Training Gi
+		Tooltip: ""
+	}
+
+	TaijutsuLegsItem: {
+		DisplayName: Taijutsu Training Pants
+		Tooltip: ""
+	}
+
+	NinjutsuHelmetItem: {
+		DisplayName: Ninjutsu Headband
+		Tooltip: ""
+	}
+
+	NinjutsuBodyItem: {
+		DisplayName: Ninjutsu Jonin Vest
+		Tooltip: ""
+	}
+
+	NinjutsuLegsItem: {
+		DisplayName: Ninjutsu Jonin Pants
+		Tooltip: ""
+	}
+
+	GenjutsuHelmetItem: {
+		DisplayName: Genjutsu Hood
+		Tooltip: ""
+	}
+
+	GenjutsuBodyItem: {
+		DisplayName: Genjutsu Illusionist's Robe
+		Tooltip: ""
+	}
+
+	GenjutsuLegsItem: {
+		DisplayName: Genjutsu Illusionist's Pants
+		Tooltip: ""
 	}
 }
 
@@ -419,8 +580,8 @@ NPCs: {
 			LoveSpace: Plenty of room to lay out my whole arsenal.
 			DislikeCrowded: A bit too crowded to spread my tools out.
 			HateCrowded: I can barely swing a kunai in here.
-			LikeNPC_Princess: {NPCName} appreciates good craftsmanship.
-			Princess_LovesNPC: {NPCName} says my tools are the finest around.
+			LikeNPC_Princess: "{NPCName} appreciates good craftsmanship."
+			Princess_LovesNPC: "{NPCName} says my tools are the finest around."
 		}
 	}
 
@@ -434,8 +595,8 @@ NPCs: {
 			LoveSpace: Plenty of room for youthful training here!
 			DislikeCrowded: A little cramped for proper training.
 			HateCrowded: No room to unleash the flames of youth in here!
-			LikeNPC_Princess: {NPCName} shares my burning youthful spirit!
-			Princess_LovesNPC: {NPCName} says my youthful energy is inspiring!
+			LikeNPC_Princess: "{NPCName} shares my burning youthful spirit!"
+			Princess_LovesNPC: "{NPCName} says my youthful energy is inspiring!"
 		}
 	}
 
@@ -449,8 +610,8 @@ NPCs: {
 			LoveSpace: Room enough to watch every approach.
 			DislikeCrowded: Too many eyes in too little space.
 			HateCrowded: Far too crowded to keep watch properly.
-			LikeNPC_Princess: {NPCName} understands the weight I carry.
-			Princess_LovesNPC: {NPCName} trusts me more than most do.
+			LikeNPC_Princess: "{NPCName} understands the weight I carry."
+			Princess_LovesNPC: "{NPCName} trusts me more than most do."
 		}
 	}
 
@@ -464,8 +625,8 @@ NPCs: {
 			LoveSpace: Plenty of room to copy a jutsu or two.
 			DislikeCrowded: A little too crowded to concentrate.
 			HateCrowded: Can't even open my book in this crowd.
-			LikeNPC_Princess: {NPCName} is surprisingly good company.
-			Princess_LovesNPC: {NPCName} says I'm always fashionably late.
+			LikeNPC_Princess: "{NPCName} is surprisingly good company."
+			Princess_LovesNPC: "{NPCName} says I'm always fashionably late."
 		}
 	}
 }
@@ -488,7 +649,7 @@ Projectiles: {
 	ShadowCloneProjectile.DisplayName: Shadow Clone
 	ChidoriProjectile.DisplayName: Chidori
 	SusanooProjectile.DisplayName: Susanoo
-	ShinraTenseiProjectile.DisplayName: "Shinra Tensei"
+	ShinraTenseiProjectile.DisplayName: Shinra Tensei
 	AshBoneProjectile.DisplayName: Ash Bone
 }
 

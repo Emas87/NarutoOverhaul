@@ -1,5 +1,6 @@
 using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Content.Items.Accessories;
+using NarutoOverhaul.Content.Items.Armor;
 using NarutoOverhaul.Content.Items.Weapons.Jutsu;
 using Terraria;
 using Terraria.ID;
@@ -63,6 +64,9 @@ namespace NarutoOverhaul.Content.NPCs.Town
 				.Add(ModContent.ItemType<WeightedLegWarmersItem>(), downedShukaku)
 				.Add(ModContent.ItemType<TaijutsuWrapsItem>(), downedShukaku)
 				.Add(ModContent.ItemType<FrontLotusItem>(), downedKakuzu)
+				.Add(ModContent.ItemType<TaijutsuHelmetItem>(), downedKakuzu)
+				.Add(ModContent.ItemType<TaijutsuBodyItem>(), downedKakuzu)
+				.Add(ModContent.ItemType<TaijutsuLegsItem>(), downedKakuzu)
 				.Register();
 		}
 	}

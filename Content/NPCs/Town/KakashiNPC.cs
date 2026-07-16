@@ -1,5 +1,6 @@
 using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Content.Items.Accessories;
+using NarutoOverhaul.Content.Items.Armor;
 using NarutoOverhaul.Content.Items.Weapons.Jutsu;
 using Terraria;
 using Terraria.ID;
@@ -68,6 +69,9 @@ namespace NarutoOverhaul.Content.NPCs.Town
 				.Add(ModContent.ItemType<NinjutsuFocusSealItem>(), downedKakuzu)
 				.Add(ModContent.ItemType<ChidoriItem>(), downedPain)
 				.Add(ModContent.ItemType<AllKillingAshBonesItem>(), downedKaguya)
+				.Add(ModContent.ItemType<NinjutsuHelmetItem>(), downedKakuzu)
+				.Add(ModContent.ItemType<NinjutsuBodyItem>(), downedKakuzu)
+				.Add(ModContent.ItemType<NinjutsuLegsItem>(), downedKakuzu)
 				.Register();
 		}
 	}

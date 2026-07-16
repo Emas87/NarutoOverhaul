@@ -1,5 +1,6 @@
 using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Content.Items.Accessories;
+using NarutoOverhaul.Content.Items.Armor;
 using NarutoOverhaul.Content.Items.Weapons.Jutsu;
 using Terraria;
 using Terraria.ID;
@@ -56,6 +57,7 @@ namespace NarutoOverhaul.Content.NPCs.Town
 		public override void AddShops()
 		{
 			var downedHaku = new Condition("NarutoOverhaul.DownedHaku", () => StoryProgressSystem.DownedHaku);
+			var downedKakuzu = new Condition("NarutoOverhaul.DownedKakuzu", () => StoryProgressSystem.DownedKakuzu);
 			var downedPain = new Condition("NarutoOverhaul.DownedPain", () => StoryProgressSystem.DownedPain);
 			var downedMadara = new Condition("NarutoOverhaul.DownedMadara", () => StoryProgressSystem.DownedMadara);
 
@@ -67,6 +69,9 @@ namespace NarutoOverhaul.Content.NPCs.Town
 				.Add(ModContent.ItemType<GenjutsuVeilItem>(), downedHaku)
 				.Add(ModContent.ItemType<ShinraTenseiItem>(), downedPain)
 				.Add(ModContent.ItemType<SusanooItem>(), downedMadara)
+				.Add(ModContent.ItemType<GenjutsuHelmetItem>(), downedKakuzu)
+				.Add(ModContent.ItemType<GenjutsuBodyItem>(), downedKakuzu)
+				.Add(ModContent.ItemType<GenjutsuLegsItem>(), downedKakuzu)
 				.Register();
 		}
 	}

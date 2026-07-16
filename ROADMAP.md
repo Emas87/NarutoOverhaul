@@ -83,18 +83,13 @@ worst first. One focused netcode pass closes almost all of it.
 
 Ranked by impact. Each entry has a sketch that reuses established patterns in this repo.
 
-- [ ] **Endgame weapons (biggest gameplay hole).** No weapon unlocks past boss 4 (Kakuzu); damage
-  tops out at 45. Pain, Madara, and Kaguya — the whole Hardmode back half — award no weapons. The
-  marquee absences map exactly onto the late-boss materials that currently only feed summon items:
-  - *Chidori* — Ninjutsu, `DownedPain` gate, crafted from `RinneganFragmentItem` (same item shape
-    as `RasenganItem`; short-range lightning burst, Kakashi shop or recipe).
-  - *Susanoo* — Genjutsu showpiece, `DownedMadara` gate, crafted from `SusanooCoreItem` (currently
-    summon-material-only) — e.g. a temporary damage-absorbing avatar buff, giving Genjutsu its
-    missing late-game identity.
-  - *Rinnegan ability* — Genjutsu/Ninjutsu utility from `RinneganFragmentItem` (e.g. Shinra Tensei
-    knockback burst).
-  - *Ōtsutsuki-tier weapon* — post-Kaguya capstone, crafted from her drop.
-  - Plus one Hardmode-tier Taijutsu weapon (Taijutsu currently ends at boss 2 unlocks).
+- [x] **Endgame weapons (biggest gameplay hole).** No weapon unlocks past boss 4 (Kakuzu); damage
+  tops out at 45. Pain, Madara, and Kaguya — the whole Hardmode back half — award no weapons.
+  *Done: 5 new weapons, all sold (not crafted, to match the existing jutsu-weapon convention)
+  once the relevant `Downed*` flag is set — Chidori (Ninjutsu/Kakashi/DownedPain), Susanoo
+  (Genjutsu/Itachi/DownedMadara), Shinra Tensei (Genjutsu/Itachi/DownedPain), All-Killing Ash
+  Bones (Ninjutsu/Kakashi/DownedKaguya, the post-Kaguya capstone), and Front Lotus
+  (Taijutsu/Guy/DownedKakuzu, Taijutsu's first Hardmode-tier weapon).*
 - [x] **Localization pass.** 100% of player-facing text is auto-generated: every DisplayName ends in
   "Item/Boss/Buff/Projectile" (`Chakra Scroll1 Item`, `Shinobi Vendor N P C`), every tooltip is
   `""`, every buff description renders as a raw key, keybind names show double spaces. One
@@ -107,8 +102,10 @@ Ranked by impact. Each entry has a sketch that reuses established patterns in th
   optionally a "Shinobi Handbook" starter item whose tooltip lists all keybinds.
 - [ ] **Expert/Master support.** No boss bags, trophies, relics, or boss music. Boss bags first
   (`ItemDropRule` + `BossBag` items), trophies/relics after; music is optional/art-dependent.
-- [ ] **Genjutsu intra-class progression.** All 3 Genjutsu weapons unlock at boss 1 with 6-8 damage.
+- [x] **Genjutsu intra-class progression.** All 3 Genjutsu weapons unlock at boss 1 with 6-8 damage.
   Spread the unlocks across bosses and add the Susanoo/Rinnegan items above so the class grows.
+  *Done as part of the endgame-weapons batch: Shinra Tensei (DownedPain) and Susanoo
+  (DownedMadara) give Genjutsu two more tiers beyond its original Haku-only unlock.*
 - [ ] **Mobility endgame.** No wings equivalent. "Chakra Wings" (Six Paths-themed, post-Madara,
   standard `wings` accessory stats) fits both canon and the vanilla progression expectation.
 - [ ] **Smaller items:** ModConfig (toggle HUD positions, drain rates); Ramen healing food (potion-
@@ -122,8 +119,9 @@ Ranked by impact. Each entry has a sketch that reuses established patterns in th
 1. **[DONE] Unobtainable-content quick wins + localization pass** — pure value, zero gameplay risk,
    makes everything already built actually reachable and readable (1c + localization from
    section 2). Landed 2026-07-15.
-2. **Endgame weapons for bosses 5-7** — fills the biggest gameplay hole; the materials and gates
-   already exist, so it's mostly new `ModItem`s following `RasenganItem`'s shape.
+2. **[DONE] Endgame weapons for bosses 5-7** — fills the biggest gameplay hole; the materials and
+   gates already exist, so it's mostly new `ModItem`s following `RasenganItem`'s shape. Landed
+   2026-07-15.
 3. **Class armor sets** — the next-largest expectation gap; establishes the armor pattern for
    future tiers.
 4. **Netcode pass (1a)** — big and focused; MP-only so it doesn't block single-player content work,
