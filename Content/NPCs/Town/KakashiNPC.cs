@@ -55,6 +55,8 @@ namespace NarutoOverhaul.Content.NPCs.Town
 		{
 			var downedOrochimaru = new Condition("NarutoOverhaul.DownedOrochimaru", () => StoryProgressSystem.DownedOrochimaru);
 			var downedKakuzu = new Condition("NarutoOverhaul.DownedKakuzu", () => StoryProgressSystem.DownedKakuzu);
+			var downedPain = new Condition("NarutoOverhaul.DownedPain", () => StoryProgressSystem.DownedPain);
+			var downedKaguya = new Condition("NarutoOverhaul.DownedKaguya", () => StoryProgressSystem.DownedKaguya);
 
 			new NPCShop(Type, "Shop")
 				.Add(ModContent.ItemType<ShadowCloneItem>())
@@ -64,6 +66,8 @@ namespace NarutoOverhaul.Content.NPCs.Town
 				.Add(ModContent.ItemType<WaterDragonItem>(), downedKakuzu)
 				.Add(ModContent.ItemType<ChakraPaperItem>(), downedKakuzu)
 				.Add(ModContent.ItemType<NinjutsuFocusSealItem>(), downedKakuzu)
+				.Add(ModContent.ItemType<ChidoriItem>(), downedPain)
+				.Add(ModContent.ItemType<AllKillingAshBonesItem>(), downedKaguya)
 				.Register();
 		}
 	}

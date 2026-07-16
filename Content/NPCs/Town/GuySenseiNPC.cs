@@ -54,6 +54,7 @@ namespace NarutoOverhaul.Content.NPCs.Town
 		public override void AddShops()
 		{
 			var downedShukaku = new Condition("NarutoOverhaul.DownedShukaku", () => StoryProgressSystem.DownedShukaku);
+			var downedKakuzu = new Condition("NarutoOverhaul.DownedKakuzu", () => StoryProgressSystem.DownedKakuzu);
 
 			new NPCShop(Type, "Shop")
 				.Add(ModContent.ItemType<GentleFistItem>(), downedShukaku)
@@ -61,6 +62,7 @@ namespace NarutoOverhaul.Content.NPCs.Town
 				.Add(ModContent.ItemType<IronLegItem>(), downedShukaku)
 				.Add(ModContent.ItemType<WeightedLegWarmersItem>(), downedShukaku)
 				.Add(ModContent.ItemType<TaijutsuWrapsItem>(), downedShukaku)
+				.Add(ModContent.ItemType<FrontLotusItem>(), downedKakuzu)
 				.Register();
 		}
 	}

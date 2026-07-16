@@ -56,6 +56,8 @@ namespace NarutoOverhaul.Content.NPCs.Town
 		public override void AddShops()
 		{
 			var downedHaku = new Condition("NarutoOverhaul.DownedHaku", () => StoryProgressSystem.DownedHaku);
+			var downedPain = new Condition("NarutoOverhaul.DownedPain", () => StoryProgressSystem.DownedPain);
+			var downedMadara = new Condition("NarutoOverhaul.DownedMadara", () => StoryProgressSystem.DownedMadara);
 
 			new NPCShop(Type, "Shop")
 				.Add(ModContent.ItemType<GenjutsuIllusionItem>(), downedHaku)
@@ -63,6 +65,8 @@ namespace NarutoOverhaul.Content.NPCs.Town
 				.Add(ModContent.ItemType<GenjutsuNightmareItem>(), downedHaku)
 				.Add(ModContent.ItemType<IllusionCharmItem>(), downedHaku)
 				.Add(ModContent.ItemType<GenjutsuVeilItem>(), downedHaku)
+				.Add(ModContent.ItemType<ShinraTenseiItem>(), downedPain)
+				.Add(ModContent.ItemType<SusanooItem>(), downedMadara)
 				.Register();
 		}
 	}

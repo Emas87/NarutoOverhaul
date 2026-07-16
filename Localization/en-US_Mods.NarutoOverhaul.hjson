@@ -373,6 +373,31 @@ Items: {
 		DisplayName: Monstrous Strength Gloves
 		Tooltip: "Channel chakra into your fists, Tsunade-style - quicker mining and a longer reach"
 	}
+
+	ChidoriItem: {
+		DisplayName: Chidori
+		Tooltip: "Raikiri - a lightning-charged thrust fast enough to outrun the eye"
+	}
+
+	SusanooItem: {
+		DisplayName: Susanoo
+		Tooltip: A titanic chakra avatar's reaching strike, slow but devastating
+	}
+
+	ShinraTenseiItem: {
+		DisplayName: "Shinra Tensei"
+		Tooltip: Almighty Push - a repulsive shockwave that hurls everything nearby away from you
+	}
+
+	AllKillingAshBonesItem: {
+		DisplayName: All-Killing Ash Bones
+		Tooltip: A barrage of bone spikes, sharp enough to end any battle in an instant
+	}
+
+	FrontLotusItem: {
+		DisplayName: Front Lotus
+		Tooltip: An inner-gate assisted strike that shatters the target's defenses
+	}
 }
 
 NPCs: {
@@ -461,6 +486,10 @@ Projectiles: {
 	SnakeMinionProjectile.DisplayName: Snake Summon
 	ToadMinionProjectile.DisplayName: Toad
 	ShadowCloneProjectile.DisplayName: Shadow Clone
+	ChidoriProjectile.DisplayName: Chidori
+	SusanooProjectile.DisplayName: Susanoo
+	ShinraTenseiProjectile.DisplayName: "Shinra Tensei"
+	AshBoneProjectile.DisplayName: Ash Bone
 }
 
 DamageClasses: {
