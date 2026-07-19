@@ -644,6 +644,41 @@ Items: {
 		Tooltip: A forehead protector bearing the Leaf's insignia - purely for show
 	}
 
+	SandVillageHeadbandItem: {
+		DisplayName: Sand Village Headband
+		Tooltip: A forehead protector bearing the Sand's insignia - purely for show
+	}
+
+	MistVillageHeadbandItem: {
+		DisplayName: Mist Village Headband
+		Tooltip: A forehead protector bearing the Mist's insignia - purely for show
+	}
+
+	CloudVillageHeadbandItem: {
+		DisplayName: Cloud Village Headband
+		Tooltip: A forehead protector bearing the Cloud's insignia - purely for show
+	}
+
+	StoneVillageHeadbandItem: {
+		DisplayName: Stone Village Headband
+		Tooltip: A forehead protector bearing the Stone's insignia - purely for show
+	}
+
+	ExplosiveKunaiItem: {
+		DisplayName: Explosive Kunai
+		Tooltip: A kunai with an exploding tag - detonates on impact
+	}
+
+	FumaShurikenItem: {
+		DisplayName: Fuma Shuriken
+		Tooltip: A massive four-blade shuriken that carves through up to 5 enemies
+	}
+
+	RamenStandItem: {
+		DisplayName: Ramen Stand
+		Tooltip: Ichiraku's finest - stay close to keep yourself Well Fed
+	}
+
 	ChakraWingsItem: {
 		DisplayName: Chakra Wings
 		Tooltip: Wings woven from raw chakra, in the manner of the Sage of the Six Paths

@@ -2,6 +2,7 @@ using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Content.Items.Accessories;
 using NarutoOverhaul.Content.Items.Armor;
 using NarutoOverhaul.Content.Items.Consumables;
+using NarutoOverhaul.Content.Items.Placeable;
 using NarutoOverhaul.Content.Items.Weapons;
 using NarutoOverhaul.Content.Items.Weapons.Jutsu;
 using Terraria;
@@ -74,8 +75,15 @@ namespace NarutoOverhaul.Content.NPCs.Town
 				.Add(ModContent.ItemType<StaminaPotionItem>())
 				.Add(ModContent.ItemType<StaminaRegenPotionItem>())
 				.Add(ModContent.ItemType<ShurikenItem>())
+				.Add(ModContent.ItemType<ExplosiveKunaiItem>())
+				.Add(ModContent.ItemType<FumaShurikenItem>())
 				.Add(ModContent.ItemType<RamenItem>())
+				.Add(ModContent.ItemType<RamenStandItem>())
 				.Add(ModContent.ItemType<LeafVillageHeadbandItem>())
+				.Add(ModContent.ItemType<SandVillageHeadbandItem>())
+				.Add(ModContent.ItemType<MistVillageHeadbandItem>())
+				.Add(ModContent.ItemType<CloudVillageHeadbandItem>())
+				.Add(ModContent.ItemType<StoneVillageHeadbandItem>())
 				.Add(ModContent.ItemType<ChakraWingsItem>(), downedMadara);
 
 			shop.Register();
