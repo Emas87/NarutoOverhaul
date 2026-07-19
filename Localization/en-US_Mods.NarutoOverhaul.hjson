@@ -4,6 +4,10 @@ Keybinds: {
 	"Toggle Six Paths Sage Mode.DisplayName": Toggle Six Paths Sage Mode
 	"Toggle Eight Gates.DisplayName": Toggle Eight Gates
 	"Toggle Chakra Control.DisplayName": Toggle Chakra Control
+	"Toggle Kamui Phase.DisplayName": Toggle  Kamui  Phase
+	"Hiraishin Warp.DisplayName": Hiraishin  Warp
+	Sprint.DisplayName: Sprint
+	"Toggle Byakugan.DisplayName": Toggle  Byakugan
 }
 
 Configs: {
@@ -110,16 +114,27 @@ Buffs: {
 		DisplayName: Chakra Control
 		Description: Walking on water and clinging to walls, at a steady chakra cost
 	}
+
+	KamuiPhaseBuff: {
+		DisplayName: Kamui Phase
+		Description: Phasing through terrain - drains Chakra while active
+	}
+
+	ByakuganBuff: {
+		DisplayName: Byakugan
+		Description: The all-seeing eye - reveals enemies, treasure, and danger while it lasts
+	}
+
+	SubstitutionCooldownBuff: {
+		DisplayName: Substitution Exhausted
+		Description: No log will take your place until this wears off
+	}
 }
 
 Items: {
 	TailedBeastSummonItem: {
 		DisplayName: Sand Village Forehead Protector
-		Tooltip:
-			'''
-			Summons Shukaku the One-Tail
-			Right click to summon
-			'''
+		Tooltip: Summons Shukaku the One-Tail - only usable in the Desert
 	}
 
 	RasenganItem: {
@@ -134,47 +149,27 @@ Items: {
 
 	OrochimaruSummonItem: {
 		DisplayName: Cursed Seal Scroll
-		Tooltip:
-			'''
-			Summons Orochimaru
-			Right click to summon
-			'''
+		Tooltip: Summons Orochimaru
 	}
 
 	KakuzuSummonItem: {
 		DisplayName: Bounty Contract
-		Tooltip:
-			'''
-			Summons Kakuzu
-			Right click to summon
-			'''
+		Tooltip: Summons Kakuzu - only usable in Hardmode
 	}
 
 	PainSummonItem: {
 		DisplayName: Deva Path Seal
-		Tooltip:
-			'''
-			Summons Pain - only usable near a Town NPC
-			Right click to summon
-			'''
+		Tooltip: Summons Pain - only usable in Hardmode, near a Town NPC
 	}
 
 	MadaraSummonItem: {
 		DisplayName: Reanimation Seal
-		Tooltip:
-			'''
-			Summons the reanimated Madara Uchiha
-			Right click to summon
-			'''
+		Tooltip: Summons the reanimated Madara Uchiha - only usable in Hardmode, in a Graveyard
 	}
 
 	KaguyaSummonItem: {
 		DisplayName: Dimensional Rift Shard
-		Tooltip:
-			'''
-			Summons Kaguya Otsutsuki
-			Right click to summon
-			'''
+		Tooltip: Summons Kaguya Otsutsuki - only usable in Hardmode with Haku, Shukaku, Orochimaru, Kakuzu, Pain, and Madara all defeated
 	}
 
 	FireballItem: {
@@ -189,17 +184,25 @@ Items: {
 
 	GenjutsuVeilItem: {
 		DisplayName: Genjutsu Veil
-		Tooltip: A concealing illusion that keeps enemies from noticing you as easily
+		Tooltip: Greatly reduces enemy aggro, making them less likely to notice you
 	}
 
 	NinjutsuFocusSealItem: {
 		DisplayName: Ninjutsu Focus Seal
-		Tooltip: Sharpens chakra flow, quickening your jutsu regeneration
+		Tooltip:
+			'''
+			10% increased Ninjutsu damage
+			25% increased Chakra regen
+			'''
 	}
 
 	TaijutsuWrapsItem: {
 		DisplayName: Taijutsu Training Wraps
-		Tooltip: Weighted bandages that sharpen every physical strike
+		Tooltip:
+			'''
+			10% increased Taijutsu damage
+			10% increased Taijutsu attack speed
+			'''
 	}
 
 	GenjutsuIllusionItem: {
@@ -209,17 +212,29 @@ Items: {
 
 	ChakraPaperItem: {
 		DisplayName: Chakra Paper
-		Tooltip: A simple test of chakra affinity, worn as a focus for ninjutsu
+		Tooltip:
+			'''
+			10% increased Ninjutsu damage
+			8% increased Ninjutsu critical strike chance
+			'''
 	}
 
 	IllusionCharmItem: {
 		DisplayName: Illusion Charm
-		Tooltip: Strengthens genjutsu and prolongs the illusions it casts
+		Tooltip:
+			'''
+			10% increased Genjutsu damage
+			Genjutsu control/fear/sleep effects last 1 second longer
+			'''
 	}
 
 	WeightedLegWarmersItem: {
 		DisplayName: Weighted Leg Warmers
-		Tooltip: Training weights in the style of Might Guy - remove them and feel the difference
+		Tooltip:
+			'''
+			10% increased Taijutsu damage
+			+20 max Stamina
+			'''
 	}
 
 	GenjutsuNightmareItem: {
@@ -254,11 +269,7 @@ Items: {
 
 	HakuSummonItem: {
 		DisplayName: Ice Mirror Shard Charm
-		Tooltip:
-			'''
-			Summons Haku - usable on the beach
-			Right click to summon
-			'''
+		Tooltip: Summons Haku - only usable on the Beach
 	}
 
 	CursedSnakeFangItem: {
@@ -293,38 +304,22 @@ Items: {
 
 	NinjaHoundSummonScrollItem: {
 		DisplayName: Ninja Hound Summoning Scroll
-		Tooltip:
-			'''
-			Kuchiyose - summons a ninja hound to fight at your side
-			Right click to summon
-			'''
+		Tooltip: Kuchiyose - summons a ninja hound to fight at your side
 	}
 
 	SlugSummonScrollItem: {
 		DisplayName: Slug Summoning Scroll
-		Tooltip:
-			'''
-			Kuchiyose - summons a slug to fight at your side
-			Right click to summon
-			'''
+		Tooltip: Kuchiyose - summons a slug to fight at your side
 	}
 
 	SnakeSummonScrollItem: {
 		DisplayName: Snake Summoning Scroll
-		Tooltip:
-			'''
-			Kuchiyose - summons a snake to fight at your side
-			Right click to summon
-			'''
+		Tooltip: Kuchiyose - summons a snake to fight at your side
 	}
 
 	ToadSummonScrollItem: {
 		DisplayName: Toad Summoning Scroll
-		Tooltip:
-			'''
-			Kuchiyose - summons a toad to fight at your side
-			Right click to summon
-			'''
+		Tooltip: Kuchiyose - summons a toad to fight at your side
 	}
 
 	ChakraPotionItem: {
@@ -334,7 +329,7 @@ Items: {
 
 	ChakraRegenPotionItem: {
 		DisplayName: Chakra Regeneration Potion
-		Tooltip: Chakra regenerates faster for a short time
+		Tooltip: Chakra regenerates faster for 1 minute
 	}
 
 	StaminaPotionItem: {
@@ -344,7 +339,7 @@ Items: {
 
 	StaminaRegenPotionItem: {
 		DisplayName: Stamina Regeneration Potion
-		Tooltip: Stamina regenerates faster for a short time
+		Tooltip: Stamina regenerates faster for 1 minute
 	}
 
 	ShadowCloneItem: {
@@ -354,38 +349,22 @@ Items: {
 
 	OtsutsukiChakraFragmentItem: {
 		DisplayName: Otsutsuki Chakra Fragment
-		Tooltip:
-			'''
-			The progenitor of chakra itself, condensed into a single dose - the Moon Lord's power pales before hers
-			Can only be consumed once - its blessing is permanent
-			'''
+		Tooltip: The progenitor of chakra itself, condensed into a single dose
 	}
 
 	GenjutsuMasteryScrollItem: {
 		DisplayName: Genjutsu Mastery Scroll
-		Tooltip:
-			'''
-			A permanent record of genjutsu mastery, sealed with the essence of two fallen foes
-			Can only be consumed once - its blessing is permanent
-			'''
+		Tooltip: A permanent record of genjutsu mastery, sealed with the essence of two fallen foes
 	}
 
 	NinjutsuMasteryScrollItem: {
 		DisplayName: Ninjutsu Mastery Scroll
-		Tooltip:
-			'''
-			A permanent record of ninjutsu mastery, sealed with the essence of two fallen foes
-			Can only be consumed once - its blessing is permanent
-			'''
+		Tooltip: A permanent record of ninjutsu mastery, sealed with the essence of two fallen foes
 	}
 
 	TaijutsuMasteryScrollItem: {
 		DisplayName: Taijutsu Mastery Scroll
-		Tooltip:
-			'''
-			A permanent record of taijutsu mastery, sealed with the essence of two fallen foes
-			Can only be consumed once - its blessing is permanent
-			'''
+		Tooltip: A permanent record of taijutsu mastery, sealed with the essence of two fallen foes
 	}
 
 	ChakraScroll1Item: {
@@ -516,7 +495,11 @@ Items: {
 
 	MonstrousStrengthGlovesItem: {
 		DisplayName: Monstrous Strength Gloves
-		Tooltip: Channel chakra into your fists, Tsunade-style - quicker mining and a longer reach
+		Tooltip:
+			'''
+			15% increased pickaxe speed
+			+3 tile block range
+			'''
 	}
 
 	ChidoriItem: {
@@ -546,82 +529,82 @@ Items: {
 
 	TaijutsuHelmetItem: {
 		DisplayName: Taijutsu Headband
-		Tooltip: ""
+		Tooltip: 5% increased Taijutsu damage
 	}
 
 	TaijutsuBodyItem: {
 		DisplayName: Taijutsu Training Gi
-		Tooltip: ""
+		Tooltip: 5% increased Taijutsu damage
 	}
 
 	TaijutsuLegsItem: {
 		DisplayName: Taijutsu Training Pants
-		Tooltip: ""
+		Tooltip: 5% increased Taijutsu damage
 	}
 
 	NinjutsuHelmetItem: {
 		DisplayName: Ninjutsu Headband
-		Tooltip: ""
+		Tooltip: 5% increased Ninjutsu damage
 	}
 
 	NinjutsuBodyItem: {
 		DisplayName: Ninjutsu Jonin Vest
-		Tooltip: ""
+		Tooltip: 5% increased Ninjutsu damage
 	}
 
 	NinjutsuLegsItem: {
 		DisplayName: Ninjutsu Jonin Pants
-		Tooltip: ""
+		Tooltip: 5% increased Ninjutsu damage
 	}
 
 	GenjutsuHelmetItem: {
 		DisplayName: Genjutsu Hood
-		Tooltip: ""
+		Tooltip: 5% increased Genjutsu damage
 	}
 
 	GenjutsuBodyItem: {
 		DisplayName: Genjutsu Illusionist's Robe
-		Tooltip: ""
+		Tooltip: 5% increased Genjutsu damage
 	}
 
 	GenjutsuLegsItem: {
 		DisplayName: Genjutsu Illusionist's Pants
-		Tooltip: ""
+		Tooltip: 5% increased Genjutsu damage
 	}
 
 	HakuBossBagItem: {
 		DisplayName: Haku's Satchel
-		Tooltip: ""
+		Tooltip: Consumed on use - grants bonus coins and 5 Ice Mirror Shards
 	}
 
 	ShukakuBossBagItem: {
 		DisplayName: Shukaku's Satchel
-		Tooltip: ""
+		Tooltip: Consumed on use - grants bonus coins and 5 Sand Cores
 	}
 
 	OrochimaruBossBagItem: {
 		DisplayName: Orochimaru's Satchel
-		Tooltip: ""
+		Tooltip: Consumed on use - grants bonus coins and 5 Cursed Snake Fangs
 	}
 
 	KakuzuBossBagItem: {
 		DisplayName: Kakuzu's Satchel
-		Tooltip: ""
+		Tooltip: Consumed on use - grants bonus coins and 5 Kakuzu's Hearts
 	}
 
 	PainBossBagItem: {
 		DisplayName: Pain's Satchel
-		Tooltip: ""
+		Tooltip: Consumed on use - grants bonus coins and 5 Rinnegan Fragments
 	}
 
 	MadaraBossBagItem: {
 		DisplayName: Madara's Satchel
-		Tooltip: ""
+		Tooltip: Consumed on use - grants bonus coins and 5 Susanoo Cores
 	}
 
 	KaguyaBossBagItem: {
 		DisplayName: Kaguya's Satchel
-		Tooltip: ""
+		Tooltip: Consumed on use - grants a large bonus of coins
 	}
 
 	ShinobiHandbookItem: {
@@ -636,7 +619,7 @@ Items: {
 
 	ShurikenItem: {
 		DisplayName: Shuriken
-		Tooltip: A spinning throwing star that cuts through multiple enemies
+		Tooltip: A spinning throwing star that pierces up to 3 enemies
 	}
 
 	LeafVillageHeadbandItem: {
@@ -679,10 +662,36 @@ Items: {
 		Tooltip: Ichiraku's finest - stay close to keep yourself Well Fed
 	}
 
+	PaperBombItem: {
+		DisplayName: Paper Bomb
+		Tooltip: An explosive tag - sticks where it lands and detonates after a short fuse
+	}
+
+	SubstitutionScrollItem: {
+		DisplayName: Substitution Scroll
+		Tooltip:
+			'''
+			The next hit that would strike you hits a log instead
+			45 second cooldown
+			'''
+	}
+
 	ChakraWingsItem: {
 		DisplayName: Chakra Wings
 		Tooltip: Wings woven from raw chakra, in the manner of the Sage of the Six Paths
 	}
+
+	HiraishinSealItem: {
+		DisplayName: Hiraishin Seal
+		Tooltip:
+			'''
+			Places a marker that the Hiraishin Warp keybind can teleport you to
+			Requires Pain defeated
+			'''
+	}
+
+
+
 }
 
 NPCs: {
@@ -776,6 +785,9 @@ Projectiles: {
 	ShinraTenseiProjectile.DisplayName: Shinra Tensei
 	AshBoneProjectile.DisplayName: Ash Bone
 	ShurikenProjectile.DisplayName: Shuriken Projectile
+	ExplosiveKunaiProjectile.DisplayName: Explosive Kunai Projectile
+	FumaShurikenProjectile.DisplayName: Fuma Shuriken Projectile
+	PaperBombProjectile.DisplayName: Paper Bomb Projectile
 }
 
 DamageClasses: {

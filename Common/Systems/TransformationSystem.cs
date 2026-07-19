@@ -16,6 +16,8 @@ namespace NarutoOverhaul.Common.Systems
 			RegisteredForms.Add(new SixPathsSageModeForm());
 			RegisteredForms.Add(new EightGatesForm());
 			RegisteredForms.Add(new ChakraControlForm());
+			RegisteredForms.Add(new KamuiPhaseForm());
+			RegisteredForms.Add(new ByakuganForm());
 		}
 	}
 }

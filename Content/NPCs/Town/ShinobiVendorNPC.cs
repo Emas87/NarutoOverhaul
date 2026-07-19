@@ -77,6 +77,8 @@ namespace NarutoOverhaul.Content.NPCs.Town
 				.Add(ModContent.ItemType<ShurikenItem>())
 				.Add(ModContent.ItemType<ExplosiveKunaiItem>())
 				.Add(ModContent.ItemType<FumaShurikenItem>())
+				.Add(ModContent.ItemType<PaperBombItem>())
+				.Add(ModContent.ItemType<SubstitutionScrollItem>())
 				.Add(ModContent.ItemType<RamenItem>())
 				.Add(ModContent.ItemType<RamenStandItem>())
 				.Add(ModContent.ItemType<LeafVillageHeadbandItem>())

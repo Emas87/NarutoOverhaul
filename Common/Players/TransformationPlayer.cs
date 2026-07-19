@@ -16,11 +16,21 @@ namespace NarutoOverhaul.Common.Players
 		public static ModKeybind ToggleSixPathsSageModeKeybind;
 		public static ModKeybind ToggleEightGatesKeybind;
 		public static ModKeybind ToggleChakraControlKeybind;
+		public static ModKeybind ToggleKamuiPhaseKeybind;
+		public static ModKeybind ToggleByakuganKeybind;
+		public static ModKeybind HiraishinWarpKeybind;
 
 		private const int EightGatesFormIndex = 3;
 		private const int ChakraControlFormIndex = 4;
+		private const int KamuiPhaseFormIndex = 5;
+		private const int ByakuganFormIndex = 6;
 		private const float EightGatesAdvanceStaminaCost = 10f;
 		private const int EightGatesWindupTicks = 180; // ~3 seconds at 60 ticks/sec
+		private const float HiraishinWarpChakraCost = 15f;
+
+		// Local cycling cursor into HiraishinMarkerSystem.MarkedTiles - deliberately not synced;
+		// it's just which mark *this client* will warp to next, not shared state.
+		private int hiraishinMarkIndex = -1;
 
 		// -1 = no active form. Only one form active at a time for now; the registry design in
 		// TransformationSystem means supporting simultaneous/stacked forms later is additive, not a rewrite.
@@ -40,6 +50,9 @@ namespace NarutoOverhaul.Common.Players
 			ToggleSixPathsSageModeKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Six Paths Sage Mode", "OemComma");
 			ToggleEightGatesKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Eight Gates", "OemOpenBrackets");
 			ToggleChakraControlKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Chakra Control", "OemCloseBrackets");
+			ToggleKamuiPhaseKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Kamui Phase", "OemPipe");
+			ToggleByakuganKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Byakugan", "B");
+			HiraishinWarpKeybind = KeybindLoader.RegisterKeybind(Mod, "Hiraishin Warp", "H");
 		}
 
 		public override void ProcessTriggers(TriggersSet triggersSet)
@@ -68,6 +81,47 @@ namespace NarutoOverhaul.Common.Players
 			{
 				ToggleForm(ChakraControlFormIndex);
 			}
+
+			if (ToggleKamuiPhaseKeybind.JustPressed)
+			{
+				ToggleForm(KamuiPhaseFormIndex);
+			}
+
+			if (ToggleByakuganKeybind.JustPressed)
+			{
+				ToggleForm(ByakuganFormIndex);
+			}
+
+			if (HiraishinWarpKeybind.JustPressed)
+			{
+				HandleHiraishinWarp();
+			}
+		}
+
+		// Cycles to the next placed Hiraishin Seal (world-wide, shared - see HiraishinMarkerSystem)
+		// and warps straight to it. Gated at the same story tier as Chidori/Shinra Tensei since
+		// there's no dedicated Minato story boss yet.
+		private void HandleHiraishinWarp()
+		{
+			if (!StoryProgressSystem.DownedPain)
+			{
+				return;
+			}
+
+			var marks = HiraishinMarkerSystem.MarkedTiles;
+
+			if (marks.Count == 0)
+			{
+				return;
+			}
+
+			if (!Player.GetModPlayer<ChakraPlayer>().TrySpendChakra(HiraishinWarpChakraCost))
+			{
+				return;
+			}
+
+			hiraishinMarkIndex = (hiraishinMarkIndex + 1) % marks.Count;
+			Player.Teleport(marks[hiraishinMarkIndex].ToWorldCoordinates(8f, 8f));
 		}
 
 		private void ToggleForm(int formIndex)
