@@ -18,6 +18,7 @@ namespace NarutoOverhaul.Common.Systems
 			RegisteredForms.Add(new ChakraControlForm());
 			RegisteredForms.Add(new KamuiPhaseForm());
 			RegisteredForms.Add(new ByakuganForm());
+			RegisteredForms.Add(new CurseMarkForm());
 		}
 	}
 }

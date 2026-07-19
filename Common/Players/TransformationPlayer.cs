@@ -18,12 +18,14 @@ namespace NarutoOverhaul.Common.Players
 		public static ModKeybind ToggleChakraControlKeybind;
 		public static ModKeybind ToggleKamuiPhaseKeybind;
 		public static ModKeybind ToggleByakuganKeybind;
+		public static ModKeybind ToggleCurseMarkKeybind;
 		public static ModKeybind HiraishinWarpKeybind;
 
 		private const int EightGatesFormIndex = 3;
 		private const int ChakraControlFormIndex = 4;
 		private const int KamuiPhaseFormIndex = 5;
 		private const int ByakuganFormIndex = 6;
+		private const int CurseMarkFormIndex = 7;
 		private const float EightGatesAdvanceStaminaCost = 10f;
 		private const int EightGatesWindupTicks = 180; // ~3 seconds at 60 ticks/sec
 		private const float HiraishinWarpChakraCost = 15f;
@@ -52,6 +54,7 @@ namespace NarutoOverhaul.Common.Players
 			ToggleChakraControlKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Chakra Control", "OemCloseBrackets");
 			ToggleKamuiPhaseKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Kamui Phase", "OemPipe");
 			ToggleByakuganKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Byakugan", "B");
+			ToggleCurseMarkKeybind = KeybindLoader.RegisterKeybind(Mod, "Toggle Curse Mark", "N");
 			HiraishinWarpKeybind = KeybindLoader.RegisterKeybind(Mod, "Hiraishin Warp", "H");
 		}
 
@@ -90,6 +93,11 @@ namespace NarutoOverhaul.Common.Players
 			if (ToggleByakuganKeybind.JustPressed)
 			{
 				ToggleForm(ByakuganFormIndex);
+			}
+
+			if (ToggleCurseMarkKeybind.JustPressed)
+			{
+				ToggleForm(CurseMarkFormIndex);
 			}
 
 			if (HiraishinWarpKeybind.JustPressed)

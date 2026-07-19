@@ -6,8 +6,8 @@ Keybinds: {
 	"Toggle Chakra Control.DisplayName": Toggle Chakra Control
 	"Toggle Kamui Phase.DisplayName": Toggle  Kamui  Phase
 	"Hiraishin Warp.DisplayName": Hiraishin  Warp
-	Sprint.DisplayName: Sprint
 	"Toggle Byakugan.DisplayName": Toggle  Byakugan
+	"Toggle Curse Mark.DisplayName": Toggle  Curse  Mark
 }
 
 Configs: {
@@ -128,6 +128,11 @@ Buffs: {
 	SubstitutionCooldownBuff: {
 		DisplayName: Substitution Exhausted
 		Description: No log will take your place until this wears off
+	}
+
+	CurseMarkBuff: {
+		DisplayName: Curse Mark
+		Description: The Cursed Seal spreads - great power, paid for in life
 	}
 }
 
@@ -674,6 +679,11 @@ Items: {
 			The next hit that would strike you hits a log instead
 			45 second cooldown
 			'''
+	}
+
+	CursedSealFragmentItem: {
+		DisplayName: Cursed Seal Fragment
+		Tooltip: Consume to brand yourself with Orochimaru's Cursed Seal, unlocking the Curse Mark form
 	}
 
 	ChakraWingsItem: {
