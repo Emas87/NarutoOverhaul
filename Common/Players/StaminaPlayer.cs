@@ -13,6 +13,8 @@ namespace NarutoOverhaul.Common.Players
 	// regen-delay-after-spend than Chakra.
 	public class StaminaPlayer : ModPlayer
 	{
+		public static ModKeybind SprintKeybind;
+
 		public const int RegenDelayTicks = 15;
 
 		public float Stamina;
@@ -29,11 +31,46 @@ namespace NarutoOverhaul.Common.Players
 		public const float BaseStaminaRegenRate = 1.2f;
 		public float StaminaRegenRate;
 
+		// Fixed rate - deliberately does NOT scale with MaxStamina. A base ~100 Stamina character
+		// empties this in ~5 seconds of continuous running; a Taijutsu-geared character with a much
+		// bigger MaxStamina pool (see TaijutsuBodyItem/WeightedLegWarmersItem/Stamina Scrolls) runs
+		// proportionally longer at this same rate - "almost free" running falls out of the existing
+		// Stamina-growth systems with no class check needed here.
+		private const float RunStaminaDrainPerTick = 100f / (5f * 60f);
+
+		private const int PotionSicknessDuration = 60 * 30; // 30 seconds of not drinking fully clears it
+		private const float PotionSicknessStackPenalty = 0.2f; // -20% restore per stack
+		private const int MaxPotionSicknessStacks = 5; // 5th+ stack in a row restores nothing
+
 		private int regenDelayCounter;
+		private bool isRunning;
+		private int potionSicknessStacks;
+		private int potionSicknessTimer;
+
+		public override void Load()
+		{
+			SprintKeybind = KeybindLoader.RegisterKeybind(Mod, "Sprint", "LeftShift");
+		}
 
 		public override void Initialize()
 		{
 			Stamina = BaseMaxStamina;
+		}
+
+		// Called by StaminaPotionItem BEFORE applying its restore, so the first potion in a fresh
+		// sequence is always full strength and each subsequent one (while still "sick") is
+		// progressively weaker.
+		public float GetPotionEffectivenessMultiplier()
+		{
+			return System.Math.Max(0f, 1f - (potionSicknessStacks * PotionSicknessStackPenalty));
+		}
+
+		// Called by StaminaPotionItem AFTER applying its restore - refreshes the timer and adds a
+		// stack for the next potion to be weaker against.
+		public void RegisterPotionUse()
+		{
+			potionSicknessStacks = System.Math.Min(MaxPotionSicknessStacks, potionSicknessStacks + 1);
+			potionSicknessTimer = PotionSicknessDuration;
 		}
 
 		public override void ResetEffects()
@@ -45,10 +82,40 @@ namespace NarutoOverhaul.Common.Players
 			{
 				StaminaRegenRate += 2f;
 			}
+
+			// Running: hold Sprint + a direction for +50% move speed, gated purely on having
+			// Stamina left - not on any class/mount check beyond excluding mounts (which have their
+			// own speed system). Set here (not PreUpdateMovement) per TransformationForm's
+			// convention that moveSpeed has to be staged before vanilla's movement code reads it.
+			isRunning = SprintKeybind.Current && (Player.controlLeft || Player.controlRight) && !Player.mount.Active && Stamina > 0f;
+
+			if (isRunning)
+			{
+				Player.moveSpeed += 0.5f;
+			}
 		}
 
 		public override void PostUpdateMiscEffects()
 		{
+			if (potionSicknessTimer > 0)
+			{
+				potionSicknessTimer--;
+
+				if (potionSicknessTimer == 0)
+				{
+					potionSicknessStacks = 0;
+				}
+			}
+
+			if (isRunning)
+			{
+				// Not TrySpendStamina - that's all-or-nothing (correct for one-shot ability costs),
+				// but a continuous per-tick drain needs to deplete-and-stop at exactly 0 instead of
+				// getting stuck on a residual smaller than one tick's drain amount forever.
+				Stamina = System.Math.Max(0f, Stamina - RunStaminaDrainPerTick);
+				regenDelayCounter = RegenDelayTicks;
+			}
+
 			if (Stamina > MaxStamina)
 			{
 				Stamina = MaxStamina;

@@ -10,6 +10,8 @@ namespace NarutoOverhaul.Content.Minions
 		protected override int BuffType => ModContent.BuffType<NinjaHoundMinionBuff>();
 		protected override float MoveSpeed => 9f;
 		protected override float AttackRange => 550f;
+		protected override int IdleFrameCount => 6;
+		protected override int AttackFrameCount => 8;
 
 		protected override void SetMinionSize()
 		{

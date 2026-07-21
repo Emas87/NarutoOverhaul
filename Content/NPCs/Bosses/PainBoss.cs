@@ -6,6 +6,7 @@ using NarutoOverhaul.Content.Projectiles;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using NarutoOverhaul.Content.Items.Consumables;
@@ -42,6 +43,20 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		private const float DevaRepelRadius = 220f;
 		private const float PretaDrainRadius = 260f;
 		public const float TownNpcDetectionRadius = 2500f;
+
+		// Sheet layout from the nano-banana-generated PainBoss.png: idle(4)/attack(6). Reused as-is
+		// for all 6 Paths per ANIMATION_PIPELINE.md - they're differentiated by projectile VFX, not pose.
+		private const int IdleFrameStart = 0;
+		private const int IdleFrameCount = 4;
+		private const int IdleTicksPerStep = 8;
+
+		private const int AttackFrameStart = IdleFrameStart + IdleFrameCount;
+		private const int AttackFrameCount = 6;
+		private const int AttackTicksPerStep = 6;
+
+		private bool inAttackBlock;
+		private int animFrame;
+		private int animTicks;
 
 		private Path CurrentPath
 		{
@@ -81,6 +96,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			NPC.npcSlots = 10f;
 			NPC.aiStyle = -1;
 			NPC.value = Item.buyPrice(gold: 28);
+			Main.npcFrameCount[NPC.type] = IdleFrameCount + AttackFrameCount;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -179,7 +195,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				CurrentPath = expected;
 				NPC.velocity = Vector2.Zero;
 				SubCounter = 0f;
-				ChakraVFX.SpawnBurst(NPC.Center, DustID.PurpleTorch, 18, 1.4f);
+				ChakraVFX.SpawnGenjutsuBurst(NPC.Center, 2.5f);
 				SoundEngine.PlaySound(SoundID.Item29, NPC.Center);
 			}
 		}
@@ -229,7 +245,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 					target.velocity += push;
 				}
 
-				ChakraVFX.SpawnDirectionalBurst(NPC.Center, pushDirection, DustID.PurpleTorch, 16, 6f);
+				ChakraVFX.SpawnGenjutsuBurst(NPC.Center, 2.4f, pushDirection.ToRotation());
 				SoundEngine.PlaySound(SoundID.Item14, NPC.Center);
 			}
 
@@ -308,7 +324,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			{
 				target.GetModPlayer<ChakraPlayer>().TrySpendChakra(8f);
 				ChakraPlayer.SendCorrection(target); // server-only drain - tell the owning client
-				ChakraVFX.SpawnBurst(target.Center, DustID.PurpleTorch, 3, 0.8f);
+				ChakraVFX.SpawnGenjutsuBurst(target.Center, 0.5f);
 			}
 
 			if (StateTimer >= 60)
@@ -325,7 +341,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			if (StateTimer == 20)
 			{
 				NPC.life = System.Math.Min(NPC.lifeMax, NPC.life + (int)(NPC.lifeMax * 0.05f));
-				ChakraVFX.SpawnBurst(NPC.Center, DustID.HealingPlus, 12, 1.2f);
+				ChakraVFX.SpawnHealingBurst(NPC.Center, 1.8f);
 			}
 
 			if (StateTimer >= 50)
@@ -347,12 +363,40 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 		}
 
+		public override void FindFrame(int frameCounter)
+		{
+			int frameHeight = TextureAssets.Npc[NPC.type].Value.Height / Main.npcFrameCount[NPC.type];
+			NPC.frame.Width = TextureAssets.Npc[NPC.type].Value.Width;
+			NPC.frame.Height = frameHeight;
+
+			bool targetAttack = CurrentAttack == AttackState.Attack;
+			if (targetAttack != inAttackBlock)
+			{
+				inAttackBlock = targetAttack;
+				animFrame = 0;
+				animTicks = 0;
+			}
+
+			int frameStart = inAttackBlock ? AttackFrameStart : IdleFrameStart;
+			int frameCount = inAttackBlock ? AttackFrameCount : IdleFrameCount;
+			int ticksPerStep = inAttackBlock ? AttackTicksPerStep : IdleTicksPerStep;
+
+			animTicks++;
+			if (animTicks >= ticksPerStep)
+			{
+				animTicks = 0;
+				animFrame = (animFrame + 1) % frameCount;
+			}
+
+			NPC.frame.Y = (frameStart + animFrame) * frameHeight;
+		}
+
 		public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
 		{
 			if (CurrentPath == Path.Human)
 			{
 				NPC.life = System.Math.Min(NPC.lifeMax, NPC.life + hurtInfo.Damage / 2);
-				ChakraVFX.SpawnBurst(NPC.Center, DustID.HealingPlus, 6, 1f);
+				ChakraVFX.SpawnHealingBurst(NPC.Center, 0.75f);
 			}
 		}
 
@@ -372,7 +416,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		public override void HitEffect(NPC.HitInfo hit)
 		{
-			ChakraVFX.SpawnBurst(NPC.Center, DustID.PurpleTorch, 3, 1f, noGravity: false);
+			ChakraVFX.SpawnGenjutsuBurst(NPC.Center, 0.5f);
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

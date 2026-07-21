@@ -9,8 +9,9 @@ namespace NarutoOverhaul.Content.UI
 		public override void OnInitialize()
 		{
 			activeFormIndicatorElement = new ActiveFormIndicatorElement();
-			activeFormIndicatorElement.Left.Set(20f, 0f);
-			activeFormIndicatorElement.Top.Set(230f, 0f);
+			// See ChakraBarUIState - centered in the gap between inventory and minimap.
+			activeFormIndicatorElement.Left.Set(-20f, 0.5f);
+			activeFormIndicatorElement.Top.Set(70f, 0f);
 			activeFormIndicatorElement.Width.Set(150f, 0f);
 			activeFormIndicatorElement.Height.Set(20f, 0f);
 

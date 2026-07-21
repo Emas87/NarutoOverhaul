@@ -1,6 +1,5 @@
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Projectiles
@@ -28,7 +27,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		public override void OnKill(int timeLeft)
 		{
-			Common.VFX.ChakraVFX.SpawnBurst(Projectile.Center, DustID.IceTorch, 4, 0.8f);
+			Common.VFX.ChakraVFX.SpawnIceBurst(Projectile.Center, 0.5f);
 		}
 	}
 }

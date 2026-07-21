@@ -1,6 +1,5 @@
 using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Projectiles
@@ -25,14 +24,32 @@ namespace NarutoOverhaul.Content.Projectiles
 			set => Projectile.ai[0] = (float)value;
 		}
 
-		private int DustType => BoltElement switch
+		private void SpawnElementBurst(float scale)
 		{
-			Element.Fire => DustID.Torch,
-			Element.Wind => DustID.Cloud,
-			Element.Lightning => DustID.Electric,
-			Element.Earth => DustID.Stone,
-			_ => DustID.Shadowflame,
-		};
+			switch (BoltElement)
+			{
+				case Element.Fire:
+					Common.VFX.ChakraVFX.SpawnFireBurst(Projectile.Center, scale);
+					break;
+				case Element.Wind:
+					Common.VFX.ChakraVFX.SpawnWindBurst(Projectile.Center, scale);
+					break;
+				case Element.Lightning:
+					Common.VFX.ChakraVFX.SpawnLightningBurst(Projectile.Center, scale);
+					break;
+				case Element.Earth:
+					Common.VFX.ChakraVFX.SpawnEarthBurst(Projectile.Center, scale);
+					break;
+				default:
+					Common.VFX.ChakraVFX.SpawnCoreBurst(Projectile.Center, scale);
+					break;
+			}
+		}
+
+		private const int FrameCount = 7;
+		private const int TicksPerFrame = 6;
+		private int animFrame;
+		private int animTicks;
 
 		public override void SetDefaults()
 		{
@@ -45,11 +62,20 @@ namespace NarutoOverhaul.Content.Projectiles
 			Projectile.timeLeft = 240;
 			Projectile.tileCollide = true;
 			Projectile.ignoreWater = true;
+			Main.projFrames[Projectile.type] = FrameCount;
 		}
 
 		public override void AI()
 		{
 			Projectile.rotation += 0.2f;
+
+			animTicks++;
+			if (animTicks >= TicksPerFrame)
+			{
+				animTicks = 0;
+				animFrame = (animFrame + 1) % FrameCount;
+			}
+			Projectile.frame = animFrame;
 
 			// Lightning bolts curve slightly toward their target's last known direction for a
 			// "homing" feel; every other element just flies straight.
@@ -62,13 +88,13 @@ namespace NarutoOverhaul.Content.Projectiles
 
 			if (Main.rand.NextBool(3))
 			{
-				Common.VFX.ChakraVFX.SpawnBurst(Projectile.Center, DustType, 1, 0.8f);
+				SpawnElementBurst(0.5f);
 			}
 		}
 
 		public override void OnKill(int timeLeft)
 		{
-			Common.VFX.ChakraVFX.SpawnBurst(Projectile.Center, DustType, 6, 1f);
+			SpawnElementBurst(0.75f);
 		}
 	}
 }

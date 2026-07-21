@@ -9,8 +9,9 @@ namespace NarutoOverhaul.Content.UI
 		public override void OnInitialize()
 		{
 			staminaBarElement = new StaminaBarElement();
-			staminaBarElement.Left.Set(20f, 0f);
-			staminaBarElement.Top.Set(205f, 0f);
+			// See ChakraBarUIState - centered in the gap between inventory and minimap.
+			staminaBarElement.Left.Set(-20f, 0.5f);
+			staminaBarElement.Top.Set(45f, 0f);
 			staminaBarElement.Width.Set(150f, 0f);
 			staminaBarElement.Height.Set(20f, 0f);
 

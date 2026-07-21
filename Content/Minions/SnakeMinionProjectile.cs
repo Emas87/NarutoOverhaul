@@ -12,6 +12,8 @@ namespace NarutoOverhaul.Content.Minions
 		protected override int BuffType => ModContent.BuffType<SnakeMinionBuff>();
 		protected override float MoveSpeed => 7f;
 		protected override float AttackRange => 500f;
+		protected override int IdleFrameCount => 5;
+		protected override int AttackFrameCount => 8;
 
 		private float wobbleTimer;
 		private int lungeTimer;

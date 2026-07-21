@@ -32,7 +32,7 @@ namespace NarutoOverhaul.Content.UI
 
 		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
-			int manaBarIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mana Bar"));
+			int manaBarIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Resource Bars"));
 
 			if (manaBarIndex == -1)
 			{

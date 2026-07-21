@@ -46,6 +46,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			tooltips.Add(new TooltipLine(Mod, "StaminaCost", $"Uses {StaminaCost} Stamina"));
+			tooltips.Add(new TooltipLine(Mod, "StoryRequirement", "Requires Shukaku defeated"));
 		}
 	}
 }

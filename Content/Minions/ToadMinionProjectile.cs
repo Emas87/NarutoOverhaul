@@ -11,6 +11,8 @@ namespace NarutoOverhaul.Content.Minions
 		protected override int BuffType => ModContent.BuffType<ToadMinionBuff>();
 		protected override float MoveSpeed => 6f;
 		protected override float AttackRange => 500f;
+		protected override int IdleFrameCount => 4;
+		protected override int AttackFrameCount => 6;
 
 		private int hopTimer;
 

@@ -12,6 +12,12 @@ namespace NarutoOverhaul.Content.Projectiles
 	// rather than a hand-written NPC-radius loop.
 	public class ShinraTenseiProjectile : ModProjectile
 	{
+		// Expanding-ring sheet: frame 0 is a tiny ring, frame 5 is the huge faded shockwave at
+		// full extent. Driven directly off timeLeft rather than an independent tick counter, so
+		// the visual ring size always matches how far into its (short, one-shot) 12-tick life it is.
+		private const int FrameCount = 6;
+		private const int LifetimeTicks = 12;
+
 		public override void SetDefaults()
 		{
 			Projectile.width = 220;
@@ -21,17 +27,21 @@ namespace NarutoOverhaul.Content.Projectiles
 			Projectile.hostile = false;
 			Projectile.DamageType = ModContent.GetInstance<GenjutsuDamageClass>();
 			Projectile.penetrate = -1;
-			Projectile.timeLeft = 12;
+			Projectile.timeLeft = LifetimeTicks;
 			Projectile.tileCollide = false;
+			Main.projFrames[Projectile.type] = FrameCount;
 		}
 
 		public override void AI()
 		{
-			if (Projectile.timeLeft == 12)
+			if (Projectile.timeLeft == LifetimeTicks)
 			{
-				Common.VFX.ChakraVFX.SpawnBurst(Projectile.Center, DustID.PurpleTorch, 30, 2.2f);
+				Common.VFX.ChakraVFX.SpawnGenjutsuBurst(Projectile.Center, 2.5f);
 				SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
 			}
+
+			int elapsed = LifetimeTicks - Projectile.timeLeft;
+			Projectile.frame = Utils.Clamp(elapsed * FrameCount / LifetimeTicks, 0, FrameCount - 1);
 		}
 	}
 }

@@ -3,7 +3,6 @@ using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
 using NarutoOverhaul.Content.Buffs;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Projectiles
@@ -13,6 +12,11 @@ namespace NarutoOverhaul.Content.Projectiles
 	public class GenjutsuIllusionProjectile : ModProjectile
 	{
 		public const int ControlDuration = 300; // 5 seconds
+
+		private const int FrameCount = 10;
+		private const int TicksPerFrame = 4;
+		private int animFrame;
+		private int animTicks;
 
 		public override void SetDefaults()
 		{
@@ -25,6 +29,7 @@ namespace NarutoOverhaul.Content.Projectiles
 			Projectile.penetrate = 1;
 			Projectile.timeLeft = 90;
 			Projectile.tileCollide = true;
+			Main.projFrames[Projectile.type] = FrameCount;
 		}
 
 		public override void AI()
@@ -33,8 +38,16 @@ namespace NarutoOverhaul.Content.Projectiles
 
 			if (Main.rand.NextBool(2))
 			{
-				ChakraVFX.SpawnBurst(Projectile.Center, DustID.PurpleTorch, 1, 0.8f);
+				ChakraVFX.SpawnGenjutsuBurst(Projectile.Center, 0.5f);
 			}
+
+			animTicks++;
+			if (animTicks >= TicksPerFrame)
+			{
+				animTicks = 0;
+				animFrame = (animFrame + 1) % FrameCount;
+			}
+			Projectile.frame = animFrame;
 		}
 
 		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
@@ -45,12 +58,12 @@ namespace NarutoOverhaul.Content.Projectiles
 			target.AddBuff(ModContent.BuffType<GenjutsuControlDebuff>(), duration);
 			target.GetGlobalNPC<GenjutsuGlobalNPC>().ControllingPlayerIndex = Projectile.owner;
 			target.netUpdate = true; // force an immediate sync so the server/other clients learn who's controlling this puppet
-			ChakraVFX.SpawnBurst(target.Center, DustID.PurpleTorch, 10, 1.2f);
+			ChakraVFX.SpawnGenjutsuBurst(target.Center, 1.5f);
 		}
 
 		public override void OnKill(int timeLeft)
 		{
-			ChakraVFX.SpawnBurst(Projectile.Center, DustID.PurpleTorch, 6, 1f);
+			ChakraVFX.SpawnGenjutsuBurst(Projectile.Center, 0.75f);
 		}
 	}
 }

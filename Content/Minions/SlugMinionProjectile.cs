@@ -12,6 +12,8 @@ namespace NarutoOverhaul.Content.Minions
 		protected override int BuffType => ModContent.BuffType<SlugMinionBuff>();
 		protected override float MoveSpeed => 4f;
 		protected override float AttackRange => 400f;
+		protected override int IdleFrameCount => 4;
+		protected override int AttackFrameCount => 12;
 
 		private const int HealIntervalTicks = 300; // 5 seconds
 		private const int HealAmount = 15;

@@ -44,6 +44,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			tooltips.Add(new TooltipLine(Mod, "ChakraCost", $"Uses {ChakraCost} Chakra"));
+			tooltips.Add(new TooltipLine(Mod, "StoryRequirement", "Requires Haku defeated"));
 			tooltips.Add(new TooltipLine(Mod, "Sleep", "Completely immobilizes the target, briefly"));
 		}
 	}

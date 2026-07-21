@@ -3,6 +3,7 @@ using NarutoOverhaul.Content.Items.Accessories;
 using NarutoOverhaul.Content.Items.Armor;
 using NarutoOverhaul.Content.Items.Weapons.Jutsu;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -15,9 +16,24 @@ namespace NarutoOverhaul.Content.NPCs.Town
 	// items' own existing CanUseItem gate.
 	public class ItachiNPC : ModNPC
 	{
+		// Sheet layout from the nano-banana-generated ItachiNPC.png: idle(5)/walking(8). Custom
+		// FindFrame() instead of AnimationType = NPCID.Guide since our sheet is a 2-row idle/walk
+		// pair, not vanilla's 25-slot Guide frame layout.
+		private const int IdleFrameStart = 0;
+		private const int IdleFrameCount = 5;
+		private const int IdleTicksPerStep = 8;
+
+		private const int WalkFrameStart = IdleFrameStart + IdleFrameCount;
+		private const int WalkFrameCount = 8;
+		private const int WalkTicksPerStep = 6;
+
+		private bool inWalkBlock;
+		private int animFrame;
+		private int animTicks;
+
 		public override void SetStaticDefaults()
 		{
-			Main.npcFrameCount[NPC.type] = 25;
+			Main.npcFrameCount[NPC.type] = IdleFrameCount + WalkFrameCount;
 		}
 
 		public override void SetDefaults()
@@ -33,7 +49,34 @@ namespace NarutoOverhaul.Content.NPCs.Town
 			NPC.HitSound = SoundID.NPCHit1;
 			NPC.DeathSound = SoundID.NPCDeath1;
 			NPC.knockBackResist = 0.5f;
-			AnimationType = NPCID.Guide;
+		}
+
+		public override void FindFrame(int frameCounter)
+		{
+			int frameHeight = TextureAssets.Npc[NPC.type].Value.Height / Main.npcFrameCount[NPC.type];
+			NPC.frame.Width = TextureAssets.Npc[NPC.type].Value.Width;
+			NPC.frame.Height = frameHeight;
+
+			bool walking = NPC.velocity.X != 0f;
+			if (walking != inWalkBlock)
+			{
+				inWalkBlock = walking;
+				animFrame = 0;
+				animTicks = 0;
+			}
+
+			int frameStart = inWalkBlock ? WalkFrameStart : IdleFrameStart;
+			int frameCount = inWalkBlock ? WalkFrameCount : IdleFrameCount;
+			int ticksPerStep = inWalkBlock ? WalkTicksPerStep : IdleTicksPerStep;
+
+			animTicks++;
+			if (animTicks >= ticksPerStep)
+			{
+				animTicks = 0;
+				animFrame = (animFrame + 1) % frameCount;
+			}
+
+			NPC.frame.Y = (frameStart + animFrame) * frameHeight;
 		}
 
 		public override string GetChat()

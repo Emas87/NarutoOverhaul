@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NarutoOverhaul.Content.Buffs;
 using Terraria;
 using Terraria.ID;
@@ -31,6 +32,11 @@ namespace NarutoOverhaul.Content.Items.Consumables
 		{
 			player.AddBuff(Item.buffType, Item.buffTime);
 			return true;
+		}
+
+		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		{
+			tooltips.Add(new TooltipLine(Mod, "RegenBonus", "+1 Chakra regen per tick"));
 		}
 	}
 }

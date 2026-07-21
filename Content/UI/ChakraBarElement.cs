@@ -30,6 +30,10 @@ namespace NarutoOverhaul.Content.UI
 				backgroundRect.Height - 4);
 
 			spriteBatch.Draw(TextureAssets.MagicPixel.Value, fillRect, new Color(40, 130, 220));
+
+			string text = $"{(int)chakraPlayer.Chakra}/{(int)chakraPlayer.MaxChakra}";
+			Vector2 center = new Vector2(backgroundRect.X + (backgroundRect.Width / 2f), backgroundRect.Y + (backgroundRect.Height / 2f));
+			Utils.DrawBorderString(spriteBatch, text, center, Color.White, 0.8f, 0.5f, 0.5f);
 		}
 	}
 }

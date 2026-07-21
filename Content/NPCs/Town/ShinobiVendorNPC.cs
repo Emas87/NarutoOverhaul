@@ -6,6 +6,7 @@ using NarutoOverhaul.Content.Items.Placeable;
 using NarutoOverhaul.Content.Items.Weapons;
 using NarutoOverhaul.Content.Items.Weapons.Jutsu;
 using Terraria;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -13,14 +14,27 @@ namespace NarutoOverhaul.Content.NPCs.Town
 {
 	// "Tenten" - canonically associated with a ninja tool shop (Higurashi's Ninja Tool Shop) in
 	// the source material. Available from world start, no unlock condition - standard vanilla
-	// housing/spawn rules only, same as Guide. Reuses Guide's AI/animation entirely (AIType/
-	// AnimationType) so this doesn't need a hand-built town-NPC state machine or walk-cycle timing,
-	// just a same-shaped placeholder texture.
+	// housing/spawn rules only, same as Guide AIType. Animation is now a custom idle/walk
+	// FindFrame() (see below) matching the nano-banana-generated ShinobiVendorNPC.png sheet,
+	// rather than reusing Guide's AnimationType/25-slot frame layout.
 	public class ShinobiVendorNPC : ModNPC
 	{
+		// Sheet layout from the nano-banana-generated ShinobiVendorNPC.png: idle(8)/walking(8).
+		private const int IdleFrameStart = 0;
+		private const int IdleFrameCount = 8;
+		private const int IdleTicksPerStep = 8;
+
+		private const int WalkFrameStart = IdleFrameStart + IdleFrameCount;
+		private const int WalkFrameCount = 8;
+		private const int WalkTicksPerStep = 6;
+
+		private bool inWalkBlock;
+		private int animFrame;
+		private int animTicks;
+
 		public override void SetStaticDefaults()
 		{
-			Main.npcFrameCount[NPC.type] = 25;
+			Main.npcFrameCount[NPC.type] = IdleFrameCount + WalkFrameCount;
 		}
 
 		public override void SetDefaults()
@@ -36,7 +50,34 @@ namespace NarutoOverhaul.Content.NPCs.Town
 			NPC.HitSound = SoundID.NPCHit1;
 			NPC.DeathSound = SoundID.NPCDeath1;
 			NPC.knockBackResist = 0.5f;
-			AnimationType = NPCID.Guide;
+		}
+
+		public override void FindFrame(int frameCounter)
+		{
+			int frameHeight = TextureAssets.Npc[NPC.type].Value.Height / Main.npcFrameCount[NPC.type];
+			NPC.frame.Width = TextureAssets.Npc[NPC.type].Value.Width;
+			NPC.frame.Height = frameHeight;
+
+			bool walking = NPC.velocity.X != 0f;
+			if (walking != inWalkBlock)
+			{
+				inWalkBlock = walking;
+				animFrame = 0;
+				animTicks = 0;
+			}
+
+			int frameStart = inWalkBlock ? WalkFrameStart : IdleFrameStart;
+			int frameCount = inWalkBlock ? WalkFrameCount : IdleFrameCount;
+			int ticksPerStep = inWalkBlock ? WalkTicksPerStep : IdleTicksPerStep;
+
+			animTicks++;
+			if (animTicks >= ticksPerStep)
+			{
+				animTicks = 0;
+				animFrame = (animFrame + 1) % frameCount;
+			}
+
+			NPC.frame.Y = (frameStart + animFrame) * frameHeight;
 		}
 
 		public override string GetChat()
@@ -67,6 +108,8 @@ namespace NarutoOverhaul.Content.NPCs.Town
 				.Add(ModContent.ItemType<KunaiItem>())
 				.Add(ModContent.ItemType<ToadSummonScrollItem>())
 				.Add(ModContent.ItemType<NinjaHoundSummonScrollItem>())
+				.Add(ModContent.ItemType<BulldogHoundSummonScrollItem>())
+				.Add(ModContent.ItemType<ScoutHoundSummonScrollItem>())
 				.Add(ModContent.ItemType<SnakeSummonScrollItem>())
 				.Add(ModContent.ItemType<SlugSummonScrollItem>())
 				.Add(ModContent.ItemType<MonstrousStrengthGlovesItem>())

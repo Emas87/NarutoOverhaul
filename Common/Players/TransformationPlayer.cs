@@ -307,7 +307,7 @@ namespace NarutoOverhaul.Common.Players
 
 			if (eightGatesWindupTimer % 10 == 0)
 			{
-				ChakraVFX.SpawnBurst(Player.Center, DustID.Torch, 8, 1.6f);
+				ChakraVFX.SpawnFireBurst(Player.Center, 1.6f);
 			}
 
 			if (eightGatesWindupTimer < EightGatesWindupTicks)

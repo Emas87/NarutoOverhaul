@@ -34,11 +34,33 @@ namespace NarutoOverhaul.Common.Players
 		// bag. Staged each frame like the fields above.
 		public int GenjutsuControlDurationBonus;
 
+		private const int PotionSicknessDuration = 60 * 30; // 30 seconds of not drinking fully clears it
+		private const float PotionSicknessStackPenalty = 0.2f; // -20% restore per stack
+		private const int MaxPotionSicknessStacks = 5; // 5th+ stack in a row restores nothing
+
 		private int regenDelayCounter;
+		private int potionSicknessStacks;
+		private int potionSicknessTimer;
 
 		public override void Initialize()
 		{
 			Chakra = BaseMaxChakra;
+		}
+
+		// Called by ChakraPotionItem BEFORE applying its restore, so the first potion in a fresh
+		// sequence is always full strength and each subsequent one (while still "sick") is
+		// progressively weaker.
+		public float GetPotionEffectivenessMultiplier()
+		{
+			return System.Math.Max(0f, 1f - (potionSicknessStacks * PotionSicknessStackPenalty));
+		}
+
+		// Called by ChakraPotionItem AFTER applying its restore - refreshes the timer and adds a
+		// stack for the next potion to be weaker against.
+		public void RegisterPotionUse()
+		{
+			potionSicknessStacks = System.Math.Min(MaxPotionSicknessStacks, potionSicknessStacks + 1);
+			potionSicknessTimer = PotionSicknessDuration;
 		}
 
 		public override void ResetEffects()
@@ -57,6 +79,16 @@ namespace NarutoOverhaul.Common.Players
 
 		public override void PostUpdateMiscEffects()
 		{
+			if (potionSicknessTimer > 0)
+			{
+				potionSicknessTimer--;
+
+				if (potionSicknessTimer == 0)
+				{
+					potionSicknessStacks = 0;
+				}
+			}
+
 			if (Chakra > MaxChakra)
 			{
 				Chakra = MaxChakra;

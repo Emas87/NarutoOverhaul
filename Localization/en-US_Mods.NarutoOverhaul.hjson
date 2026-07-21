@@ -6,6 +6,7 @@ Keybinds: {
 	"Toggle Chakra Control.DisplayName": Toggle Chakra Control
 	"Toggle Kamui Phase.DisplayName": Toggle  Kamui  Phase
 	"Hiraishin Warp.DisplayName": Hiraishin  Warp
+	Sprint.DisplayName: Sprint
 	"Toggle Byakugan.DisplayName": Toggle  Byakugan
 	"Toggle Curse Mark.DisplayName": Toggle  Curse  Mark
 }
@@ -83,6 +84,16 @@ Buffs: {
 	NinjaHoundMinionBuff: {
 		DisplayName: Ninja Hound
 		Description: A summoned ninja hound is fighting for you
+	}
+
+	BulldogHoundMinionBuff: {
+		DisplayName: Bulldog Hound
+		Description: A summoned bulldog hound is fighting for you
+	}
+
+	ScoutHoundMinionBuff: {
+		DisplayName: Scout Hound
+		Description: A summoned scout hound is fighting for you
 	}
 
 	SlugMinionBuff: {
@@ -308,8 +319,18 @@ Items: {
 	}
 
 	NinjaHoundSummonScrollItem: {
-		DisplayName: Ninja Hound Summoning Scroll
+		DisplayName: Hound Summoning Scroll I
 		Tooltip: Kuchiyose - summons a ninja hound to fight at your side
+	}
+
+	BulldogHoundSummonScrollItem: {
+		DisplayName: Hound Summoning Scroll II
+		Tooltip: Kuchiyose - summons a stocky bulldog hound, hits harder but runs slower
+	}
+
+	ScoutHoundSummonScrollItem: {
+		DisplayName: Hound Summoning Scroll III
+		Tooltip: Kuchiyose - summons a tracker hound that engages enemies from much further away
 	}
 
 	SlugSummonScrollItem: {
@@ -700,8 +721,20 @@ Items: {
 			'''
 	}
 
+	GenjutsuEmblemItem: {
+		DisplayName: Genjutsu Emblem
+		Tooltip: 15% increased Genjutsu damage
+	}
 
+	NinjutsuEmblemItem: {
+		DisplayName: Ninjutsu Emblem
+		Tooltip: 15% increased Ninjutsu damage
+	}
 
+	TaijutsuEmblemItem: {
+		DisplayName: Taijutsu Emblem
+		Tooltip: 15% increased Taijutsu damage
+	}
 }
 
 NPCs: {
@@ -786,6 +819,8 @@ Projectiles: {
 	GreatBreakthroughProjectile.DisplayName: Great Breakthrough
 	WaterDragonProjectile.DisplayName: Water Dragon
 	NinjaHoundMinionProjectile.DisplayName: Ninja Hound
+	BulldogHoundMinionProjectile.DisplayName: Bulldog Hound
+	ScoutHoundMinionProjectile.DisplayName: Scout Hound
 	SlugMinionProjectile.DisplayName: Slug
 	SnakeMinionProjectile.DisplayName: Snake Summon
 	ToadMinionProjectile.DisplayName: Toad
@@ -798,6 +833,21 @@ Projectiles: {
 	ExplosiveKunaiProjectile.DisplayName: Explosive Kunai Projectile
 	FumaShurikenProjectile.DisplayName: Fuma Shuriken Projectile
 	PaperBombProjectile.DisplayName: Paper Bomb Projectile
+	BoneBurstProjectile.DisplayName: Bone Burst Projectile
+	ChakraBurstProjectile.DisplayName: Chakra Burst Projectile
+	CoreBurstProjectile.DisplayName: Core Burst Projectile
+	CorruptionBurstProjectile.DisplayName: Corruption Burst Projectile
+	EarthBurstProjectile.DisplayName: Earth Burst Projectile
+	FireBurstProjectile.DisplayName: Fire Burst Projectile
+	GenjutsuBurstProjectile.DisplayName: Genjutsu Burst Projectile
+	HealingBurstProjectile.DisplayName: Healing Burst Projectile
+	IceBurstProjectile.DisplayName: Ice Burst Projectile
+	LightningBurstProjectile.DisplayName: Lightning Burst Projectile
+	SharinganBurstProjectile.DisplayName: Sharingan Burst Projectile
+	SmokeBurstProjectile.DisplayName: Smoke Burst Projectile
+	WaterBurstProjectile.DisplayName: Water Burst Projectile
+	WindBurstProjectile.DisplayName: Wind Burst Projectile
+	WoodBurstProjectile.DisplayName: Wood Burst Projectile
 }
 
 DamageClasses: {

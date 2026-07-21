@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NarutoOverhaul.Common.Players;
 using NarutoOverhaul.Common.VFX;
 using Terraria;
@@ -34,9 +35,17 @@ namespace NarutoOverhaul.Content.Items.Consumables
 		public override bool? UseItem(Player player)
 		{
 			StaminaPlayer staminaPlayer = player.GetModPlayer<StaminaPlayer>();
-			staminaPlayer.Stamina = System.Math.Min(staminaPlayer.MaxStamina, staminaPlayer.Stamina + RestoreAmount);
-			ChakraVFX.SpawnBurst(player.Center, DustID.Torch, 8, 1f);
+			float actualRestore = RestoreAmount * staminaPlayer.GetPotionEffectivenessMultiplier();
+			staminaPlayer.Stamina = System.Math.Min(staminaPlayer.MaxStamina, staminaPlayer.Stamina + actualRestore);
+			staminaPlayer.RegisterPotionUse();
+			ChakraVFX.SpawnFireBurst(player.Center, 1f);
 			return true;
+		}
+
+		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		{
+			tooltips.Add(new TooltipLine(Mod, "RestoreAmount", $"Restores {RestoreAmount} Stamina"));
+			tooltips.Add(new TooltipLine(Mod, "PotionSickness", "Repeated use in a short time restores less, down to nothing"));
 		}
 	}
 }

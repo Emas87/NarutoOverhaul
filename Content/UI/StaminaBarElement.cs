@@ -7,7 +7,7 @@ using Terraria.UI;
 
 namespace NarutoOverhaul.Content.UI
 {
-	// Placeholder-art bar, same technique as ChakraBarElement but a different color (orange)
+	// Placeholder-art bar, same technique as ChakraBarElement but a different color (yellow)
 	// so it visibly reads as a distinct resource from the blue Chakra bar.
 	public class StaminaBarElement : UIElement
 	{
@@ -29,7 +29,11 @@ namespace NarutoOverhaul.Content.UI
 				(int)((backgroundRect.Width - 4) * fillPercent),
 				backgroundRect.Height - 4);
 
-			spriteBatch.Draw(TextureAssets.MagicPixel.Value, fillRect, new Color(220, 120, 30));
+			spriteBatch.Draw(TextureAssets.MagicPixel.Value, fillRect, new Color(235, 210, 30));
+
+			string text = $"{(int)staminaPlayer.Stamina}/{(int)staminaPlayer.MaxStamina}";
+			Vector2 center = new Vector2(backgroundRect.X + (backgroundRect.Width / 2f), backgroundRect.Y + (backgroundRect.Height / 2f));
+			Utils.DrawBorderString(spriteBatch, text, center, Color.White, 0.8f, 0.5f, 0.5f);
 		}
 	}
 }

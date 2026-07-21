@@ -5,6 +5,7 @@ using NarutoOverhaul.Content.Projectiles;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using NarutoOverhaul.Content.Items.Consumables;
@@ -27,6 +28,19 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		private const int BurstShots = 3;
 		private const int RecoverTicks = 50;
+
+		// Sheet layout from the nano-banana-generated KakuzuBoss.png: idle(4)/cast(7).
+		private const int IdleFrameStart = 0;
+		private const int IdleFrameCount = 4;
+		private const int IdleTicksPerStep = 8;
+
+		private const int CastFrameStart = IdleFrameStart + IdleFrameCount;
+		private const int CastFrameCount = 7;
+		private const int CastTicksPerStep = 6;
+
+		private bool inCastBlock;
+		private int animFrame;
+		private int animTicks;
 
 		private ElementalBoltProjectile.Element CurrentElement
 		{
@@ -68,6 +82,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			NPC.npcSlots = 9f;
 			NPC.aiStyle = -1;
 			NPC.value = Item.buyPrice(gold: 22);
+			Main.npcFrameCount[NPC.type] = IdleFrameCount + CastFrameCount;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -126,7 +141,26 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			{
 				CurrentElement = expected;
 				NPC.velocity = Vector2.Zero;
-				ChakraVFX.SpawnBurst(NPC.Center, DustID.Torch, 16, 1.3f);
+
+				switch (expected)
+				{
+					case ElementalBoltProjectile.Element.Fire:
+						ChakraVFX.SpawnFireBurst(NPC.Center, 2.5f);
+						break;
+					case ElementalBoltProjectile.Element.Wind:
+						ChakraVFX.SpawnWindBurst(NPC.Center, 2.5f);
+						break;
+					case ElementalBoltProjectile.Element.Lightning:
+						ChakraVFX.SpawnLightningBurst(NPC.Center, 2.5f);
+						break;
+					case ElementalBoltProjectile.Element.Earth:
+						ChakraVFX.SpawnEarthBurst(NPC.Center, 2.5f);
+						break;
+					default:
+						ChakraVFX.SpawnCoreBurst(NPC.Center, 2.5f);
+						break;
+				}
+
 				SoundEngine.PlaySound(SoundID.NPCHit1, NPC.Center);
 			}
 		}
@@ -168,6 +202,51 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				StateTimer = 0f;
 				ShotsFired = 0f;
 			}
+		}
+
+		public override void FindFrame(int frameCounter)
+		{
+			int frameHeight = TextureAssets.Npc[NPC.type].Value.Height / Main.npcFrameCount[NPC.type];
+			NPC.frame.Width = TextureAssets.Npc[NPC.type].Value.Width;
+			NPC.frame.Height = frameHeight;
+
+			bool targetCast = CurrentAttack == AttackState.RangedBurst;
+			if (targetCast != inCastBlock)
+			{
+				inCastBlock = targetCast;
+				animFrame = 0;
+				animTicks = 0;
+			}
+
+			int frameStart = inCastBlock ? CastFrameStart : IdleFrameStart;
+			int frameCount = inCastBlock ? CastFrameCount : IdleFrameCount;
+			int ticksPerStep = inCastBlock ? CastTicksPerStep : IdleTicksPerStep;
+
+			animTicks++;
+			if (animTicks >= ticksPerStep)
+			{
+				animTicks = 0;
+				animFrame = (animFrame + 1) % frameCount;
+			}
+
+			NPC.frame.Y = (frameStart + animFrame) * frameHeight;
+		}
+
+		// One rig, five elemental "masks" - differentiated purely by tint, per
+		// ANIMATION_PIPELINE.md, matching the same element->dust colors ElementalBoltProjectile uses.
+		public override Color? GetAlpha(Color drawColor)
+		{
+			Color tint = CurrentElement switch
+			{
+				ElementalBoltProjectile.Element.Fire => new Color(230, 140, 60),
+				ElementalBoltProjectile.Element.Wind => new Color(170, 230, 170),
+				ElementalBoltProjectile.Element.Lightning => new Color(130, 200, 255),
+				ElementalBoltProjectile.Element.Earth => new Color(150, 110, 70),
+				ElementalBoltProjectile.Element.Core => new Color(160, 90, 190),
+				_ => Color.White,
+			};
+
+			return Color.Lerp(drawColor, tint, 0.35f);
 		}
 
 		public override void OnKill()

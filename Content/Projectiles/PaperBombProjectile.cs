@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using NarutoOverhaul.Common.VFX;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -71,10 +72,10 @@ namespace NarutoOverhaul.Content.Projectiles
 			Projectile.Resize(BlastRadius, BlastRadius);
 			Projectile.timeLeft = 3;
 			SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
-			for (int i = 0; i < 30; i++)
+			ChakraVFX.SpawnFireBurst(Projectile.Center, scale: 3.5f);
+			for (int i = 0; i < 12; i++)
 			{
 				Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Smoke);
-				Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Torch, Scale: 1.8f);
 			}
 		}
 

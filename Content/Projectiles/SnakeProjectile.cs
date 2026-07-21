@@ -33,7 +33,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		public override void OnKill(int timeLeft)
 		{
-			Common.VFX.ChakraVFX.SpawnBurst(Projectile.Center, DustID.Corruption, 5, 1f);
+			Common.VFX.ChakraVFX.SpawnCorruptionBurst(Projectile.Center, 0.625f);
 		}
 	}
 }

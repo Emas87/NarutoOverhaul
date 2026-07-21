@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.Systems;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Projectiles
@@ -34,6 +33,11 @@ namespace NarutoOverhaul.Content.Projectiles
 			set => Projectile.ai[1] = value;
 		}
 
+		private const int FrameCount = 6;
+		private const int TicksPerFrame = 8;
+		private int animFrame;
+		private int animTicks;
+
 		public override void SetDefaults()
 		{
 			Projectile.width = 64;
@@ -45,6 +49,7 @@ namespace NarutoOverhaul.Content.Projectiles
 			Projectile.penetrate = -1;
 			Projectile.timeLeft = WindupTicks + ActiveTicks + RetractTicks;
 			Projectile.tileCollide = false;
+			Main.projFrames[Projectile.type] = FrameCount;
 		}
 
 		public override void AI()
@@ -72,7 +77,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 			if (Main.rand.NextBool(2))
 			{
-				Common.VFX.ChakraVFX.SpawnBurst(Projectile.Center, DustID.PurpleTorch, 3, 1.6f);
+				Common.VFX.ChakraVFX.SpawnGenjutsuBurst(Projectile.Center, 0.6f);
 			}
 
 			StateTimer++;
@@ -91,11 +96,19 @@ namespace NarutoOverhaul.Content.Projectiles
 					Projectile.Kill();
 					break;
 			}
+
+			animTicks++;
+			if (animTicks >= TicksPerFrame)
+			{
+				animTicks = 0;
+				animFrame = (animFrame + 1) % FrameCount;
+			}
+			Projectile.frame = animFrame;
 		}
 
 		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
-			Common.VFX.ChakraVFX.SpawnBurst(target.Center, DustID.PurpleTorch, 14, 1.8f);
+			Common.VFX.ChakraVFX.SpawnGenjutsuBurst(target.Center, 2.5f);
 		}
 	}
 }

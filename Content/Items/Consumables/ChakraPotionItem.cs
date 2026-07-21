@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using NarutoOverhaul.Common.Players;
 using NarutoOverhaul.Common.VFX;
 using Terraria;
@@ -6,8 +7,9 @@ using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Items.Consumables
 {
-	// Instant Chakra restore - mirrors vanilla Mana Potion conventions: no cooldown, unlike
-	// Healing potions' potion sickness.
+	// Instant Chakra restore - unlike vanilla Mana Potions, repeated use in a short window has
+	// diminishing returns (see ChakraPlayer.GetPotionEffectivenessMultiplier/RegisterPotionUse),
+	// closer in spirit to Healing Potions' sickness but stacking instead of a hard lockout.
 	public class ChakraPotionItem : ModItem
 	{
 		public const float RestoreAmount = 50f;
@@ -36,9 +38,17 @@ namespace NarutoOverhaul.Content.Items.Consumables
 		public override bool? UseItem(Player player)
 		{
 			ChakraPlayer chakraPlayer = player.GetModPlayer<ChakraPlayer>();
-			chakraPlayer.Chakra = System.Math.Min(chakraPlayer.MaxChakra, chakraPlayer.Chakra + RestoreAmount);
-			ChakraVFX.SpawnBurst(player.Center, DustID.BlueTorch, 8, 1f);
+			float actualRestore = RestoreAmount * chakraPlayer.GetPotionEffectivenessMultiplier();
+			chakraPlayer.Chakra = System.Math.Min(chakraPlayer.MaxChakra, chakraPlayer.Chakra + actualRestore);
+			chakraPlayer.RegisterPotionUse();
+			ChakraVFX.SpawnChakraBurst(player.Center, 1f);
 			return true;
+		}
+
+		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		{
+			tooltips.Add(new TooltipLine(Mod, "RestoreAmount", $"Restores {RestoreAmount} Chakra"));
+			tooltips.Add(new TooltipLine(Mod, "PotionSickness", "Repeated use in a short time restores less, down to nothing"));
 		}
 	}
 }

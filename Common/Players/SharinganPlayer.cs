@@ -2,7 +2,6 @@ using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
 using NarutoOverhaul.Content.Buffs;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Common.Players
@@ -22,7 +21,7 @@ namespace NarutoOverhaul.Common.Players
 				return false;
 			}
 
-			ChakraVFX.SpawnBurst(Player.Center, DustID.RedTorch, 6, 1f);
+			ChakraVFX.SpawnSharinganBurst(Player.Center, 0.75f);
 			Player.AddBuff(ModContent.BuffType<SharinganFocusBuff>(), FocusDuration);
 			return true;
 		}

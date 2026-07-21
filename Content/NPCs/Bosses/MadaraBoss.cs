@@ -6,6 +6,7 @@ using NarutoOverhaul.Content.Projectiles;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using NarutoOverhaul.Content.Items.Consumables;
@@ -35,6 +36,29 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		private const int LungeTicks = 22;
 		private const int RecoverTicks = 40;
 		private const float SusanooScale = 1.8f;
+
+		// Sheet layout from the nano-banana-generated MadaraBoss.png: idle(5)/melee(4)/cast(4).
+		private const int IdleFrameStart = 0;
+		private const int IdleFrameCount = 5;
+		private const int IdleTicksPerStep = 8;
+
+		private const int MeleeFrameStart = IdleFrameStart + IdleFrameCount;
+		private const int MeleeFrameCount = 4;
+
+		private const int CastFrameStart = MeleeFrameStart + MeleeFrameCount;
+		private const int CastFrameCount = 4;
+		private const int CastTicksPerStep = 6;
+
+		private enum AnimBlock
+		{
+			Idle,
+			Melee,
+			Cast
+		}
+
+		private AnimBlock currentAnimBlock = AnimBlock.Idle;
+		private int animFrame;
+		private int animTicks;
 
 		private Phase CurrentPhase
 		{
@@ -78,6 +102,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			NPC.npcSlots = 10f;
 			NPC.aiStyle = -1;
 			NPC.value = Item.buyPrice(gold: 32);
+			Main.npcFrameCount[NPC.type] = IdleFrameCount + MeleeFrameCount + CastFrameCount;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -137,7 +162,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			// re-center hitbox growth so the boss doesn't visually jump position when it scales up
 			NPC.position -= new Vector2(NPC.width * (SusanooScale - 1f) / 2f, NPC.height * (SusanooScale - 1f) / 2f);
 
-			ChakraVFX.SpawnBurst(NPC.Center, DustID.PurpleTorch, 30, 1.8f);
+			ChakraVFX.SpawnGenjutsuBurst(NPC.Center, 2.5f);
 			SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
 
 			CurrentAttack = AttackState.Recover;
@@ -205,6 +230,76 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 		}
 
+		public override void FindFrame(int frameCounter)
+		{
+			int frameHeight = TextureAssets.Npc[NPC.type].Value.Height / Main.npcFrameCount[NPC.type];
+			NPC.frame.Width = TextureAssets.Npc[NPC.type].Value.Width;
+			NPC.frame.Height = frameHeight;
+
+			AnimBlock targetBlock = CurrentAttack switch
+			{
+				AttackState.Lunge => AnimBlock.Melee,
+				AttackState.RangedBurst => AnimBlock.Cast,
+				_ => AnimBlock.Idle,
+			};
+
+			if (targetBlock != currentAnimBlock)
+			{
+				currentAnimBlock = targetBlock;
+				animFrame = 0;
+				animTicks = 0;
+			}
+
+			int frameStart;
+			int frameIndex;
+
+			switch (currentAnimBlock)
+			{
+				case AnimBlock.Melee:
+					// A single lunge-and-recover beat, not a repeating cycle - play it once,
+					// synced to how far through the lunge (LungeTicks) we are.
+					float progress = MathHelper.Clamp(StateTimer / LungeTicks, 0f, 1f);
+					frameStart = MeleeFrameStart;
+					frameIndex = (int)(progress * (MeleeFrameCount - 1));
+					break;
+				case AnimBlock.Cast:
+					frameStart = CastFrameStart;
+					animTicks++;
+					if (animTicks >= CastTicksPerStep)
+					{
+						animTicks = 0;
+						animFrame = (animFrame + 1) % CastFrameCount;
+					}
+					frameIndex = animFrame;
+					break;
+				default:
+					frameStart = IdleFrameStart;
+					animTicks++;
+					if (animTicks >= IdleTicksPerStep)
+					{
+						animTicks = 0;
+						animFrame = (animFrame + 1) % IdleFrameCount;
+					}
+					frameIndex = animFrame;
+					break;
+			}
+
+			NPC.frame.Y = (frameStart + frameIndex) * frameHeight;
+		}
+
+		// Susanoo transformation already reads via NPC.scale (SetDefaults/TransitionToSusanoo);
+		// layering a purple aura tint on top gives it a bit more visual escalation without needing
+		// the "separate model" ANIMATION_PIPELINE.md originally called for - reuses the same rig.
+		public override Color? GetAlpha(Color drawColor)
+		{
+			if (CurrentPhase == Phase.Susanoo)
+			{
+				return Color.Lerp(drawColor, new Color(150, 60, 200), 0.4f);
+			}
+
+			return null;
+		}
+
 		public override void OnKill()
 		{
 			StoryProgressSystem.DownedMadara = true;
@@ -221,7 +316,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		public override void HitEffect(NPC.HitInfo hit)
 		{
-			ChakraVFX.SpawnBurst(NPC.Center, DustID.PurpleTorch, 3, 1f, noGravity: false);
+			ChakraVFX.SpawnGenjutsuBurst(NPC.Center, 0.5f);
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

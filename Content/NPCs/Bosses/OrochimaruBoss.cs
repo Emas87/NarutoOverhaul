@@ -6,6 +6,7 @@ using NarutoOverhaul.Content.Projectiles;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using NarutoOverhaul.Content.Items.Consumables;
@@ -37,6 +38,29 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		private const int LungeTicks = 20;
 		private const int RecoverTicks = 45;
 		private const float SubstitutionHealFraction = 0.08f;
+
+		// Sheet layout from the nano-banana-generated OrochimaruBoss.png: idle(4)/melee(6)/cast(6).
+		private const int IdleFrameStart = 0;
+		private const int IdleFrameCount = 4;
+		private const int IdleTicksPerStep = 8;
+
+		private const int MeleeFrameStart = IdleFrameStart + IdleFrameCount;
+		private const int MeleeFrameCount = 6;
+
+		private const int CastFrameStart = MeleeFrameStart + MeleeFrameCount;
+		private const int CastFrameCount = 6;
+		private const int CastTicksPerStep = 6;
+
+		private enum AnimBlock
+		{
+			Idle,
+			Melee,
+			Cast
+		}
+
+		private AnimBlock currentAnimBlock = AnimBlock.Idle;
+		private int animFrame;
+		private int animTicks;
 
 		private Phase CurrentPhase
 		{
@@ -85,6 +109,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			NPC.npcSlots = 9f;
 			NPC.aiStyle = -1;
 			NPC.value = Item.buyPrice(gold: 18);
+			Main.npcFrameCount[NPC.type] = IdleFrameCount + MeleeFrameCount + CastFrameCount;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -172,7 +197,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		private void DoSubstitution(Player target)
 		{
-			ChakraVFX.SpawnBurst(NPC.Center, DustID.Corruption, 18, 1.4f);
+			ChakraVFX.SpawnCorruptionBurst(NPC.Center, 2.5f);
 			SoundEngine.PlaySound(SoundID.Item29, NPC.Center);
 
 			Vector2 offset = Main.rand.NextVector2CircularEdge(260f, 260f);
@@ -180,7 +205,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			NPC.velocity = Vector2.Zero;
 			NPC.life = System.Math.Min(NPC.lifeMax, NPC.life + (int)(NPC.lifeMax * SubstitutionHealFraction));
 
-			ChakraVFX.SpawnBurst(NPC.Center, DustID.Corruption, 18, 1.4f);
+			ChakraVFX.SpawnCorruptionBurst(NPC.Center, 2.5f);
 
 			CurrentAttack = AttackState.Recover;
 			StateTimer = 0f;
@@ -240,6 +265,75 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 		}
 
+		public override void FindFrame(int frameCounter)
+		{
+			int frameHeight = TextureAssets.Npc[NPC.type].Value.Height / Main.npcFrameCount[NPC.type];
+			NPC.frame.Width = TextureAssets.Npc[NPC.type].Value.Width;
+			NPC.frame.Height = frameHeight;
+
+			AnimBlock targetBlock = CurrentAttack switch
+			{
+				AttackState.Lunge => AnimBlock.Melee,
+				AttackState.SnakeSummon => AnimBlock.Cast,
+				_ => AnimBlock.Idle,
+			};
+
+			if (targetBlock != currentAnimBlock)
+			{
+				currentAnimBlock = targetBlock;
+				animFrame = 0;
+				animTicks = 0;
+			}
+
+			int frameStart;
+			int frameIndex;
+
+			switch (currentAnimBlock)
+			{
+				case AnimBlock.Melee:
+					float progress = MathHelper.Clamp(StateTimer / LungeTicks, 0f, 1f);
+					frameStart = MeleeFrameStart;
+					frameIndex = (int)(progress * (MeleeFrameCount - 1));
+					break;
+				case AnimBlock.Cast:
+					frameStart = CastFrameStart;
+					animTicks++;
+					if (animTicks >= CastTicksPerStep)
+					{
+						animTicks = 0;
+						animFrame = (animFrame + 1) % CastFrameCount;
+					}
+					frameIndex = animFrame;
+					break;
+				default:
+					frameStart = IdleFrameStart;
+					animTicks++;
+					if (animTicks >= IdleTicksPerStep)
+					{
+						animTicks = 0;
+						animFrame = (animFrame + 1) % IdleFrameCount;
+					}
+					frameIndex = animFrame;
+					break;
+			}
+
+			NPC.frame.Y = (frameStart + frameIndex) * frameHeight;
+		}
+
+		// Phase escalation = increasing sickly-purple aura intensity in post, per
+		// ANIMATION_PIPELINE.md, rather than new geometry per phase.
+		public override Color? GetAlpha(Color drawColor)
+		{
+			float intensity = CurrentPhase switch
+			{
+				Phase.Two => 0.2f,
+				Phase.Three => 0.4f,
+				_ => 0f,
+			};
+
+			return intensity <= 0f ? null : Color.Lerp(drawColor, new Color(140, 70, 170), intensity);
+		}
+
 		public override void OnKill()
 		{
 			StoryProgressSystem.DownedOrochimaru = true;
@@ -257,7 +351,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		public override void HitEffect(NPC.HitInfo hit)
 		{
-			ChakraVFX.SpawnBurst(NPC.Center, DustID.Corruption, 3, 1f, noGravity: false);
+			ChakraVFX.SpawnCorruptionBurst(NPC.Center, 0.5f);
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

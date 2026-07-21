@@ -15,6 +15,18 @@ namespace NarutoOverhaul.Content.Minions
 		protected abstract float MoveSpeed { get; }
 		protected abstract float AttackRange { get; }
 
+		// nano-banana-generated sheets: idle/follow block, then attack/chase block, stacked in that
+		// order. Frame counts differ per animal, so each subclass supplies its own. ModProjectile has
+		// no FindFrame hook (unlike ModNPC) - animation is driven by hand from AI() instead.
+		protected abstract int IdleFrameCount { get; }
+		protected abstract int AttackFrameCount { get; }
+		protected virtual int IdleTicksPerStep => 8;
+		protected virtual int AttackTicksPerStep => 6;
+
+		private bool inAttackBlock;
+		private int animFrame;
+		private int animTicks;
+
 		public sealed override void SetDefaults()
 		{
 			SetMinionSize();
@@ -25,6 +37,7 @@ namespace NarutoOverhaul.Content.Minions
 			Projectile.tileCollide = false;
 			Projectile.netImportant = true;
 			Projectile.DamageType = DamageClass.Summon;
+			Main.projFrames[Projectile.type] = IdleFrameCount + AttackFrameCount;
 
 			SetMinionDefaults();
 		}
@@ -63,7 +76,36 @@ namespace NarutoOverhaul.Content.Minions
 				FollowOwner(owner);
 			}
 
+			if (Projectile.velocity.X != 0f)
+			{
+				Projectile.spriteDirection = Projectile.velocity.X < 0 ? -1 : 1;
+			}
+
 			UpdateVisuals(owner, target);
+			UpdateAnimationFrame(target != null);
+		}
+
+		private void UpdateAnimationFrame(bool attacking)
+		{
+			if (attacking != inAttackBlock)
+			{
+				inAttackBlock = attacking;
+				animFrame = 0;
+				animTicks = 0;
+			}
+
+			int frameCount = inAttackBlock ? AttackFrameCount : IdleFrameCount;
+			int ticksPerStep = inAttackBlock ? AttackTicksPerStep : IdleTicksPerStep;
+
+			animTicks++;
+			if (animTicks >= ticksPerStep)
+			{
+				animTicks = 0;
+				animFrame = (animFrame + 1) % frameCount;
+			}
+
+			int frameStart = inAttackBlock ? IdleFrameCount : 0;
+			Projectile.frame = frameStart + animFrame;
 		}
 
 		private NPC FindTarget(Player owner)

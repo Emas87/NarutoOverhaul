@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using NarutoOverhaul.Content.Items.Consumables;
@@ -32,6 +33,30 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		private const int ChaseTicks = 90;
 		private const int ChargeTicks = 20;
 		private const int RecoverTicks = 45;
+
+		// Sheet layout from the nano-banana-generated TailedBeastBoss.png (hand-directed non-humanoid
+		// poses per ANIMATION_PIPELINE.md, not the shared humanoid rig): idle/hover(8)/chase(8)/charge(7).
+		private const int IdleFrameStart = 0;
+		private const int IdleFrameCount = 8;
+		private const int IdleTicksPerStep = 8;
+
+		private const int ChaseFrameStart = IdleFrameStart + IdleFrameCount;
+		private const int ChaseFrameCount = 8;
+		private const int ChaseTicksPerStep = 6;
+
+		private const int ChargeFrameStart = ChaseFrameStart + ChaseFrameCount;
+		private const int ChargeFrameCount = 7;
+
+		private enum AnimBlock
+		{
+			Idle,
+			Chase,
+			Charge
+		}
+
+		private AnimBlock currentAnimBlock = AnimBlock.Idle;
+		private int animFrame;
+		private int animTicks;
 
 		private Vector2 chargeDirection;
 
@@ -81,6 +106,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			NPC.npcSlots = 10f;
 			NPC.aiStyle = -1;
 			NPC.value = Item.buyPrice(gold: 20);
+			Main.npcFrameCount[NPC.type] = IdleFrameCount + ChaseFrameCount + ChargeFrameCount;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -157,7 +183,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		private void OnPhaseTransition()
 		{
 			NPC.velocity = Vector2.Zero;
-			Common.VFX.ChakraVFX.SpawnBurst(NPC.Center, DustID.BlueTorch, 20, 1.5f);
+			Common.VFX.ChakraVFX.SpawnChakraBurst(NPC.Center, 2.5f);
 			SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
 		}
 
@@ -195,6 +221,78 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				CurrentAttack = AttackState.Chase;
 				StateTimer = 0f;
 			}
+		}
+
+		public override void FindFrame(int frameCounter)
+		{
+			int frameHeight = TextureAssets.Npc[NPC.type].Value.Height / Main.npcFrameCount[NPC.type];
+			NPC.frame.Width = TextureAssets.Npc[NPC.type].Value.Width;
+			NPC.frame.Height = frameHeight;
+
+			AnimBlock targetBlock = CurrentAttack switch
+			{
+				AttackState.Chase => AnimBlock.Chase,
+				AttackState.Charge => AnimBlock.Charge,
+				_ => AnimBlock.Idle,
+			};
+
+			if (targetBlock != currentAnimBlock)
+			{
+				currentAnimBlock = targetBlock;
+				animFrame = 0;
+				animTicks = 0;
+			}
+
+			int frameStart;
+			int frameIndex;
+
+			switch (currentAnimBlock)
+			{
+				case AnimBlock.Charge:
+					// The rear-back-and-roar sequence is a single telegraph-into-dash beat, not a
+					// repeating cycle - play it once, synced to how far through the charge
+					// (ChargeTicks) we are.
+					float progress = MathHelper.Clamp(StateTimer / ChargeTicks, 0f, 1f);
+					frameStart = ChargeFrameStart;
+					frameIndex = (int)(progress * (ChargeFrameCount - 1));
+					break;
+				case AnimBlock.Chase:
+					frameStart = ChaseFrameStart;
+					animTicks++;
+					if (animTicks >= ChaseTicksPerStep)
+					{
+						animTicks = 0;
+						animFrame = (animFrame + 1) % ChaseFrameCount;
+					}
+					frameIndex = animFrame;
+					break;
+				default:
+					frameStart = IdleFrameStart;
+					animTicks++;
+					if (animTicks >= IdleTicksPerStep)
+					{
+						animTicks = 0;
+						animFrame = (animFrame + 1) % IdleFrameCount;
+					}
+					frameIndex = animFrame;
+					break;
+			}
+
+			NPC.frame.Y = (frameStart + frameIndex) * frameHeight;
+		}
+
+		// Phase escalation = increasing blue chakra-cloak intensity in post, matching the BlueTorch
+		// dust already used on phase transition, per ANIMATION_PIPELINE.md's tint-not-new-geometry guidance.
+		public override Color? GetAlpha(Color drawColor)
+		{
+			float intensity = CurrentPhase switch
+			{
+				Phase.Two => 0.15f,
+				Phase.Three => 0.3f,
+				_ => 0f,
+			};
+
+			return intensity <= 0f ? null : Color.Lerp(drawColor, new Color(120, 180, 240), intensity);
 		}
 
 		public override void HitEffect(NPC.HitInfo hit)

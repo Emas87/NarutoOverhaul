@@ -49,12 +49,13 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			target.AddBuff(ModContent.BuffType<GenjutsuFearDebuff>(), duration);
 			target.GetGlobalNPC<GenjutsuGlobalNPC>().ControllingPlayerIndex = player.whoAmI;
 			target.netUpdate = true; // force an immediate sync so the server/other clients learn who's controlling this flee
-			ChakraVFX.SpawnBurst(target.Center, DustID.PurpleTorch, 10, 1.2f);
+			ChakraVFX.SpawnGenjutsuBurst(target.Center, 1.5f);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			tooltips.Add(new TooltipLine(Mod, "ChakraCost", $"Uses {ChakraCost} Chakra"));
+			tooltips.Add(new TooltipLine(Mod, "StoryRequirement", "Requires Haku defeated"));
 			tooltips.Add(new TooltipLine(Mod, "Fear", "Terrifies nearby enemies into fleeing"));
 		}
 	}

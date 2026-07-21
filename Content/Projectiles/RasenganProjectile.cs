@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.Systems;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Projectiles
@@ -33,6 +32,13 @@ namespace NarutoOverhaul.Content.Projectiles
 			set => Projectile.ai[1] = value;
 		}
 
+		// nano-banana-generated 9-frame spin sheet - cycles continuously while held, layered on
+		// top of the existing whole-sprite rotation below rather than replacing it.
+		private const int FrameCount = 9;
+		private const int TicksPerFrame = 4;
+		private int animFrame;
+		private int animTicks;
+
 		public override void SetDefaults()
 		{
 			Projectile.width = 28;
@@ -44,6 +50,7 @@ namespace NarutoOverhaul.Content.Projectiles
 			Projectile.penetrate = -1;
 			Projectile.timeLeft = WindupTicks + ActiveTicks + RetractTicks;
 			Projectile.tileCollide = false;
+			Main.projFrames[Projectile.type] = FrameCount;
 		}
 
 		public override void AI()
@@ -85,11 +92,19 @@ namespace NarutoOverhaul.Content.Projectiles
 					Projectile.Kill();
 					break;
 			}
+
+			animTicks++;
+			if (animTicks >= TicksPerFrame)
+			{
+				animTicks = 0;
+				animFrame = (animFrame + 1) % FrameCount;
+			}
+			Projectile.frame = animFrame;
 		}
 
 		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
-			Common.VFX.ChakraVFX.SpawnBurst(target.Center, DustID.BlueTorch, 8, 1.2f);
+			Common.VFX.ChakraVFX.SpawnChakraBurst(target.Center, 1.2f);
 		}
 	}
 }

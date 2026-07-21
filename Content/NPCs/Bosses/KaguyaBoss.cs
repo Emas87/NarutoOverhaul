@@ -7,6 +7,7 @@ using NarutoOverhaul.Content.Projectiles;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -39,6 +40,31 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		private const int PortalCount = 3;
 		private const int PortalTelegraphTicks = 40;
 		private const int PortalDetonateTicks = 60;
+
+		// Sheet layout from the nano-banana-generated KaguyaBoss.png: idle(4)/cast(7)/telegraph(4)
+		// stacked in that order. Teleport reuses idle per ANIMATION_PIPELINE.md.
+		private const int IdleFrameStart = 0;
+		private const int IdleFrameCount = 4;
+		private const int IdleTicksPerStep = 8;
+
+		private const int CastFrameStart = IdleFrameStart + IdleFrameCount;
+		private const int CastFrameCount = 7;
+		private const int CastTicksPerStep = 6;
+
+		private const int TelegraphFrameStart = CastFrameStart + CastFrameCount;
+		private const int TelegraphFrameCount = 4;
+		private const int TelegraphTicksPerStep = 8;
+
+		private enum AnimBlock
+		{
+			Idle,
+			Cast,
+			Telegraph
+		}
+
+		private AnimBlock currentAnimBlock = AnimBlock.Idle;
+		private int animFrame;
+		private int animTicks;
 
 		private readonly Vector2[] portalPositions = new Vector2[PortalCount];
 
@@ -87,6 +113,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			NPC.npcSlots = 12f;
 			NPC.aiStyle = -1;
 			NPC.value = Item.buyPrice(gold: 50);
+			Main.npcFrameCount[NPC.type] = IdleFrameCount + CastFrameCount + TelegraphFrameCount;
 		}
 
 		public override void OnSpawn(IEntitySource source)
@@ -178,7 +205,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		private void OnPhaseTransition()
 		{
 			NPC.velocity = Vector2.Zero;
-			ChakraVFX.SpawnBurst(NPC.Center, DustID.WhiteTorch, 24, 1.6f);
+			ChakraVFX.SpawnBoneBurst(NPC.Center, 2.5f);
 			SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
 
 			if (CurrentPhase == Phase.Final)
@@ -193,13 +220,13 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		private void DoTeleport(Player target)
 		{
-			ChakraVFX.SpawnBurst(NPC.Center, DustID.WhiteTorch, 10, 1.3f);
+			ChakraVFX.SpawnBoneBurst(NPC.Center, 1.6f);
 
 			Vector2 offset = Main.rand.NextVector2CircularEdge(TeleportRadius, TeleportRadius);
 			NPC.Center = target.Center + offset;
 			NPC.velocity = Vector2.Zero;
 
-			ChakraVFX.SpawnBurst(NPC.Center, DustID.WhiteTorch, 10, 1.3f);
+			ChakraVFX.SpawnBoneBurst(NPC.Center, 1.6f);
 			SoundEngine.PlaySound(SoundID.Item28, NPC.Center);
 
 			CurrentAttack = AttackState.Recover;
@@ -245,7 +272,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				for (int i = 0; i < PortalCount; i++)
 				{
 					portalPositions[i] = target.Center + Main.rand.NextVector2CircularEdge(180f, 180f);
-					ChakraVFX.SpawnBurst(portalPositions[i], DustID.WhiteTorch, 6, 1.2f);
+					ChakraVFX.SpawnBoneBurst(portalPositions[i], 0.9f);
 				}
 			}
 
@@ -253,7 +280,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			{
 				foreach (Vector2 portal in portalPositions)
 				{
-					ChakraVFX.SpawnBurst(portal, DustID.WhiteTorch, 14, 1.6f);
+					ChakraVFX.SpawnBoneBurst(portal, 2.5f);
 					SoundEngine.PlaySound(SoundID.Item14, portal);
 
 					if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -302,6 +329,73 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			};
 		}
 
+		public override void FindFrame(int frameCounter)
+		{
+			int frameHeight = TextureAssets.Npc[NPC.type].Value.Height / Main.npcFrameCount[NPC.type];
+			NPC.frame.Width = TextureAssets.Npc[NPC.type].Value.Width;
+			NPC.frame.Height = frameHeight;
+
+			AnimBlock targetBlock = CurrentAttack switch
+			{
+				AttackState.ElementalBurst => AnimBlock.Cast,
+				AttackState.DimensionPortals => AnimBlock.Telegraph,
+				_ => AnimBlock.Idle, // Teleport, Recover -> idle
+			};
+
+			if (targetBlock != currentAnimBlock)
+			{
+				currentAnimBlock = targetBlock;
+				animFrame = 0;
+				animTicks = 0;
+			}
+
+			int frameStart;
+			int frameCount;
+			int ticksPerStep;
+
+			switch (currentAnimBlock)
+			{
+				case AnimBlock.Cast:
+					frameStart = CastFrameStart;
+					frameCount = CastFrameCount;
+					ticksPerStep = CastTicksPerStep;
+					break;
+				case AnimBlock.Telegraph:
+					frameStart = TelegraphFrameStart;
+					frameCount = TelegraphFrameCount;
+					ticksPerStep = TelegraphTicksPerStep;
+					break;
+				default:
+					frameStart = IdleFrameStart;
+					frameCount = IdleFrameCount;
+					ticksPerStep = IdleTicksPerStep;
+					break;
+			}
+
+			animTicks++;
+			if (animTicks >= ticksPerStep)
+			{
+				animTicks = 0;
+				animFrame = (animFrame + 1) % frameCount;
+			}
+
+			NPC.frame.Y = (frameStart + animFrame) * frameHeight;
+		}
+
+		// Phase escalation = increasing violet glow intensity in post, per ANIMATION_PIPELINE.md,
+		// rather than new geometry per phase.
+		public override Color? GetAlpha(Color drawColor)
+		{
+			float intensity = CurrentPhase switch
+			{
+				Phase.Escalate => 0.2f,
+				Phase.Final => 0.4f,
+				_ => 0f,
+			};
+
+			return intensity <= 0f ? null : Color.Lerp(drawColor, new Color(190, 130, 230), intensity);
+		}
+
 		public override void OnKill()
 		{
 			StoryProgressSystem.DownedKaguya = true;
@@ -318,7 +412,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		public override void HitEffect(NPC.HitInfo hit)
 		{
-			ChakraVFX.SpawnBurst(NPC.Center, DustID.WhiteTorch, 3, 1f, noGravity: false);
+			ChakraVFX.SpawnBoneBurst(NPC.Center, 0.5f);
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
