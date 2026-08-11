@@ -44,7 +44,10 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			player.GetModPlayer<ChakraPlayer>().TrySpendChakra(ChakraCost);
+			if (!player.GetModPlayer<ChakraPlayer>().TrySpendChakra(ChakraCost))
+			{
+				return false;
+			}
 
 			float[] spreadAngles = { -SpreadAngle, 0f, SpreadAngle };
 

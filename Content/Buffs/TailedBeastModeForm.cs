@@ -13,7 +13,7 @@ namespace NarutoOverhaul.Content.Buffs
 		public override int BuffType => ModContent.BuffType<TailedBeastModeBuff>();
 		public override int ActivationCost => 50;
 		public override float ChakraDrainPerTick => 0.6f;
-		public override bool IsUnlocked => StoryProgressSystem.DownedMadara;
+		public override bool IsUnlocked(Player player) => StoryProgressSystem.DownedMadara;
 
 		public override void ApplyStatBoosts(Player player)
 		{

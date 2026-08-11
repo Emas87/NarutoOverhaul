@@ -17,7 +17,7 @@ namespace NarutoOverhaul.Content.Buffs
 		public override int BuffType => ModContent.BuffType<EightGatesBuff>();
 		public override int ActivationCost => 40;
 		public override float ChakraDrainPerTick => 0f;
-		public override bool IsUnlocked => StoryProgressSystem.DownedMadara;
+		public override bool IsUnlocked(Player player) => StoryProgressSystem.DownedMadara;
 
 		public override float LifeDrainPerTick(Player player)
 		{

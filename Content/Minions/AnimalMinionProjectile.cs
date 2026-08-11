@@ -55,9 +55,11 @@ namespace NarutoOverhaul.Content.Minions
 		{
 			Player owner = Main.player[Projectile.owner];
 
-			if (owner.dead || !owner.active)
+			if (!owner.active || owner.dead)
 			{
 				owner.ClearBuff(BuffType);
+				Projectile.Kill();
+				return;
 			}
 
 			if (owner.HasBuff(BuffType))

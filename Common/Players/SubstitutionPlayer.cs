@@ -29,6 +29,7 @@ namespace NarutoOverhaul.Common.Players
 			}
 
 			ChakraVFX.SpawnWoodBurst(Player.Center, 2.4f);
+			ChakraVFX.SpawnSubstitutionLog(Player.Center, info.HitDirection);
 			// Kick away from the incoming hit instead of teleporting - no tile-clip risk.
 			Player.velocity.X = -info.HitDirection * 6f;
 			Player.velocity.Y = -4f;

@@ -12,10 +12,17 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 {
 	// A short-range AoE fear illusion - melee-hitbox so it naturally catches multiple enemies in
 	// one swing (like Leaf Hurricane), applying GenjutsuFearDebuff instead of dealing real damage.
+	// noUseGraphic + Thrust (not Swing) so it reads as a hand-seal pulse instead of a sword slash -
+	// a genjutsu should never look like it's swinging a blade.
 	public class GenjutsuNightmareItem : ModItem
 	{
 		public const float ChakraCost = 20f;
 		public const int FearDuration = 180; // 3 seconds
+
+		// UseAnimation can't abort the swing outright (unlike Shoot returning false), so the debuff
+		// application in OnHitNPC is gated on this instead - keeps a failed spend from applying the
+		// effect for free.
+		private bool chakraSpent;
 
 		public override void SetDefaults()
 		{
@@ -23,7 +30,8 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			Item.height = 36;
 			Item.damage = 6;
 			Item.DamageType = ModContent.GetInstance<GenjutsuDamageClass>();
-			Item.useStyle = ItemUseStyleID.Swing;
+			Item.useStyle = ItemUseStyleID.Thrust;
+			Item.noUseGraphic = true;
 			Item.useAnimation = 30;
 			Item.useTime = 30;
 			Item.knockBack = 1f;
@@ -39,11 +47,17 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		public override void UseAnimation(Player player)
 		{
-			player.GetModPlayer<ChakraPlayer>().TrySpendChakra(ChakraCost);
+			chakraSpent = player.GetModPlayer<ChakraPlayer>().TrySpendChakra(ChakraCost);
+			ChakraVFX.SpawnGenjutsuBurst(player.Center, 1.2f);
 		}
 
 		public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
 		{
+			if (!chakraSpent)
+			{
+				return;
+			}
+
 			int duration = FearDuration + player.GetModPlayer<ChakraPlayer>().GenjutsuControlDurationBonus;
 
 			target.AddBuff(ModContent.BuffType<GenjutsuFearDebuff>(), duration);

@@ -27,7 +27,10 @@ namespace NarutoOverhaul.Content.Items.Consumables
 			tooltips.Add(new TooltipLine(Mod, "Handbook2", "Toggle Sage Mode: '.'  |  Toggle Tailed Beast Mode: '/'"));
 			tooltips.Add(new TooltipLine(Mod, "Handbook3", "Toggle Six Paths Sage Mode: ','  |  Toggle Eight Gates: '['"));
 			tooltips.Add(new TooltipLine(Mod, "Handbook4", "Toggle Chakra Control (water/wall walking): ']'"));
-			tooltips.Add(new TooltipLine(Mod, "Handbook5", "Rebind any of these in Settings > Keybindings."));
+			tooltips.Add(new TooltipLine(Mod, "Handbook5", "Toggle Kamui Phase: '\\'  |  Toggle Byakugan: 'B'"));
+			tooltips.Add(new TooltipLine(Mod, "Handbook6", "Toggle Curse Mark: 'N'  |  Hiraishin Warp: 'H'"));
+			tooltips.Add(new TooltipLine(Mod, "Handbook7", "If a keybind does nothing, it may not have bound by default -"));
+			tooltips.Add(new TooltipLine(Mod, "Handbook8", "check/set it yourself in Settings > Controls > Keybinds."));
 		}
 	}
 }

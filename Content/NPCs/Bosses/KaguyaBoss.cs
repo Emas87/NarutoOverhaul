@@ -11,6 +11,7 @@ using Terraria.GameContent;
 using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace NarutoOverhaul.Content.NPCs.Bosses
 {
@@ -138,14 +139,28 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		// See OrochimaruBoss.SendExtraAI - lifeMax isn't part of the standard NPC sync packet, so
 		// without this a scaled-up Kaguya shows a client-side HP bar above 100%.
+		//
+		// portalPositions is rolled with Main.rand, which isn't synced across peers - without also
+		// sending it here, each client would pick its own portal spots while only the server's copy
+		// spawns the real hitboxes, so the telegraph would visually land in the wrong place.
 		public override void SendExtraAI(BinaryWriter writer)
 		{
 			writer.Write(NPC.lifeMax);
+
+			for (int i = 0; i < PortalCount; i++)
+			{
+				writer.WriteVector2(portalPositions[i]);
+			}
 		}
 
 		public override void ReceiveExtraAI(BinaryReader reader)
 		{
 			NPC.lifeMax = reader.ReadInt32();
+
+			for (int i = 0; i < PortalCount; i++)
+			{
+				portalPositions[i] = reader.ReadVector2();
+			}
 		}
 
 		public override void AI()
@@ -265,7 +280,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		{
 			NPC.velocity *= 0.9f;
 
-			if (StateTimer == 0)
+			if (StateTimer == 0 && Main.netMode != NetmodeID.MultiplayerClient)
 			{
 				Player target = Main.player[NPC.target];
 
@@ -274,6 +289,8 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 					portalPositions[i] = target.Center + Main.rand.NextVector2CircularEdge(180f, 180f);
 					ChakraVFX.SpawnBoneBurst(portalPositions[i], 0.9f);
 				}
+
+				NPC.netUpdate = true; // push the freshly rolled portalPositions through SendExtraAI
 			}
 
 			if (StateTimer == PortalTelegraphTicks)

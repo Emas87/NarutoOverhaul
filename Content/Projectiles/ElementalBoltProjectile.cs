@@ -82,8 +82,12 @@ namespace NarutoOverhaul.Content.Projectiles
 			if (BoltElement == Element.Lightning && Projectile.timeLeft % 10 == 0)
 			{
 				Player target = Main.player[Player.FindClosest(Projectile.Center, 1, 1)];
-				Vector2 toTarget = (target.Center - Projectile.Center).SafeNormalize(Projectile.velocity);
-				Projectile.velocity = Vector2.Lerp(Projectile.velocity, toTarget * Projectile.velocity.Length(), 0.15f);
+
+				if (target.active)
+				{
+					Vector2 toTarget = (target.Center - Projectile.Center).SafeNormalize(Projectile.velocity);
+					Projectile.velocity = Vector2.Lerp(Projectile.velocity, toTarget * Projectile.velocity.Length(), 0.15f);
+				}
 			}
 
 			if (Main.rand.NextBool(3))

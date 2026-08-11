@@ -5,3 +5,4 @@ side = Both
 modReferences =
 sortAfter =
 sortBefore =
+buildIgnore = tools/*,ARMOR_REFERENCE_IMAGES.md,ANIMATION_PIPELINE.md,SPRITE_PROMPTS.md,ROADMAP.md

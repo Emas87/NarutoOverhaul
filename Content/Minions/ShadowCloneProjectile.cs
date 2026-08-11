@@ -114,6 +114,30 @@ namespace NarutoOverhaul.Content.Minions
 			System.Array.Copy(owner.armor, visualClone.armor, owner.armor.Length);
 			System.Array.Copy(owner.dye, visualClone.dye, owner.dye.Length);
 
+			// Player.head/body/legs (the draw-slot IDs PlayerDrawLayers indexes into
+			// TextureAssets.Armor*[]) are normally computed from the armor array once per tick
+			// inside the real Player.Update(). visualClone never runs that, so without this they
+			// stay at their -1 default and the renderer throws mid-draw (silently, since it's a
+			// mod hook) - which is why the clone was fully invisible instead of just unarmored.
+			visualClone.head = visualClone.armor[0].headSlot;
+			visualClone.body = visualClone.armor[1].bodySlot;
+			visualClone.legs = visualClone.armor[2].legSlot;
+
+			if (visualClone.armor[10].headSlot >= 0)
+			{
+				visualClone.head = visualClone.armor[10].headSlot;
+			}
+
+			if (visualClone.armor[11].bodySlot >= 0)
+			{
+				visualClone.body = visualClone.armor[11].bodySlot;
+			}
+
+			if (visualClone.armor[12].legSlot >= 0)
+			{
+				visualClone.legs = visualClone.armor[12].legSlot;
+			}
+
 			visualClone.position = Projectile.position;
 			visualClone.width = Projectile.width;
 			visualClone.height = Projectile.height;
@@ -129,10 +153,13 @@ namespace NarutoOverhaul.Content.Minions
 				return true;
 			}
 
-			Vector2 drawPosition = Projectile.position - Main.screenPosition
-				+ new Vector2(Projectile.width / 2f, Projectile.height);
-
-			Main.PlayerRenderer.DrawPlayer(Main.Camera, visualClone, drawPosition, 0f, new Vector2(visualClone.width / 2f, visualClone.height), 0f, 1f);
+			// PlayerRenderer.DrawPlayer wants the player's raw top-left position, matching vanilla's
+			// own call sites exactly (Main's normal player-draw loop passes player.position
+			// untouched, with the width/height offset only in rotationOrigin below). Adding that
+			// same offset into the position too - on top of passing it as rotationOrigin - double
+			// counted it and shifted the clone down by its own height, which is why it rendered
+			// below the player instead of right next to them.
+			Main.PlayerRenderer.DrawPlayer(Main.Camera, visualClone, Projectile.position, 0f, new Vector2(visualClone.width / 2f, visualClone.height), 0f, 1f);
 
 			return false;
 		}

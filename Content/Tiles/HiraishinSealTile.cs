@@ -12,7 +12,7 @@ namespace NarutoOverhaul.Content.Tiles
 	// Teleporter/Pylon): any player can warp to any placed seal via TransformationPlayer's
 	// Hiraishin Warp keybind, and it stays part of the network until physically mined out.
 	// HiraishinMarkerSystem is the single source of truth for which tiles count as marks -
-	// PlaceInWorld/KillMultiTile just keep that registry in sync with the actual world tiles.
+	// PlaceInWorld/KillTile just keep that registry in sync with the actual world tiles.
 	public class HiraishinSealTile : ModTile
 	{
 		public override void SetStaticDefaults()
@@ -34,9 +34,15 @@ namespace NarutoOverhaul.Content.Tiles
 			HiraishinMarkerSystem.AddMark(new Point16(i, j));
 		}
 
-		public override void KillMultiTile(int i, int j, int frameX, int frameY)
+		// KillMultiTile only fires for tiles LARGER than 1x1 (per ModTile's own doc comment) - this
+		// is a Style1x1 tile, so mining it never called that hook at all, meaning RemoveMark never
+		// ran and a mined seal stayed warpable forever. KillTile is the correct hook for a 1x1 tile.
+		public override void KillTile(int i, int j, ref bool fail, ref bool effectOnly, ref bool noItem)
 		{
-			HiraishinMarkerSystem.RemoveMark(new Point16(i, j));
+			if (!fail)
+			{
+				HiraishinMarkerSystem.RemoveMark(new Point16(i, j));
+			}
 		}
 	}
 }

@@ -51,7 +51,7 @@ namespace NarutoOverhaul.Content.Items.Consumables
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			tooltips.Add(new TooltipLine(Mod, "OneTime", "Can only be consumed once - its blessing is permanent"));
-			tooltips.Add(new TooltipLine(Mod, "MasteryNote", $"Permanently increases Genjutsu damage by {ClassMasteryPlayer.MasteryDamageBonus * 100}%"));
+			tooltips.Add(new TooltipLine(Mod, "MasteryNote", $"Permanently increases Genjutsu damage by {ClassMasteryPlayer.MasteryDamageBonus * 100:0.##}%"));
 		}
 	}
 }

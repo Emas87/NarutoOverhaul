@@ -12,7 +12,7 @@ namespace NarutoOverhaul.Content.Buffs
 		public override int BuffType => ModContent.BuffType<SixPathsSageModeBuff>();
 		public override int ActivationCost => 60;
 		public override float ChakraDrainPerTick => 0.5f;
-		public override bool IsUnlocked => StoryProgressSystem.DownedKaguya;
+		public override bool IsUnlocked(Player player) => StoryProgressSystem.DownedKaguya;
 
 		public override void ApplyStatBoosts(Player player)
 		{

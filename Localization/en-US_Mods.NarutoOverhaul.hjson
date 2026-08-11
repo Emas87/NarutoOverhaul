@@ -4,11 +4,11 @@ Keybinds: {
 	"Toggle Six Paths Sage Mode.DisplayName": Toggle Six Paths Sage Mode
 	"Toggle Eight Gates.DisplayName": Toggle Eight Gates
 	"Toggle Chakra Control.DisplayName": Toggle Chakra Control
-	"Toggle Kamui Phase.DisplayName": Toggle  Kamui  Phase
-	"Hiraishin Warp.DisplayName": Hiraishin  Warp
+	"Toggle Kamui Phase.DisplayName": Toggle Kamui Phase
+	"Hiraishin Warp.DisplayName": Hiraishin Warp
 	Sprint.DisplayName: Sprint
-	"Toggle Byakugan.DisplayName": Toggle  Byakugan
-	"Toggle Curse Mark.DisplayName": Toggle  Curse  Mark
+	"Toggle Byakugan.DisplayName": Toggle Byakugan
+	"Toggle Curse Mark.DisplayName": Toggle Curse Mark
 }
 
 Configs: {
@@ -31,6 +31,11 @@ Configs: {
 				Shows the name of your active transformation (Sage Mode, Chakra Control, ...) below
 				the Chakra/Stamina bars.
 				'''
+		}
+
+		ShowResourceBars: {
+			Label: Show Resource Bars
+			Tooltip: Shows the Chakra and Stamina bars on the HUD. Turn off to hide them.
 		}
 
 		Headers: {
@@ -393,6 +398,11 @@ Items: {
 		Tooltip: A permanent record of taijutsu mastery, sealed with the essence of two fallen foes
 	}
 
+	SharinganAwakeningItem: {
+		DisplayName: Sharingan Awakening
+		Tooltip: Sealed within shards of a shattered ice mirror - drink to awaken your Sharingan
+	}
+
 	ChakraScroll1Item: {
 		DisplayName: Chakra Scroll I: First Steps
 		Tooltip:
@@ -712,11 +722,12 @@ Items: {
 		Tooltip: Wings woven from raw chakra, in the manner of the Sage of the Six Paths
 	}
 
-	HiraishinSealItem: {
-		DisplayName: Hiraishin Seal
+	MinatoKunaiItem: {
+		DisplayName: Minato Kunai
 		Tooltip:
 			'''
-			Places a marker that the Hiraishin Warp keybind can teleport you to
+			Throws like a kunai - plants a Hiraishin Seal wherever it lands
+			The Hiraishin Warp keybind teleports you to a planted seal
 			Requires Pain defeated
 			'''
 	}
@@ -848,6 +859,12 @@ Projectiles: {
 	WaterBurstProjectile.DisplayName: Water Burst Projectile
 	WindBurstProjectile.DisplayName: Wind Burst Projectile
 	WoodBurstProjectile.DisplayName: Wood Burst Projectile
+	ImpactBurstProjectile.DisplayName: Impact Burst Projectile
+	FrontLotusKickProjectile.DisplayName: Front Lotus Kick Projectile
+	IronLegKickProjectile.DisplayName: Iron Leg Kick Projectile
+	LeafHurricaneKickProjectile.DisplayName: Leaf Hurricane Kick Projectile
+	SubstitutionLogProjectile.DisplayName: Substitution Log Projectile
+	MinatoKunaiProjectile.DisplayName: Minato Kunai
 }
 
 DamageClasses: {

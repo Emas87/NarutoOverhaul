@@ -1,22 +1,27 @@
-using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
 using NarutoOverhaul.Content.Buffs;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace NarutoOverhaul.Common.Players
 {
 	// Sasuke's 2-tomoe Sharingan: a passive chance to fully avoid a hit and gain a brief
-	// counter-damage window. Unlocked after the Haku fight (canonically awakens there).
+	// counter-damage window. Previously auto-unlocked on downing Haku with no player-facing
+	// signal at all - now requires actually consuming SharinganAwakeningItem, so there's a visible
+	// moment (and tooltip) telling the player they gained it, same reasoning as the *MasteryScroll
+	// items over ClassMasteryPlayer's flags. Once set, HasSharingan is permanent like those flags.
 	public class SharinganPlayer : ModPlayer
 	{
 		public const float DodgeChance = 0.15f;
 		public const int FocusDuration = 180; // 3 seconds
 		public const float FocusDamageBonus = 0.15f;
 
+		public bool HasSharingan;
+
 		public override bool FreeDodge(Player.HurtInfo info)
 		{
-			if (!StoryProgressSystem.DownedHaku || Main.rand.NextFloat() >= DodgeChance)
+			if (!HasSharingan || Main.rand.NextFloat() >= DodgeChance)
 			{
 				return false;
 			}
@@ -32,6 +37,16 @@ namespace NarutoOverhaul.Common.Players
 			{
 				Player.GetDamage(DamageClass.Generic) += FocusDamageBonus;
 			}
+		}
+
+		public override void SaveData(TagCompound tag)
+		{
+			tag["hasSharingan"] = HasSharingan;
+		}
+
+		public override void LoadData(TagCompound tag)
+		{
+			HasSharingan = tag.GetBool("hasSharingan");
 		}
 	}
 }

@@ -17,13 +17,16 @@ namespace NarutoOverhaul.Content.Buffs
 		public override int BuffType => ModContent.BuffType<KamuiPhaseBuff>();
 		public override int ActivationCost => 10;
 		public override float ChakraDrainPerTick => 0.15f;
-		public override bool IsUnlocked => Main.hardMode;
+		public override bool IsUnlocked(Player player) => Main.hardMode;
 
 		public override void ApplyStatBoosts(Player player)
 		{
-			// Shimmer movement integrates position at 0.375x velocity - a small speed bump keeps
-			// phasing from feeling sluggish compared to normal movement.
-			player.moveSpeed += 0.3f;
+			// Shimmer movement integrates position at only 0.375x velocity (Player.ShimmerCollision),
+			// so a +0.3 moveSpeed bump (the original tuning here) still nets out to roughly half of
+			// normal walking speed after that dampening - which read as "stuck against a wall" in
+			// testing. +2.2 nets out to modestly faster than normal walking once the 0.375x is
+			// applied, so phasing actually feels like a deliberate fast dash through the wall.
+			player.moveSpeed += 2.2f;
 		}
 
 		public override void PreUpdateMovement(Player player)

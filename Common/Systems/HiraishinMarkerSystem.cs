@@ -16,6 +16,12 @@ namespace NarutoOverhaul.Common.Systems
 	// mid-session, not just at world load.
 	public class HiraishinMarkerSystem : ModSystem
 	{
+		// A seal can still be physically placed past this cap (HiraishinSealTile.PlaceInWorld
+		// doesn't block placement), it just won't join the warp network - mine out an existing one
+		// to free a slot. Keeps the shared network from growing unbounded and the Hiraishin Warp
+		// cycle from getting unwieldy to page through.
+		public const int MaxMarks = 10;
+
 		public static List<Point16> MarkedTiles { get; private set; } = new List<Point16>();
 
 		public override void OnWorldLoad()
@@ -84,7 +90,7 @@ namespace NarutoOverhaul.Common.Systems
 
 		public static void AddMark(Point16 tile)
 		{
-			if (MarkedTiles.Contains(tile))
+			if (MarkedTiles.Contains(tile) || MarkedTiles.Count >= MaxMarks)
 			{
 				return;
 			}

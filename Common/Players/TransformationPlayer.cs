@@ -1,6 +1,8 @@
 using System.IO;
+using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
+using NarutoOverhaul.Content.Buffs;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameInput;
@@ -21,11 +23,18 @@ namespace NarutoOverhaul.Common.Players
 		public static ModKeybind ToggleCurseMarkKeybind;
 		public static ModKeybind HiraishinWarpKeybind;
 
-		private const int EightGatesFormIndex = 3;
-		private const int ChakraControlFormIndex = 4;
-		private const int KamuiPhaseFormIndex = 5;
-		private const int ByakuganFormIndex = 6;
-		private const int CurseMarkFormIndex = 7;
+		// Resolved by type, not hardcoded position - see TransformationSystem.IndexOfForm. Looked up
+		// fresh each call rather than cached: RegisteredForms only has 8 entries and never changes
+		// after PostSetupContent, so the lookup cost is negligible next to the safety of never
+		// going stale.
+		private static int SageModeFormIndex => TransformationSystem.IndexOfForm<SageModeForm>();
+		private static int TailedBeastModeFormIndex => TransformationSystem.IndexOfForm<TailedBeastModeForm>();
+		private static int SixPathsSageModeFormIndex => TransformationSystem.IndexOfForm<SixPathsSageModeForm>();
+		private static int EightGatesFormIndex => TransformationSystem.IndexOfForm<EightGatesForm>();
+		private static int ChakraControlFormIndex => TransformationSystem.IndexOfForm<ChakraControlForm>();
+		private static int KamuiPhaseFormIndex => TransformationSystem.IndexOfForm<KamuiPhaseForm>();
+		private static int ByakuganFormIndex => TransformationSystem.IndexOfForm<ByakuganForm>();
+		private static int CurseMarkFormIndex => TransformationSystem.IndexOfForm<CurseMarkForm>();
 		private const float EightGatesAdvanceStaminaCost = 10f;
 		private const int EightGatesWindupTicks = 180; // ~3 seconds at 60 ticks/sec
 		private const float HiraishinWarpChakraCost = 15f;
@@ -62,17 +71,17 @@ namespace NarutoOverhaul.Common.Players
 		{
 			if (ToggleSageModeKeybind.JustPressed)
 			{
-				ToggleForm(0);
+				ToggleForm(SageModeFormIndex);
 			}
 
 			if (ToggleTailedBeastModeKeybind.JustPressed)
 			{
-				ToggleForm(1);
+				ToggleForm(TailedBeastModeFormIndex);
 			}
 
 			if (ToggleSixPathsSageModeKeybind.JustPressed)
 			{
-				ToggleForm(2);
+				ToggleForm(SixPathsSageModeFormIndex);
 			}
 
 			if (ToggleEightGatesKeybind.JustPressed)
@@ -129,7 +138,14 @@ namespace NarutoOverhaul.Common.Players
 			}
 
 			hiraishinMarkIndex = (hiraishinMarkIndex + 1) % marks.Count;
-			Player.Teleport(marks[hiraishinMarkIndex].ToWorldCoordinates(8f, 8f));
+
+			// Player.position is the hitbox's top-left corner, not its center - ToWorldCoordinates(8, 8)
+			// is the seal tile's center point, so teleporting straight there put the player's top-left
+			// AT the tile and let most of the (much taller) hitbox hang down through the floor below
+			// it. Offset by half the player's width and its full height so the player's feet land on
+			// the tile's top surface instead, centered horizontally on the seal.
+			Vector2 warpTarget = marks[hiraishinMarkIndex].ToWorldCoordinates(8f, 0f) - new Vector2(Player.width / 2f, Player.height);
+			Player.Teleport(warpTarget);
 		}
 
 		private void ToggleForm(int formIndex)
@@ -147,7 +163,7 @@ namespace NarutoOverhaul.Common.Players
 				return;
 			}
 
-			if (ActiveFormIndex != -1 || !form.IsUnlocked)
+			if (ActiveFormIndex != -1 || !form.IsUnlocked(Player))
 			{
 				return;
 			}
@@ -178,7 +194,7 @@ namespace NarutoOverhaul.Common.Players
 
 			if (ActiveFormIndex != EightGatesFormIndex)
 			{
-				if (ActiveFormIndex != -1 || !form.IsUnlocked)
+				if (ActiveFormIndex != -1 || !form.IsUnlocked(Player))
 				{
 					return;
 				}
@@ -244,6 +260,23 @@ namespace NarutoOverhaul.Common.Players
 			}
 
 			form.ApplyStatBoosts(Player);
+		}
+
+		// Kamui Phase relies on player.shimmering for its noclip (see KamuiPhaseForm), which comes
+		// bundled with vanilla's own Shimmer damage-dodge (Player.Hurt -> AllowShimmerDodge) - but
+		// that dodge deliberately excludes bosses, invasion NPCs, and anything flagged
+		// NPCID/ProjectileID.Sets.CanHitPastShimmer, since regular Shimmer is a minor liquid
+		// gimmick, not real invincibility. Obito's actual Kamui is true intangibility to everything,
+		// so these two hooks bypass that restriction entirely while the form is active - blocking
+		// the hit from registering at all, rather than negating damage after the fact.
+		public override bool CanBeHitByNPC(NPC npc, ref int cooldownSlot)
+		{
+			return ActiveFormIndex != KamuiPhaseFormIndex;
+		}
+
+		public override bool CanBeHitByProjectile(Projectile proj)
+		{
+			return ActiveFormIndex != KamuiPhaseFormIndex;
 		}
 
 		public override void PreUpdateMovement()

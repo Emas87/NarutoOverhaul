@@ -1,8 +1,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NarutoOverhaul.Common.Players;
+using NarutoOverhaul.Common.Systems;
 using Terraria;
 using Terraria.GameContent;
+using Terraria.ModLoader;
 using Terraria.UI;
 
 namespace NarutoOverhaul.Content.UI
@@ -13,6 +15,11 @@ namespace NarutoOverhaul.Content.UI
 	{
 		protected override void DrawSelf(SpriteBatch spriteBatch)
 		{
+			if (!ModContent.GetInstance<NarutoOverhaulConfig>().ShowResourceBars)
+			{
+				return;
+			}
+
 			ChakraPlayer chakraPlayer = Main.LocalPlayer.GetModPlayer<ChakraPlayer>();
 
 			CalculatedStyle dimensions = GetDimensions();

@@ -38,10 +38,6 @@ namespace NarutoOverhaul.Common.Players
 		// Stamina-growth systems with no class check needed here.
 		private const float RunStaminaDrainPerTick = 100f / (5f * 60f);
 
-		private const int PotionSicknessDuration = 60 * 30; // 30 seconds of not drinking fully clears it
-		private const float PotionSicknessStackPenalty = 0.2f; // -20% restore per stack
-		private const int MaxPotionSicknessStacks = 5; // 5th+ stack in a row restores nothing
-
 		private int regenDelayCounter;
 		private bool isRunning;
 		private int potionSicknessStacks;
@@ -62,15 +58,15 @@ namespace NarutoOverhaul.Common.Players
 		// progressively weaker.
 		public float GetPotionEffectivenessMultiplier()
 		{
-			return System.Math.Max(0f, 1f - (potionSicknessStacks * PotionSicknessStackPenalty));
+			return System.Math.Max(0f, 1f - (potionSicknessStacks * PotionSicknessConstants.StackPenalty));
 		}
 
 		// Called by StaminaPotionItem AFTER applying its restore - refreshes the timer and adds a
 		// stack for the next potion to be weaker against.
 		public void RegisterPotionUse()
 		{
-			potionSicknessStacks = System.Math.Min(MaxPotionSicknessStacks, potionSicknessStacks + 1);
-			potionSicknessTimer = PotionSicknessDuration;
+			potionSicknessStacks = System.Math.Min(PotionSicknessConstants.MaxStacks, potionSicknessStacks + 1);
+			potionSicknessTimer = PotionSicknessConstants.Duration;
 		}
 
 		public override void ResetEffects()
@@ -181,22 +177,12 @@ namespace NarutoOverhaul.Common.Players
 		// Stamina symmetric with Chakra's correction-packet mechanism for whenever one is added.
 		public static void SendCorrection(Player player)
 		{
-			if (Main.netMode != NetmodeID.Server)
-			{
-				return;
-			}
-
-			ModPacket packet = ModContent.GetInstance<NarutoOverhaul>().GetPacket();
-			packet.Write((byte)NetMessageType.SyncStaminaCorrection);
-			packet.Write((byte)player.whoAmI);
-			packet.Write(player.GetModPlayer<StaminaPlayer>().Stamina);
-			packet.Send(player.whoAmI);
+			ResourceCorrectionPacket.Send(NetMessageType.SyncStaminaCorrection, player, player.GetModPlayer<StaminaPlayer>().Stamina);
 		}
 
 		public static void HandleCorrectionPacket(BinaryReader reader)
 		{
-			byte playerIndex = reader.ReadByte();
-			float stamina = reader.ReadSingle();
+			ResourceCorrectionPacket.Receive(reader, out byte playerIndex, out float stamina);
 			Main.player[playerIndex].GetModPlayer<StaminaPlayer>().Stamina = stamina;
 		}
 	}

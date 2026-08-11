@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.Players;
 using NarutoOverhaul.Common.Systems;
+using NarutoOverhaul.Common.VFX;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -21,11 +23,16 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			Item.height = 20;
 			Item.damage = 22;
 			Item.DamageType = ModContent.GetInstance<TaijutsuDamageClass>();
-			Item.useStyle = ItemUseStyleID.Swing;
+			// Thrust = fixed horizontal jab in the player's facing direction, not an overhead sword
+			// arc - the same use style GumGum (a One Piece mod, decompiled for reference) uses for
+			// its own bare-fist punch item.
+			Item.useStyle = ItemUseStyleID.Thrust;
 			Item.useAnimation = 18;
 			Item.useTime = 18;
 			Item.autoReuse = true;
-			Item.knockBack = 3f;
+			// No held weapon graphic - this is a bare-handed strike, not a sword swing.
+			Item.noUseGraphic = true;
+			Item.knockBack = 6f;
 			Item.value = Item.sellPrice(gold: 3);
 			Item.rare = ItemRarityID.LightRed;
 			Item.UseSound = SoundID.Item1;
@@ -39,11 +46,17 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 		public override void UseAnimation(Player player)
 		{
 			player.GetModPlayer<StaminaPlayer>().TrySpendStamina(StaminaCost);
+			ChakraVFX.SpawnImpactBurst(player.Center + new Vector2(player.direction * 20f, 0f), 0.9f);
 		}
 
 		public override void ModifyHitNPC(Player player, NPC target, ref NPC.HitModifiers modifiers)
 		{
 			modifiers.ArmorPenetration += ArmorPenetration;
+		}
+
+		public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
+		{
+			ChakraVFX.SpawnImpactBurst(target.Center, 1.1f);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)

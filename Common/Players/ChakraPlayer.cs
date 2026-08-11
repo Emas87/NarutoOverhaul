@@ -34,9 +34,12 @@ namespace NarutoOverhaul.Common.Players
 		// bag. Staged each frame like the fields above.
 		public int GenjutsuControlDurationBonus;
 
-		private const int PotionSicknessDuration = 60 * 30; // 30 seconds of not drinking fully clears it
-		private const float PotionSicknessStackPenalty = 0.2f; // -20% restore per stack
-		private const int MaxPotionSicknessStacks = 5; // 5th+ stack in a row restores nothing
+		// Set by ChakraWingsItem.UpdateEquip while the wings are equipped and the player is
+		// airborne (flying OR just falling) - regen otherwise works fine in midair (e.g. jumping
+		// around casting jutsu), this is specifically the wings' "must land to refuel" gate so
+		// hovering can't passively regenerate the fuel it's burning. Staged each frame like the
+		// fields above.
+		public bool SuppressRegenAirborne;
 
 		private int regenDelayCounter;
 		private int potionSicknessStacks;
@@ -52,15 +55,15 @@ namespace NarutoOverhaul.Common.Players
 		// progressively weaker.
 		public float GetPotionEffectivenessMultiplier()
 		{
-			return System.Math.Max(0f, 1f - (potionSicknessStacks * PotionSicknessStackPenalty));
+			return System.Math.Max(0f, 1f - (potionSicknessStacks * PotionSicknessConstants.StackPenalty));
 		}
 
 		// Called by ChakraPotionItem AFTER applying its restore - refreshes the timer and adds a
 		// stack for the next potion to be weaker against.
 		public void RegisterPotionUse()
 		{
-			potionSicknessStacks = System.Math.Min(MaxPotionSicknessStacks, potionSicknessStacks + 1);
-			potionSicknessTimer = PotionSicknessDuration;
+			potionSicknessStacks = System.Math.Min(PotionSicknessConstants.MaxStacks, potionSicknessStacks + 1);
+			potionSicknessTimer = PotionSicknessConstants.Duration;
 		}
 
 		public override void ResetEffects()
@@ -70,6 +73,7 @@ namespace NarutoOverhaul.Common.Players
 			MaxChakra = BaseMaxChakra;
 			ChakraRegenRate = BaseChakraRegenRate;
 			GenjutsuControlDurationBonus = 0;
+			SuppressRegenAirborne = false;
 
 			if (Player.HasBuff(ModContent.BuffType<ChakraRegenBuff>()))
 			{
@@ -100,7 +104,7 @@ namespace NarutoOverhaul.Common.Players
 				return;
 			}
 
-			if (Chakra < MaxChakra)
+			if (Chakra < MaxChakra && !SuppressRegenAirborne)
 			{
 				Chakra = System.Math.Min(MaxChakra, Chakra + ChakraRegenRate);
 			}
@@ -161,22 +165,12 @@ namespace NarutoOverhaul.Common.Players
 		// triggered right after the drain is the minimal correct fix.
 		public static void SendCorrection(Player player)
 		{
-			if (Main.netMode != NetmodeID.Server)
-			{
-				return;
-			}
-
-			ModPacket packet = ModContent.GetInstance<NarutoOverhaul>().GetPacket();
-			packet.Write((byte)NetMessageType.SyncChakraCorrection);
-			packet.Write((byte)player.whoAmI);
-			packet.Write(player.GetModPlayer<ChakraPlayer>().Chakra);
-			packet.Send(player.whoAmI);
+			ResourceCorrectionPacket.Send(NetMessageType.SyncChakraCorrection, player, player.GetModPlayer<ChakraPlayer>().Chakra);
 		}
 
 		public static void HandleCorrectionPacket(BinaryReader reader)
 		{
-			byte playerIndex = reader.ReadByte();
-			float chakra = reader.ReadSingle();
+			ResourceCorrectionPacket.Receive(reader, out byte playerIndex, out float chakra);
 			Main.player[playerIndex].GetModPlayer<ChakraPlayer>().Chakra = chakra;
 		}
 	}

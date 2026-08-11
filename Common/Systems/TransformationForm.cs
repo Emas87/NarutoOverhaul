@@ -12,8 +12,11 @@ namespace NarutoOverhaul.Common.Systems
 		public abstract int ActivationCost { get; }
 		public abstract float ChakraDrainPerTick { get; }
 
-		// Story-gate for this form, e.g. "must have downed Pain" - default true for forms with no gate.
-		public virtual bool IsUnlocked => true;
+		// Story-gate for this form, e.g. "must have downed Pain" - default true for forms with no
+		// gate. Takes Player (like LifeDrainPerTick below) rather than being a static property,
+		// since a per-player gate (e.g. Curse Mark's one-time consumable unlock) needs to check the
+		// specific player being evaluated, not whichever player happens to be local.
+		public virtual bool IsUnlocked(Player player) => true;
 
 		// Most forms (Sage Mode, Tailed Beast Mode) only cost chakra. A form like Eight Gates
 		// needs a real bodily cost on top of that, scaled by per-player state (gate level) - hence

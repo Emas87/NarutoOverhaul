@@ -62,7 +62,8 @@ namespace NarutoOverhaul.Common.GlobalNPCs
 				(controller.controlRight ? 1 : 0) - (controller.controlLeft ? 1 : 0),
 				(controller.controlDown ? 1 : 0) - (controller.controlUp ? 1 : 0));
 
-			npc.velocity = direction.SafeNormalize(Vector2.Zero) * PuppetSpeed;
+			Vector2 desiredVelocity = direction.SafeNormalize(Vector2.Zero) * PuppetSpeed;
+			npc.velocity = Collision.TileCollision(npc.position, desiredVelocity, npc.width, npc.height);
 			npc.position += npc.velocity;
 
 			if (npc.velocity.X != 0)
@@ -81,7 +82,8 @@ namespace NarutoOverhaul.Common.GlobalNPCs
 			}
 
 			Vector2 away = (npc.Center - Main.player[ControllingPlayerIndex].Center).SafeNormalize(Vector2.UnitX);
-			npc.velocity = away * FleeSpeed;
+			Vector2 desiredVelocity = away * FleeSpeed;
+			npc.velocity = Collision.TileCollision(npc.position, desiredVelocity, npc.width, npc.height);
 			npc.position += npc.velocity;
 			npc.spriteDirection = npc.velocity.X > 0 ? 1 : -1;
 
@@ -102,7 +104,8 @@ namespace NarutoOverhaul.Common.GlobalNPCs
 
 		public override void ReceiveExtraAI(NPC npc, BitReader bitReader, BinaryReader binaryReader)
 		{
-			ControllingPlayerIndex = binaryReader.ReadInt32();
+			int received = binaryReader.ReadInt32();
+			ControllingPlayerIndex = received >= 0 && received < Main.maxPlayers ? received : -1;
 		}
 	}
 }

@@ -4,8 +4,11 @@ using Terraria.ModLoader.IO;
 namespace NarutoOverhaul.Common.Players
 {
 	// Tracks the one-time Cursed Seal branding (same permanent-consumable pattern as
-	// MoonLordBlessingPlayer). Only read client-side by CurseMarkForm.IsUnlocked, so no
-	// SyncPlayer needed - form activation itself already syncs via TransformationPlayer.
+	// MoonLordBlessingPlayer). CurseMarkForm.IsUnlocked(Player) takes whichever player is being
+	// checked, but its only call site (TransformationPlayer.ToggleForm, from client-side
+	// ProcessTriggers) always means the local player - so this field is only ever meaningfully
+	// read for its own owning client, and doesn't need SyncPlayer for that to stay correct. Form
+	// activation itself already syncs via TransformationPlayer if that assumption ever changes.
 	public class CurseMarkPlayer : ModPlayer
 	{
 		public bool HasCurseMark;

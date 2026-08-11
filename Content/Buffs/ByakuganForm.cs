@@ -13,7 +13,7 @@ namespace NarutoOverhaul.Content.Buffs
 		public override int BuffType => ModContent.BuffType<ByakuganBuff>();
 		public override int ActivationCost => 10;
 		public override float ChakraDrainPerTick => 0.1f;
-		public override bool IsUnlocked => StoryProgressSystem.DownedShukaku;
+		public override bool IsUnlocked(Player player) => StoryProgressSystem.DownedShukaku;
 
 		public override void ApplyStatBoosts(Player player)
 		{

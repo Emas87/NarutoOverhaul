@@ -19,5 +19,8 @@ namespace NarutoOverhaul.Common.Systems
 		[Header("HUD")]
 		[DefaultValue(true)]
 		public bool ShowActiveFormIndicator = true;
+
+		[DefaultValue(true)]
+		public bool ShowResourceBars = true;
 	}
 }

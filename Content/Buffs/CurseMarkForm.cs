@@ -15,9 +15,7 @@ namespace NarutoOverhaul.Content.Buffs
 		public override int ActivationCost => 20;
 		public override float ChakraDrainPerTick => 0f;
 
-		// IsUnlocked is only ever read from ToggleForm (ProcessTriggers - client-side, local
-		// player), so reading Main.LocalPlayer here is safe.
-		public override bool IsUnlocked => Main.LocalPlayer.GetModPlayer<CurseMarkPlayer>().HasCurseMark;
+		public override bool IsUnlocked(Player player) => player.GetModPlayer<CurseMarkPlayer>().HasCurseMark;
 
 		// The shared drain loop truncates to whole HP per tick, so a sub-1 rate has to be
 		// time-sliced: 1 HP every 6th tick = 10 HP/s.

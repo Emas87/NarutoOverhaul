@@ -8,6 +8,11 @@ namespace NarutoOverhaul.Content.Items.Armor
 	[AutoloadEquip(EquipType.Head)]
 	public class StoneVillageHeadbandItem : ModItem
 	{
+		public override void SetStaticDefaults()
+		{
+			ArmorIDs.Head.Sets.DrawFullHair[Item.headSlot] = true;
+		}
+
 		public override void SetDefaults()
 		{
 			Item.width = 18;

@@ -7,8 +7,9 @@ using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
-	// Arcs under gravity, sticks where it lands, then detonates when its fuse (timeLeft) runs
-	// out - same oversized-hitbox explosion pattern as ExplosiveKunaiProjectile.
+	// Arcs under gravity, sticks to whatever it hits first - an enemy (rides along with it) or a
+	// tile (stays put) - then detonates when its fuse (timeLeft) runs out. Same oversized-hitbox
+	// explosion pattern as ExplosiveKunaiProjectile.
 	public class PaperBombProjectile : ModProjectile
 	{
 		private const int BlastRadius = 110;
@@ -16,6 +17,11 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		private bool Stuck => Projectile.ai[0] == 1f;
 		private bool Exploding => Projectile.ai[1] == 1f;
+
+		// Not synced over ai[] (already full at 2 slots) - fine for this mod's current netcode
+		// scope, same as the other single-player-assumed projectile state elsewhere in the mod.
+		private int stuckNpcIndex = -1;
+		private Vector2 stuckOffsetFromNpcCenter;
 
 		public override void SetDefaults()
 		{
@@ -39,6 +45,18 @@ namespace NarutoOverhaul.Content.Projectiles
 
 			if (Stuck)
 			{
+				if (stuckNpcIndex != -1)
+				{
+					NPC npc = Main.npc[stuckNpcIndex];
+					if (!npc.active)
+					{
+						Explode();
+						return;
+					}
+
+					Projectile.position = npc.Center + stuckOffsetFromNpcCenter - Projectile.Size / 2f;
+				}
+
 				Projectile.velocity = Vector2.Zero;
 				// fizzing fuse sparks
 				if (Main.rand.NextBool(4))
@@ -66,6 +84,7 @@ namespace NarutoOverhaul.Content.Projectiles
 			}
 
 			Projectile.ai[1] = 1f;
+			Projectile.friendly = true;
 			Projectile.tileCollide = false;
 			Projectile.velocity = Vector2.Zero;
 			Projectile.alpha = 255;
@@ -81,8 +100,27 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			Projectile.ai[0] = 1f;
+			if (!Stuck)
+			{
+				Projectile.ai[0] = 1f;
+			}
+
 			return false;
+		}
+
+		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+		{
+			if (Stuck)
+			{
+				return;
+			}
+
+			Projectile.ai[0] = 1f;
+			stuckNpcIndex = target.whoAmI;
+			stuckOffsetFromNpcCenter = Projectile.Center - target.Center;
+			// Stops dealing the direct throwing hit every tick while riding along - the fuse
+			// explosion (which re-enables friendly) is what actually punishes the target.
+			Projectile.friendly = false;
 		}
 	}
 }

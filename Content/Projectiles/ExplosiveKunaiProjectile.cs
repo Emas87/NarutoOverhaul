@@ -1,7 +1,11 @@
+using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using NarutoOverhaul.Common.Projectiles;
 using NarutoOverhaul.Common.VFX;
 using Terraria;
 using Terraria.Audio;
+using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -15,24 +19,36 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		private bool Exploding => Projectile.ai[1] == 1f;
 
+		// See KunaiProjectile.SetDefaults - small square hitbox decoupled from the taller 8x24 art
+		// so it doesn't stay upright (and clip the floor) once the sprite visually rotates to point
+		// at its target. tileCollide starts off and only turns on once clear of the spawn point.
+		private readonly DelayedTileCollide delayedTileCollide = new(clearanceDistance: 24f);
+
 		public override void SetDefaults()
 		{
-			Projectile.width = 8;
-			Projectile.height = 24;
+			Projectile.width = 10;
+			Projectile.height = 10;
+			Projectile.scale = 3.5f;
 			Projectile.aiStyle = -1;
 			Projectile.friendly = true;
 			Projectile.hostile = false;
 			Projectile.DamageType = DamageClass.Throwing;
 			Projectile.penetrate = -1;
 			Projectile.timeLeft = 180;
-			Projectile.tileCollide = true;
+			Projectile.tileCollide = false;
 		}
+
+		// See KunaiProjectile.BakedArtAngle - same fix, but this is a separate 8x24 asset whose
+		// diagonal stroke runs the other way (measured from the pixels: (6,9) to (0,13)).
+		private static readonly float BakedArtAngle = MathF.Atan2(-4f, 7f);
 
 		public override void AI()
 		{
 			if (!Exploding)
 			{
-				Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+				delayedTileCollide.Update(Projectile);
+				// See KunaiProjectile.AI - +Pi so the tip leads instead of the trailing/hilt end.
+				Projectile.rotation = Projectile.velocity.ToRotation() - BakedArtAngle + MathHelper.Pi;
 			}
 		}
 
@@ -55,6 +71,19 @@ namespace NarutoOverhaul.Content.Projectiles
 			{
 				Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Smoke);
 			}
+		}
+
+		// See KunaiProjectile.PreDraw - same hitbox/texture-size mismatch fix. Not relevant during
+		// the exploding phase since Projectile.alpha is already 255 (fully invisible) there.
+		public override bool PreDraw(ref Color lightColor)
+		{
+			Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
+			Vector2 origin = texture.Size() / 2f;
+			Vector2 drawPosition = Projectile.Center - Main.screenPosition;
+
+			Main.EntitySpriteDraw(texture, drawPosition, null, Projectile.GetAlpha(lightColor), Projectile.rotation, origin, Projectile.scale, SpriteEffects.None, 0);
+
+			return false;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)

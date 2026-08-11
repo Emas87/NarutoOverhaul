@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using NarutoOverhaul.Content.Projectiles;
 using NarutoOverhaul.Content.Projectiles.Bursts;
 using Terraria;
 using Terraria.DataStructures;
@@ -67,5 +68,20 @@ namespace NarutoOverhaul.Common.VFX
 		public static void SpawnSharinganBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<SharinganBurstProjectile>(position, scale, rotation);
 		public static void SpawnHealingBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<HealingBurstProjectile>(position, scale, rotation);
 		public static void SpawnWoodBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<WoodBurstProjectile>(position, scale, rotation);
+		public static void SpawnImpactBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<ImpactBurstProjectile>(position, scale, rotation);
+
+		// The log a Substitution dodge leaves behind - see SubstitutionLogProjectile. Given a small
+		// upward hop plus a bit of the incoming hit's own sideways kick so it visibly tumbles instead
+		// of just dropping straight down. Same multiplayer double-spawn guard as SpawnBurstEffect.
+		public static void SpawnSubstitutionLog(Vector2 position, int hitDirection)
+		{
+			if (Main.netMode == NetmodeID.MultiplayerClient)
+			{
+				return;
+			}
+
+			Vector2 velocity = new(hitDirection * Main.rand.NextFloat(1.5f, 3f), -Main.rand.NextFloat(4f, 5.5f));
+			Projectile.NewProjectile(new EntitySource_Misc("substitutionLog"), position, velocity, ModContent.ProjectileType<SubstitutionLogProjectile>(), 0, 0f);
+		}
 	}
 }

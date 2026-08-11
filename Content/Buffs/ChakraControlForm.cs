@@ -1,4 +1,3 @@
-using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.Systems;
 using Terraria;
 using Terraria.ModLoader;
@@ -10,36 +9,24 @@ namespace NarutoOverhaul.Content.Buffs
 	// this is a utility toggle, not a combat cost.
 	public class ChakraControlForm : TransformationForm
 	{
-		private const float ClimbSpeed = 3f;
-		private const float WallCheckOffset = 4f;
-
 		public override string DisplayName => "Chakra Control";
 		public override int BuffType => ModContent.BuffType<ChakraControlBuff>();
 		public override int ActivationCost => 10;
 		public override float ChakraDrainPerTick => 0.05f;
-		public override bool IsUnlocked => true;
+		public override bool IsUnlocked(Player player) => true;
 
+		// Wall climbing was originally a hand-rolled SolidCollision heuristic (checking boxes near
+		// the player) - it had real bugs (wrong box positions meant "on ground" read true while
+		// pressed against a wall, so climbing never triggered) and duplicated a mechanic vanilla
+		// already ships: Player.spikedBoots is exactly the Climbing Claws/Tiger Climbing Gear stat
+		// (1 = slow slide down, 2 = full stick + climb via controlUp/controlDown), driven by
+		// Player.WallslideMovement() using slideDir, which vanilla derives from real tile-collision
+		// results rather than a manual box check. Setting spikedBoots = 2 here every tick gets the
+		// same robust wall-cling for free, dust effects included, instead of reinventing it.
 		public override void ApplyStatBoosts(Player player)
 		{
 			player.waterWalk = true;
-		}
-
-		// Wall/tree climbing has no vanilla equivalent to lean on (unlike waterWalk) - this is a
-		// first-pass heuristic and the one part of this feature most likely to need tuning after a
-		// real playtest. Runs from PreUpdateMovement (not ApplyStatBoosts/ResetEffects) because
-		// overriding velocity/gravity has to happen before vanilla's own movement code for the tick,
-		// or it just gets stomped.
-		public override void PreUpdateMovement(Player player)
-		{
-			bool touchingWallLeft = Collision.SolidCollision(player.position - new Vector2(WallCheckOffset, 0f), player.width, player.height);
-			bool touchingWallRight = Collision.SolidCollision(player.position + new Vector2(WallCheckOffset, 0f), player.width, player.height);
-			bool onGround = Collision.SolidCollision(player.position + new Vector2(0f, 2f), player.width, 2);
-
-			if (!onGround && (touchingWallLeft || touchingWallRight) && (player.controlUp || player.controlDown))
-			{
-				player.velocity.Y = player.controlUp ? -ClimbSpeed : ClimbSpeed;
-				player.gravity = 0f;
-			}
+			player.spikedBoots = 2;
 		}
 	}
 }

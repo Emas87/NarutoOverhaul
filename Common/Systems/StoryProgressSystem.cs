@@ -58,6 +58,9 @@ namespace NarutoOverhaul.Common.Systems
 		// NetSend/NetReceive cover join-time sync (tModLoader calls these as part of the standard
 		// mod-world-data handshake); SyncToClients must be called manually from each boss's OnKill
 		// so already-connected clients pick up the change mid-session too.
+		// Two BitsByte (16 bits) instead of one - 7 flags already fill 7 of a single byte's 8 bits,
+		// so the next story boss added would silently need a wider wire format. Widening now leaves
+		// room for 9 more flags before this needs revisiting again.
 		public override void NetSend(BinaryWriter writer)
 		{
 			var flags = new BitsByte
@@ -70,13 +73,16 @@ namespace NarutoOverhaul.Common.Systems
 				[5] = DownedMadara,
 				[6] = DownedKaguya,
 			};
+			BitsByte flags2 = default;
 
 			writer.Write(flags);
+			writer.Write(flags2);
 		}
 
 		public override void NetReceive(BinaryReader reader)
 		{
 			BitsByte flags = reader.ReadByte();
+			_ = (BitsByte)reader.ReadByte();
 			DownedHaku = flags[0];
 			DownedShukaku = flags[1];
 			DownedOrochimaru = flags[2];
