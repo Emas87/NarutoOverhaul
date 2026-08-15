@@ -26,8 +26,8 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		public override void SetDefaults()
 		{
-			Item.width = 36;
-			Item.height = 36;
+			Item.width = 40;
+			Item.height = 40;
 			Item.damage = 6;
 			Item.DamageType = ModContent.GetInstance<GenjutsuDamageClass>();
 			Item.useStyle = ItemUseStyleID.Thrust;

@@ -1,12 +1,11 @@
-using Microsoft.Xna.Framework;
 using NarutoOverhaul.Content.Buffs;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Minions
 {
-	// Orochimaru/Sasuke's snake contract - slithers with a sine-wave wobble, lunges then retreats
-	// on the attack pass instead of a straight chase.
+	// Orochimaru/Sasuke's snake contract - crawls the ground like the rest of the pack, lunges then
+	// retreats on the attack pass instead of a straight chase.
 	public class SnakeMinionProjectile : AnimalMinionProjectile
 	{
 		protected override int BuffType => ModContent.BuffType<SnakeMinionBuff>();
@@ -15,7 +14,6 @@ namespace NarutoOverhaul.Content.Minions
 		protected override int IdleFrameCount => 5;
 		protected override int AttackFrameCount => 8;
 
-		private float wobbleTimer;
 		private int lungeTimer;
 		private bool retreating;
 
@@ -33,8 +31,6 @@ namespace NarutoOverhaul.Content.Minions
 
 		protected override void UpdateVisuals(Player owner, NPC target)
 		{
-			wobbleTimer += 0.2f;
-
 			if (target != null)
 			{
 				lungeTimer++;
@@ -47,17 +43,17 @@ namespace NarutoOverhaul.Content.Minions
 
 				if (retreating)
 				{
-					Projectile.velocity = -Projectile.velocity.SafeNormalize(Vector2.Zero) * MoveSpeed * 0.75f;
+					// -spriteDirection (not -velocity.X) so a retreat that starts exactly when
+					// velocity.X is momentarily 0 (e.g. just landed a hop) still picks a direction.
+					Projectile.velocity.X = -Projectile.spriteDirection * MoveSpeed * 0.75f;
+					Projectile.spriteDirection = Projectile.velocity.X < 0 ? -1 : 1;
 				}
 			}
 			else
 			{
 				lungeTimer = 0;
 				retreating = false;
-				Projectile.velocity.Y += (float)System.Math.Sin(wobbleTimer) * 0.5f;
 			}
-
-			Projectile.rotation = Projectile.velocity.ToRotation();
 		}
 	}
 }

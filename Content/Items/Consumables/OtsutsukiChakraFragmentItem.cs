@@ -9,14 +9,15 @@ namespace NarutoOverhaul.Content.Items.Consumables
 	// Kaguya's signature drop - the progenitor of chakra's power, condensed into a single dose.
 	// A permanent, one-time blessing rather than gear: once consumed it can never be used again
 	// (tracked by MoonLordBlessingPlayer), unlike an accessory that could be swapped in only for
-	// the fight. Its headline effect (weakening Moon Lord specifically) lives in
-	// Common/GlobalNPCs/MoonLordWeakenGlobalNPC.cs.
+	// the fight. Its headline effect (homing assist bolts during the Moon Lord fight specifically)
+	// lives in Common/GlobalNPCs/MoonLordAssistGlobalNPC.cs - deliberately never spelled out in the
+	// tooltip below.
 	public class OtsutsukiChakraFragmentItem : ModItem
 	{
 		public override void SetDefaults()
 		{
-			Item.width = 24;
-			Item.height = 24;
+			Item.width = 28;
+			Item.height = 28;
 			Item.useStyle = ItemUseStyleID.DrinkLiquid;
 			Item.useAnimation = 30;
 			Item.useTime = 30;
@@ -39,10 +40,11 @@ namespace NarutoOverhaul.Content.Items.Consumables
 			return true;
 		}
 
+		// No hint at what the blessing actually does or who it's for (see MoonLordAssistGlobalNPC) -
+		// only that consuming it is permanent and irreversible, same as any other mysterious relic.
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
 			tooltips.Add(new TooltipLine(Mod, "OneTime", "Can only be consumed once - its blessing is permanent"));
-			tooltips.Add(new TooltipLine(Mod, "MoonLordNote", "The Moon Lord's power pales before hers"));
 		}
 	}
 }

@@ -16,8 +16,8 @@ namespace NarutoOverhaul.Content.Items.Weapons
 	{
 		public override void SetDefaults()
 		{
-			Item.width = 18;
-			Item.height = 18;
+			Item.width = 34;
+			Item.height = 14;
 			Item.useStyle = ItemUseStyleID.Swing;
 			Item.useAnimation = 20;
 			Item.useTime = 20;

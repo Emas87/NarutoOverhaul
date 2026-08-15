@@ -15,8 +15,8 @@ namespace NarutoOverhaul.Content.Items.Armor
 
 		public override void SetDefaults()
 		{
-			Item.width = 18;
-			Item.height = 18;
+			Item.width = 26;
+			Item.height = 26;
 			Item.accessory = true;
 			Item.vanity = true;
 			Item.value = Item.sellPrice(silver: 5);

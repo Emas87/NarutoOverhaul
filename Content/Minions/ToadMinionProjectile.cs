@@ -1,11 +1,11 @@
-using Microsoft.Xna.Framework;
 using NarutoOverhaul.Content.Buffs;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Minions
 {
-	// Naruto/Jiraiya's toad contract - hops rather than flying smoothly.
+	// Naruto/Jiraiya's toad contract - ground-hops like vanilla's own Vampire Frog pet (aiStyle
+	// CommonFollow) instead of flying smoothly.
 	public class ToadMinionProjectile : AnimalMinionProjectile
 	{
 		protected override int BuffType => ModContent.BuffType<ToadMinionBuff>();
@@ -30,12 +30,18 @@ namespace NarutoOverhaul.Content.Minions
 
 		protected override void UpdateVisuals(Player owner, NPC target)
 		{
-			hopTimer++;
-
-			if (hopTimer >= 25)
+			// Only hop while actually resting on ground - gating on Grounded (set by the base
+			// class's gravity/Collision.StepUp step) stops this from stacking extra upward velocity
+			// mid-air on top of a landing/step-up hop, which read as an erratic double-jump.
+			if (Grounded)
 			{
-				Projectile.velocity.Y -= 5f;
-				hopTimer = 0;
+				hopTimer++;
+
+				if (hopTimer >= 25)
+				{
+					Projectile.velocity.Y = -7f;
+					hopTimer = 0;
+				}
 			}
 
 			Projectile.rotation = Projectile.velocity.X * 0.05f;

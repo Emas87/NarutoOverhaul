@@ -14,8 +14,8 @@ namespace NarutoOverhaul.Content.Items.Consumables
 	{
 		public override void SetDefaults()
 		{
-			Item.width = 24;
-			Item.height = 24;
+			Item.width = 32;
+			Item.height = 32;
 			Item.useStyle = ItemUseStyleID.DrinkLiquid;
 			Item.useAnimation = 30;
 			Item.useTime = 30;

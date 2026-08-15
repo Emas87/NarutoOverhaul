@@ -17,6 +17,8 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 	// Ice Mirror mechanic: rather than a chase/thrust pattern (TailedBeastBoss), Haku teleports
 	// between "mirror" positions around the target and alternates a melee lunge with senbon
 	// volleys - reads as a distinct fight instead of a reskin of the existing boss.
+	// [AutoloadBossHead] registers HakuBoss_Head_Boss.png as this boss's health-bar/minimap head icon.
+	[AutoloadBossHead]
 	public class HakuBoss : ModNPC
 	{
 		private enum Phase
@@ -34,8 +36,13 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		}
 
 		private const int StrikeTicks = 24;
-		private const int RecoverTicks = 40;
+		// Teleport itself is an instant position swap (no travel time), so this - the stationary
+		// "Recover" window between one attack ending and the next Teleport firing - is the only
+		// real lever on how often Haku teleports. Raised from 40 (was teleporting almost every
+		// other second, especially in Phase Two at half this) to give a real window to hit her.
+		private const int RecoverTicks = 70;
 		private const float TeleportRadius = 220f;
+		private const int TeleportClearAttempts = 8;
 
 		// Sheet layout from the nano-banana-generated HakuBoss.png (idle/melee/cast rows, each a
 		// real posed sequence rather than one hero frame repeated): 10 idle frames, then 7 melee
@@ -82,12 +89,23 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		private int VolleyShotCount => CurrentPhase == Phase.One ? 3 : 5;
 		private float StrikeSpeed => CurrentPhase == Phase.One ? 14f : 20f;
-		private int RecoverTicksForPhase => CurrentPhase == Phase.One ? RecoverTicks : RecoverTicks / 2;
+		// Phase Two still recovers faster than Phase One (that's the intended ramp-up), but no
+		// longer halved outright - that made her teleport nearly twice as often right when the
+		// fight was already getting harder.
+		private int RecoverTicksForPhase => CurrentPhase == Phase.One ? RecoverTicks : RecoverTicks * 3 / 4;
+
+		// Doubled from the original 40x56/1x - Haku read as too small next to the other bosses
+		// (Kakuzu/Orochimaru/Pain/Kaguya/Madara are all 44-48 wide). NPC.scale only affects the
+		// drawn sprite (Entity.Hitbox uses raw width/height, not scale - see MadaraBoss's Susanoo
+		// transition for the same distinction), so both are doubled together to actually grow the
+		// hitbox and not just the visual.
+		private const float SizeMultiplier = 2f;
 
 		public override void SetDefaults()
 		{
-			NPC.width = 40;
-			NPC.height = 56;
+			NPC.width = (int)(40 * SizeMultiplier);
+			NPC.height = (int)(56 * SizeMultiplier);
+			NPC.scale = SizeMultiplier;
 			NPC.damage = 32;
 			NPC.defense = 14;
 			NPC.lifeMax = 6000;
@@ -155,8 +173,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		{
 			ChakraVFX.SpawnIceBurst(NPC.Center, 1.6f);
 
-			Vector2 offset = Main.rand.NextVector2CircularEdge(TeleportRadius, TeleportRadius);
-			NPC.Center = target.Center + offset;
+			NPC.Center = FindClearTeleportCenter(target.Center, TeleportRadius);
 			NPC.velocity = Vector2.Zero;
 
 			ChakraVFX.SpawnIceBurst(NPC.Center, 1.6f);
@@ -165,6 +182,49 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			CurrentAttack = Main.rand.NextBool() ? AttackState.Strike : AttackState.SenbonVolley;
 			StateTimer = 0f;
 			VolleyShotsFired = 0f;
+		}
+
+		// The old code teleported straight to target.Center + a random offset with no check that the
+		// landing spot was actually open - could land Haku's hitbox partway inside solid terrain
+		// (cave/tunnel fights), where she'd stay wedged permanently. Retrying several random offsets
+		// and only committing to one with a fully clear hitbox footprint fixes this at the source;
+		// falling back to straight above the target if every attempt is blocked. Same pattern as
+		// OrochimaruBoss.FindClearTeleportCenter.
+		private bool IsAreaClear(Vector2 topLeft, int width, int height)
+		{
+			int tileX1 = (int)(topLeft.X / 16f);
+			int tileY1 = (int)(topLeft.Y / 16f);
+			int tileX2 = (int)((topLeft.X + width) / 16f);
+			int tileY2 = (int)((topLeft.Y + height) / 16f);
+
+			for (int x = tileX1; x <= tileX2; x++)
+			{
+				for (int y = tileY1; y <= tileY2; y++)
+				{
+					if (WorldGen.SolidTile(x, y))
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		private Vector2 FindClearTeleportCenter(Vector2 targetCenter, float radius)
+		{
+			for (int i = 0; i < TeleportClearAttempts; i++)
+			{
+				Vector2 candidateCenter = targetCenter + Main.rand.NextVector2CircularEdge(radius, radius);
+				Vector2 candidateTopLeft = candidateCenter - new Vector2(NPC.width / 2f, NPC.height / 2f);
+
+				if (IsAreaClear(candidateTopLeft, NPC.width, NPC.height))
+				{
+					return candidateCenter;
+				}
+			}
+
+			return targetCenter - new Vector2(0f, 150f);
 		}
 
 		private void DoStrike(Player target)

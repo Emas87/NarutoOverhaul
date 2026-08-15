@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -14,6 +15,9 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 	// AI as an explicit state machine: NPC.ai[0] = phase, ai[1] = attack state, ai[2] = state timer.
 	// HP-threshold phase transitions raise chase/charge speed - the "difficulty ramps per phase" pattern
 	// used by overhaul-mod bosses instead of a flat, single-pattern fight.
+	// [AutoloadBossHead] registers TailedBeastBoss_Head_Boss.png as this boss's health-bar/minimap
+	// head icon.
+	[AutoloadBossHead]
 	public class TailedBeastBoss : ModNPC
 	{
 		private enum Phase
@@ -27,6 +31,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		{
 			Chase,
 			Charge,
+			Jump,
 			Recover
 		}
 
@@ -58,7 +63,9 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		private int animFrame;
 		private int animTicks;
 
-		private Vector2 chargeDirection;
+		private float chargeDirectionX;
+		private float jumpDirectionX;
+		private bool jumpLaunched;
 
 		private Phase CurrentPhase
 		{
@@ -92,16 +99,66 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			_ => 18f,
 		};
 
+		// A telegraphed leap attack (EoC-style slam): plant for JumpTelegraphTicks, launch toward the
+		// target with a single big velocity impulse, then let ApplyGroundedMovement (called
+		// unconditionally every tick, see AI()) carry the actual arc - its gravity-fall math already
+		// generalizes to any starting velocity.Y (including a big negative "launch" one), not just
+		// falling from rest, so no separate jump-physics path is needed here. Landing is detected the
+		// same way ApplyGroundedMovement reports "resting" (velocity.Y snapped to exactly 0f), then a
+		// landing burst + knockback flourish - actual damage comes from ordinary contact during the
+		// leap/landing, same as every other movement-based attack here, not a separate damage source.
+		// See OrochimaruBoss.DoJump for the same pattern applied to a vanilla-gravity boss.
+		private const int JumpTelegraphTicks = 25;
+		private const float JumpHorizontalSpeed = 9f;
+		private const float JumpVerticalImpulse = -22f;
+		private const float JumpImpactRadius = 160f;
+		private const float JumpImpactKnockback = 10f;
+
+		// Shukaku read as way too small at 1x - a full tailed beast should tower over the player.
+		// NPC.scale only affects the drawn sprite (Entity.Hitbox uses raw width/height, not scale -
+		// see MadaraBoss's Susanoo transition/HakuBoss's size doubling for the same distinction),
+		// so both are scaled together to actually grow the hitbox and not just the visual.
+		private const float SizeMultiplier = 4f;
+
+		// Real native frame size from TailedBeastBoss.png (77x1288 = 23 frames of 56px), measured by
+		// alpha bounding box - NOT 100x100.
+		private const int NativeFrameWidth = 77;
+		private const int NativeFrameHeight = 56;
+
 		public override void SetDefaults()
 		{
-			NPC.width = 100;
-			NPC.height = 100;
+			// Set width/height to the NATIVE (unscaled) frame size here, NOT pre-multiplied by
+			// SizeMultiplier. Vanilla's own NPC.SetDefaults(int) unconditionally does
+			// `width = (int)(width * scale); height = (int)(height * scale);` right after this
+			// override returns - confirmed by decompiling it. Pre-multiplying here as well double
+			// applied SizeMultiplier to the hitbox only (77*4=308, then vanilla's auto-multiply made
+			// it 308*4=1232) while the drawn sprite only ever gets scaled once by NPC.scale in
+			// PreDraw - a hitbox 4x too large in each dimension versus the visible sprite, explaining
+			// every "something invisible is hitting me" report this session (confirmed via
+			// HitDebugLoggerPlayer's log: reported hitbox was exactly 1232x896, i.e. 16x the native
+			// 77x56 frame instead of the intended 4x).
+			NPC.width = NativeFrameWidth;
+			NPC.height = NativeFrameHeight;
+			NPC.scale = SizeMultiplier;
 			NPC.damage = 40;
 			NPC.defense = 20;
 			NPC.lifeMax = 12000;
 			NPC.HitSound = SoundID.NPCHit1;
 			NPC.DeathSound = SoundID.NPCDeath1;
 			NPC.knockBackResist = 0f;
+			// Shukaku is a ground creature, not a flier like HakuBoss, but vanilla's own
+			// gravity/Collision.TileCollision (used when these are left off) is built for
+			// few-tile-sized mobs - decompiling NPC.UpdateCollision confirmed it runs the same
+			// generic resolver regardless of aiStyle, and that resolver just zeroes out further
+			// vertical movement the moment any part of a hitbox this size (19x14 tiles) touches
+			// ground, instead of tracking the surface height as it walks. That pinned Shukaku at
+			// whatever Y it first landed on regardless of terrain, so as the player moved to a
+			// different elevation its real (just wrongly-elevated) hitbox could still reach them
+			// while visibly sitting somewhere else - "an invisible thing hitting me". Both flags stay
+			// on and ApplyGroundedMovement (see AI()) does its own terrain-height tracking instead,
+			// sized appropriately for this NPC instead of vanilla's small-mob-tuned collision.
+			NPC.noGravity = true;
+			NPC.noTileCollide = true;
 			NPC.boss = true;
 			NPC.npcSlots = 10f;
 			NPC.aiStyle = -1;
@@ -141,8 +198,14 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 			if (!target.active || target.dead)
 			{
-				NPC.velocity.Y -= 0.2f;
-				NPC.EncourageDespawn(10);
+				// EncourageDespawn alone doesn't work here: vanilla's own per-tick despawn check
+				// resets timeLeft back to full (and clears despawnEncouraged) every tick the NPC's
+				// hitbox is still on ANY player's screen - including the player who just died, who
+				// is usually still looking right at it. boss=true also exempts it from the normal
+				// off-screen despawn entirely. Deactivating directly guarantees it actually leaves,
+				// without granting kill credit/loot the way NPC.checkDead() would.
+				NPC.active = false;
+				NPC.netUpdate = true;
 				return;
 			}
 
@@ -156,12 +219,69 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				case AttackState.Charge:
 					DoCharge();
 					break;
+				case AttackState.Jump:
+					DoJump();
+					break;
 				case AttackState.Recover:
 					DoRecover();
 					break;
 			}
 
+			ApplyGroundedMovement();
+
 			StateTimer++;
+		}
+
+		private const float FallGravity = 0.5f;
+		private const float MaxFallSpeed = 12f;
+		// How far below the current top edge to search for the nearest solid tile, in tiles - generous
+		// enough to cover falling from spawn height or off a cliff without scanning the whole world
+		// every tick.
+		private const int GroundScanRangeTiles = 120;
+
+		// DoChase/DoCharge/DoRecover only ever touch velocity.X - this owns all of Y. Scans downward
+		// from the NPC's own top edge (not vanilla's undersized-for-this-hitbox TileCollision) for the
+		// nearest solid tile at its horizontal center and either falls toward it or snaps onto it,
+		// re-run every tick so it re-tracks the surface height as it walks across hills/valleys instead
+		// of getting stuck at whatever level it first landed on.
+		private void ApplyGroundedMovement()
+		{
+			int centerTileX = (int)(NPC.Center.X / 16f);
+			int topTileY = (int)(NPC.position.Y / 16f);
+			int groundTileY = -1;
+
+			for (int tileY = System.Math.Max(topTileY, 0); tileY < topTileY + GroundScanRangeTiles; tileY++)
+			{
+				if (WorldGen.SolidTile(centerTileX, tileY))
+				{
+					groundTileY = tileY;
+					break;
+				}
+			}
+
+			if (groundTileY < 0)
+			{
+				// No ground found within range (e.g. mid-fall off a cliff) - keep falling.
+				NPC.velocity.Y = System.Math.Min(NPC.velocity.Y + FallGravity, MaxFallSpeed);
+				NPC.position.Y += NPC.velocity.Y;
+				return;
+			}
+
+			float groundSurfaceY = groundTileY * 16f;
+			float desiredTopY = groundSurfaceY - NPC.height;
+
+			if (NPC.position.Y >= desiredTopY - (NPC.velocity.Y + FallGravity))
+			{
+				// Already resting on it, or about to reach/pass it this tick - land exactly on it
+				// instead of overshooting into the ground.
+				NPC.position.Y = desiredTopY;
+				NPC.velocity.Y = 0f;
+			}
+			else
+			{
+				NPC.velocity.Y = System.Math.Min(NPC.velocity.Y + FallGravity, MaxFallSpeed);
+				NPC.position.Y += NPC.velocity.Y;
+			}
 		}
 
 		private void UpdatePhase()
@@ -187,23 +307,49 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
 		}
 
+		// Native (unflipped, spriteDirection=1) art faces RIGHT - confirmed by rendering the chase
+		// frames directly (snout/eye on the right, legs stepping rightward, tail curling up-left
+		// behind). A prior comment here claimed the opposite (native pose faces left) and the
+		// resulting ternary had Shukaku flipped to face away from its own movement the whole time -
+		// read as "walking backwards". SetFacing below is the single source of truth for this now.
+		private void SetFacing(float velocityX)
+		{
+			if (velocityX != 0f)
+			{
+				NPC.spriteDirection = velocityX < 0 ? -1 : 1;
+			}
+		}
+
 		private void DoChase(Player target)
 		{
-			Vector2 toTarget = target.Center - NPC.Center;
-			NPC.velocity = Vector2.Lerp(NPC.velocity, toTarget.SafeNormalize(Vector2.Zero) * ChaseSpeed, 0.05f);
-			NPC.spriteDirection = target.Center.X < NPC.Center.X ? -1 : 1;
+			// Ground creature, not a flier: only ever drive velocity.X here - velocity.Y is left
+			// entirely to vanilla's own gravity/tile collision (noGravity/noTileCollide are off), so
+			// Shukaku falls, lands, and walks on terrain like a normal NPC instead of hovering/flying.
+			float directionX = target.Center.X > NPC.Center.X ? 1f : -1f;
+			NPC.velocity.X = MathHelper.Lerp(NPC.velocity.X, directionX * ChaseSpeed, 0.05f);
+			SetFacing(directionX);
 
 			if (StateTimer >= ChaseTicks)
 			{
-				chargeDirection = toTarget.SafeNormalize(Vector2.UnitX);
-				CurrentAttack = AttackState.Charge;
+				if (Main.rand.NextBool())
+				{
+					chargeDirectionX = directionX;
+					CurrentAttack = AttackState.Charge;
+				}
+				else
+				{
+					jumpDirectionX = directionX;
+					CurrentAttack = AttackState.Jump;
+				}
+
 				StateTimer = 0f;
 			}
 		}
 
 		private void DoCharge()
 		{
-			NPC.velocity = chargeDirection * ChargeSpeed;
+			NPC.velocity.X = chargeDirectionX * ChargeSpeed;
+			SetFacing(NPC.velocity.X);
 
 			if (StateTimer >= ChargeTicks)
 			{
@@ -212,9 +358,60 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 		}
 
+		private void DoJump()
+		{
+			if (!jumpLaunched)
+			{
+				if (StateTimer < JumpTelegraphTicks)
+				{
+					NPC.velocity.X *= 0.8f;
+					SetFacing(jumpDirectionX);
+					return;
+				}
+
+				NPC.velocity.X = jumpDirectionX * JumpHorizontalSpeed;
+				NPC.velocity.Y = JumpVerticalImpulse;
+				jumpLaunched = true;
+				SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
+			}
+
+			SetFacing(NPC.velocity.X);
+
+			if (jumpLaunched && StateTimer > JumpTelegraphTicks && NPC.velocity.Y == 0f)
+			{
+				OnJumpLanding();
+				CurrentAttack = AttackState.Recover;
+				StateTimer = 0f;
+				jumpLaunched = false;
+			}
+		}
+
+		private void OnJumpLanding()
+		{
+			Common.VFX.ChakraVFX.SpawnChakraBurst(NPC.Center, 2.5f);
+			SoundEngine.PlaySound(SoundID.Item14, NPC.Center);
+
+			for (int i = 0; i < Main.maxPlayers; i++)
+			{
+				Player player = Main.player[i];
+
+				if (!player.active || player.dead)
+				{
+					continue;
+				}
+
+				if (Vector2.Distance(player.Center, NPC.Center) <= JumpImpactRadius)
+				{
+					Vector2 push = (player.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * JumpImpactKnockback;
+					player.velocity += push;
+				}
+			}
+		}
+
 		private void DoRecover()
 		{
-			NPC.velocity *= 0.9f;
+			NPC.velocity.X *= 0.9f;
+			SetFacing(NPC.velocity.X);
 
 			if (StateTimer >= RecoverTicks)
 			{
@@ -233,6 +430,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			{
 				AttackState.Chase => AnimBlock.Chase,
 				AttackState.Charge => AnimBlock.Charge,
+				AttackState.Jump => AnimBlock.Charge,
 				_ => AnimBlock.Idle,
 			};
 
@@ -279,6 +477,36 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 
 			NPC.frame.Y = (frameStart + frameIndex) * frameHeight;
+		}
+
+		// Vanilla's default NPC draw anchors the sprite's origin at half the HITBOX size, not half
+		// the frame/texture size (same bug pattern already fixed elsewhere in this codebase - see
+		// SenbonProjectile/AnimalMinionProjectile). Even now that the hitbox is sized off the real
+		// native frame (see NativeFrameWidth/Height above) instead of an invented one, the origin
+		// still needs to come from the actual frame rectangle, not vanilla's hitbox-based default,
+		// for the draw to land where the collision box actually is.
+		//
+		// A plain frame-center origin still isn't right though: measuring the sheet's alpha bounding
+		// box per frame (same technique used for AnimalMinionProjectile) shows the character's feet
+		// sit a consistent 2px above the frame's bottom edge in every frame, but the empty space
+		// ABOVE the character varies per pose (0-4px - the charge/roar frames reach higher into the
+		// frame). Anchoring at the geometric frame center against that uneven top padding reads as
+		// the sprite floating a few pixels above the hitbox and bobbing between poses. Anchoring to
+		// the frame's (fixed) bottom padding instead and drawing at NPC.Bottom keeps the feet planted
+		// on the hitbox's bottom edge regardless of pose.
+		private const float VisualBottomPaddingPx = 2f;
+
+		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+		{
+			Texture2D texture = TextureAssets.Npc[NPC.type].Value;
+			Rectangle frame = NPC.frame;
+			Vector2 origin = new(frame.Width / 2f, frame.Height - VisualBottomPaddingPx);
+			SpriteEffects effects = NPC.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+			Vector2 drawPosition = NPC.Bottom - screenPos + new Vector2(0f, NPC.gfxOffY);
+
+			spriteBatch.Draw(texture, drawPosition, frame, NPC.GetAlpha(drawColor), NPC.rotation, origin, NPC.scale, effects, 0f);
+
+			return false;
 		}
 
 		// Phase escalation = increasing blue chakra-cloak intensity in post, matching the BlueTorch

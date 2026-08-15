@@ -10,8 +10,8 @@ namespace NarutoOverhaul.Content.Items.Weapons
 	{
 		public override void SetDefaults()
 		{
-			Item.width = 18;
-			Item.height = 18;
+			Item.width = 26;
+			Item.height = 26;
 			Item.damage = 16;
 			Item.DamageType = DamageClass.Throwing;
 			Item.useStyle = ItemUseStyleID.Swing;

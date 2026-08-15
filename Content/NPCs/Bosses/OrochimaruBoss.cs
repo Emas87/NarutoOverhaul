@@ -1,5 +1,6 @@
 using System.IO;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
 using NarutoOverhaul.Content.Projectiles;
@@ -19,6 +20,8 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 	// TailedBeastBoss (chase+charge): alternates a sword lunge with 3-way snake-projectile spreads,
 	// and "substitutes" (teleports + partially heals, Orochimaru's resilience) once per phase
 	// transition instead of just getting faster like the other bosses.
+	// [AutoloadBossHead] registers OrochimaruBoss_Head_Boss.png as this boss's health-bar/minimap head icon.
+	[AutoloadBossHead]
 	public class OrochimaruBoss : ModNPC
 	{
 		private enum Phase
@@ -32,12 +35,76 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		{
 			Lunge,
 			SnakeSummon,
+			Jump,
 			Recover
 		}
 
 		private const int LungeTicks = 20;
 		private const int RecoverTicks = 45;
 		private const float SubstitutionHealFraction = 0.08f;
+
+		// DoLunge recomputes a full velocity toward the target from scratch every tick - when a
+		// 1-tile obstacle blocks that path, vanilla's tile collision cancels velocity.X for that
+		// tick, but the very next tick DoLunge immediately stomps it with the same blocked-direction
+		// vector again before any step-climb correction can accumulate, so Orochimaru just sits there
+		// pressed against the block ("getting stuck on one tile"). TryHopOverObstacle below is a
+		// small additive unstick valve on top of vanilla's normal gravity/tile collision (which stays
+		// on, unlike TailedBeastBoss's fully manual noGravity/noTileCollide movement - Orochimaru is
+		// humanoid-scale and should still be blocked by real walls, just able to hop 1-2 tile steps),
+		// mirroring the same wall-ahead-hop half of the pattern already proven for the ground-walking
+		// minions in AnimalMinionProjectile.
+		private const int HopCooldownTicks = 15;
+		private const float BlockedVelocityThreshold = 1f;
+		private const float HopImpulseSmall = -7f;
+		private const float HopImpulseLarge = -10f;
+
+		private int hopCooldown;
+
+		// Universal "don't stay wedged/bouncing in place forever" safety net. "Stuck" covers two
+		// cases: (1) the hitbox literally overlapping solid tiles (bad teleport/knockback), and
+		// (2) repeatedly attempting to move (nonzero velocity) without ever making real net progress.
+		// Being stationary while genuinely idle (casting/recovering, near-zero velocity) is NOT stuck
+		// and must not trigger this, or a boss calmly casting could suddenly sink through the floor
+		// for no reason. Once either condition holds for StuckToleranceTicks (3s) with less than
+		// StuckMovementThreshold net displacement, nudge it to a nearby clear-air spot and let
+		// gravity/collision (which stay ON throughout - never touching NPC.noTileCollide) settle it
+		// onto whatever ground is below, same as any normal fall/landing. An earlier version of this
+		// used NPC.noTileCollide to phase through terrain, but that disables collision in EVERY
+		// direction including straight down, so a stuck boss fell clean through the floor instead of
+		// escaping sideways/upward while still landing on solid ground - this reposition approach
+		// can't do that since normal collision never turns off. Reuses the IsAreaClear/
+		// FindClearTeleportCenter helpers already below (added for the safe-substitution fix).
+		private const int StuckToleranceTicks = 180;
+		private const float StuckMovementThreshold = 60f;
+		private const float MovingVelocityThreshold = 1.5f;
+		private const float EscapeSearchRadius = 150f;
+		private int stuckTimer;
+		private Vector2 stuckWindowStartPosition;
+
+		// A telegraphed leap attack (EoC-style slam): plant for JumpTelegraphTicks, launch toward the
+		// target with a single big velocity impulse, let vanilla's normal gravity/tile collision carry
+		// the arc (same IsGrounded() landing test as TryHopOverObstacle above), then a landing burst +
+		// knockback flourish - actual damage comes from ordinary contact during the leap/landing, same
+		// as every other movement-based attack here (Lunge included), not a separate damage source.
+		private const int JumpTelegraphTicks = 20;
+		private const float JumpHorizontalSpeed = 9f;
+		private const float JumpVerticalImpulse = -20f;
+		private const float JumpImpactRadius = 110f;
+		private const float JumpImpactKnockback = 8f;
+
+		private bool jumpLaunched;
+
+		// Orochimaru read as too small next to the other bosses. NPC.scale only affects the drawn
+		// sprite (Entity.Hitbox uses raw width/height, not scale - see TailedBeastBoss/HakuBoss for
+		// the same distinction), so both are scaled together via SetDefaults+PreDraw below to
+		// actually grow the hitbox and not just the visual.
+		private const float SizeMultiplier = 2f;
+
+		// OrochimaruBoss.png's alpha bounding box sits flush against a consistent 2px bottom margin
+		// in every frame (measured directly, same technique as TailedBeastBoss) - used by PreDraw
+		// below to anchor the sprite's feet to the hitbox bottom instead of vanilla's default
+		// hitbox-center anchor.
+		private const float VisualBottomPaddingPx = 2f;
 
 		// Sheet layout from the nano-banana-generated OrochimaruBoss.png: idle(4)/melee(6)/cast(6).
 		private const int IdleFrameStart = 0;
@@ -97,8 +164,14 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		public override void SetDefaults()
 		{
+			// Native (unscaled) size - do NOT pre-multiply by SizeMultiplier here. Vanilla's own
+			// NPC.SetDefaults(int) unconditionally does `width = (int)(width * scale); height =
+			// (int)(height * scale);` right after this override returns, so pre-multiplying as well
+			// would double-apply SizeMultiplier to the hitbox only, leaving it out of sync with the
+			// sprite (which is scaled once, by PreDraw). See TailedBeastBoss for the same rule.
 			NPC.width = 44;
 			NPC.height = 60;
+			NPC.scale = SizeMultiplier;
 			NPC.damage = 38;
 			NPC.defense = 22;
 			NPC.lifeMax = 9000;
@@ -162,6 +235,19 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 
 			UpdatePhase();
+			UpdateStuckState();
+
+			// Set once per tick regardless of attack state (matching MadaraBoss/PainBoss/KaguyaBoss)
+			// instead of only inside DoLunge - previously spriteDirection went stale for the entire
+			// Recover/SnakeSummon portion of the cycle while the body kept drifting on decayed lunge
+			// velocity, reading as "moving backward" whenever the player crossed to the other side
+			// during that window.
+			NPC.spriteDirection = target.Center.X < NPC.Center.X ? -1 : 1;
+
+			if (hopCooldown > 0)
+			{
+				hopCooldown--;
+			}
 
 			switch (CurrentAttack)
 			{
@@ -171,9 +257,20 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				case AttackState.SnakeSummon:
 					DoSnakeSummon(target);
 					break;
+				case AttackState.Jump:
+					DoJump(target);
+					break;
 				case AttackState.Recover:
 					DoRecover();
 					break;
+			}
+
+			// Only during Lunge: that's the only state whose purpose is closing distance with the
+			// player (SnakeSummon is a stationary caster, Recover is a decaying settle) - gating here
+			// avoids fighting either of those.
+			if (CurrentAttack == AttackState.Lunge)
+			{
+				TryHopOverObstacle();
 			}
 
 			StateTimer++;
@@ -195,13 +292,15 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 		}
 
+		private const float SubstitutionTeleportRadius = 260f;
+		private const int TeleportClearAttempts = 8;
+
 		private void DoSubstitution(Player target)
 		{
 			ChakraVFX.SpawnCorruptionBurst(NPC.Center, 2.5f);
 			SoundEngine.PlaySound(SoundID.Item29, NPC.Center);
 
-			Vector2 offset = Main.rand.NextVector2CircularEdge(260f, 260f);
-			NPC.Center = target.Center + offset;
+			NPC.Center = FindClearTeleportCenter(target.Center, SubstitutionTeleportRadius);
 			NPC.velocity = Vector2.Zero;
 			NPC.life = System.Math.Min(NPC.lifeMax, NPC.life + (int)(NPC.lifeMax * SubstitutionHealFraction));
 
@@ -212,11 +311,88 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			SnakesFired = 0f;
 		}
 
+		// The old code teleported straight to target.Center + a random offset with no check that the
+		// landing spot was actually open - a substitution at a bad HP-threshold moment (player fighting
+		// in a cave, tunnel, etc.) could land Orochimaru's hitbox partway inside solid terrain, where
+		// he'd stay wedged permanently (no state ever un-embeds him - Recover/SnakeSummon never move
+		// him, and TryHopOverObstacle only fires during Lunge and only helps when blocked ahead while
+		// already grounded, not when already overlapping solid tiles). Retrying several random offsets
+		// and only committing to one with a fully clear hitbox footprint fixes this at the source;
+		// falling back to straight above the target (virtually always open air mid-fight) if every
+		// attempt is blocked, rather than ever risking a blind teleport into terrain.
+		private bool IsAreaClear(Vector2 topLeft, int width, int height)
+		{
+			int tileX1 = (int)(topLeft.X / 16f);
+			int tileY1 = (int)(topLeft.Y / 16f);
+			int tileX2 = (int)((topLeft.X + width) / 16f);
+			int tileY2 = (int)((topLeft.Y + height) / 16f);
+
+			for (int x = tileX1; x <= tileX2; x++)
+			{
+				for (int y = tileY1; y <= tileY2; y++)
+				{
+					if (WorldGen.SolidTile(x, y))
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		private void UpdateStuckState()
+		{
+			bool embedded = !IsAreaClear(NPC.position, NPC.width, NPC.height);
+			bool attemptingMovement = NPC.velocity.LengthSquared() > MovingVelocityThreshold * MovingVelocityThreshold;
+
+			if (!embedded && !attemptingMovement)
+			{
+				stuckTimer = 0;
+				return;
+			}
+
+			if (stuckTimer == 0)
+			{
+				stuckWindowStartPosition = NPC.Center;
+			}
+
+			stuckTimer++;
+
+			if (Vector2.Distance(NPC.Center, stuckWindowStartPosition) >= StuckMovementThreshold)
+			{
+				stuckTimer = 0;
+				return;
+			}
+
+			if (embedded || stuckTimer >= StuckToleranceTicks)
+			{
+				NPC.Center = FindClearTeleportCenter(NPC.Center, EscapeSearchRadius);
+				NPC.velocity = Vector2.Zero;
+				stuckTimer = 0;
+			}
+		}
+
+		private Vector2 FindClearTeleportCenter(Vector2 targetCenter, float radius)
+		{
+			for (int i = 0; i < TeleportClearAttempts; i++)
+			{
+				Vector2 candidateCenter = targetCenter + Main.rand.NextVector2CircularEdge(radius, radius);
+				Vector2 candidateTopLeft = candidateCenter - new Vector2(NPC.width / 2f, NPC.height / 2f);
+
+				if (IsAreaClear(candidateTopLeft, NPC.width, NPC.height))
+				{
+					return candidateCenter;
+				}
+			}
+
+			return targetCenter - new Vector2(0f, 150f);
+		}
+
 		private void DoLunge(Player target)
 		{
 			Vector2 toTarget = (target.Center - NPC.Center).SafeNormalize(Vector2.UnitX);
 			NPC.velocity = toTarget * LungeSpeed;
-			NPC.spriteDirection = target.Center.X < NPC.Center.X ? -1 : 1;
 
 			if (StateTimer >= LungeTicks)
 			{
@@ -225,11 +401,54 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 		}
 
+		// Same test AnimalMinionProjectile uses - scale-independent, no adjustment needed for the
+		// doubled hitbox.
+		private bool IsGrounded() => NPC.velocity.Y == 0f;
+
+		// Edge-relative (NPC.width/height, which already reflect the 2x hitbox) rather than a flat
+		// pixel offset, so this stays correct if the size ever changes again.
+		private bool IsWallAhead(int direction)
+		{
+			float aheadX = direction > 0 ? NPC.position.X + NPC.width + 4f : NPC.position.X - 4f;
+			int tileX = (int)(aheadX / 16f);
+			int footTileY = (int)((NPC.position.Y + NPC.height - 4f) / 16f);
+
+			return WorldGen.SolidTile(tileX, footTileY);
+		}
+
+		private void TryHopOverObstacle()
+		{
+			if (hopCooldown > 0 || !IsGrounded())
+			{
+				return;
+			}
+
+			int direction = NPC.spriteDirection;
+
+			// velocity.X should be near LungeSpeed while actively lunging - if it's been cancelled
+			// down near zero, tile collision just blocked this tick's movement.
+			if (System.Math.Abs(NPC.velocity.X) >= BlockedVelocityThreshold || !IsWallAhead(direction))
+			{
+				return;
+			}
+
+			int tileX = (int)((NPC.Center.X + direction * (NPC.width / 2f + 4f)) / 16f);
+			int footTileY = (int)((NPC.position.Y + NPC.height - 4f) / 16f);
+			bool clearAbove = !WorldGen.SolidTile(tileX, footTileY - 2);
+
+			NPC.velocity.Y = clearAbove ? HopImpulseSmall : HopImpulseLarge;
+			hopCooldown = HopCooldownTicks;
+		}
+
 		private void DoSnakeSummon(Player target)
 		{
 			NPC.velocity *= 0.9f;
 
-			if (StateTimer == 0)
+			// AI() increments StateTimer unconditionally every tick, including the tick DoRecover
+			// resets it to 0 when transitioning into this state - by the time this method actually
+			// runs for the first time in a fresh cycle, StateTimer is already 1, never 0 (same bug
+			// found in PainBoss.DoAnimal - see there for the full trace).
+			if (StateTimer == 1)
 			{
 				if (Main.netMode != NetmodeID.MultiplayerClient)
 				{
@@ -259,9 +478,63 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 			if (StateTimer >= RecoverTicksForPhase)
 			{
-				CurrentAttack = Main.rand.NextBool() ? AttackState.Lunge : AttackState.SnakeSummon;
+				CurrentAttack = Main.rand.Next(3) switch
+				{
+					0 => AttackState.Lunge,
+					1 => AttackState.SnakeSummon,
+					_ => AttackState.Jump,
+				};
 				StateTimer = 0f;
 				SnakesFired = 0f;
+			}
+		}
+
+		private void DoJump(Player target)
+		{
+			if (!jumpLaunched)
+			{
+				if (StateTimer < JumpTelegraphTicks)
+				{
+					NPC.velocity.X *= 0.8f;
+					return;
+				}
+
+				float directionX = target.Center.X > NPC.Center.X ? 1f : -1f;
+				NPC.velocity.X = directionX * JumpHorizontalSpeed;
+				NPC.velocity.Y = JumpVerticalImpulse;
+				jumpLaunched = true;
+				SoundEngine.PlaySound(SoundID.Item29, NPC.Center);
+				return;
+			}
+
+			if (StateTimer > JumpTelegraphTicks && IsGrounded())
+			{
+				OnJumpLanding();
+				CurrentAttack = AttackState.Recover;
+				StateTimer = 0f;
+				jumpLaunched = false;
+			}
+		}
+
+		private void OnJumpLanding()
+		{
+			ChakraVFX.SpawnCorruptionBurst(NPC.Center, 2f);
+			SoundEngine.PlaySound(SoundID.Item14, NPC.Center);
+
+			for (int i = 0; i < Main.maxPlayers; i++)
+			{
+				Player player = Main.player[i];
+
+				if (!player.active || player.dead)
+				{
+					continue;
+				}
+
+				if (Vector2.Distance(player.Center, NPC.Center) <= JumpImpactRadius)
+				{
+					Vector2 push = (player.Center - NPC.Center).SafeNormalize(Vector2.UnitX) * JumpImpactKnockback;
+					player.velocity += push;
+				}
 			}
 		}
 
@@ -275,6 +548,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			{
 				AttackState.Lunge => AnimBlock.Melee,
 				AttackState.SnakeSummon => AnimBlock.Cast,
+				AttackState.Jump => AnimBlock.Melee,
 				_ => AnimBlock.Idle,
 			};
 
@@ -318,6 +592,24 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 
 			NPC.frame.Y = (frameStart + frameIndex) * frameHeight;
+		}
+
+		// Vanilla's default NPC draw anchors the sprite's origin at half the HITBOX size, not half
+		// the frame size - once the hitbox stops matching the frame (see SizeMultiplier/PreDraw
+		// above), that mismatch reads as the sprite floating away from its own hitbox. Anchoring to
+		// the frame's own (measured) bottom padding and drawing at NPC.Bottom instead keeps the feet
+		// planted on the hitbox's bottom edge regardless of scale. Same pattern as TailedBeastBoss.
+		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
+		{
+			Texture2D texture = TextureAssets.Npc[NPC.type].Value;
+			Rectangle frame = NPC.frame;
+			Vector2 origin = new(frame.Width / 2f, frame.Height - VisualBottomPaddingPx);
+			SpriteEffects effects = NPC.spriteDirection == -1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+			Vector2 drawPosition = NPC.Bottom - screenPos + new Vector2(0f, NPC.gfxOffY);
+
+			spriteBatch.Draw(texture, drawPosition, frame, NPC.GetAlpha(drawColor), NPC.rotation, origin, NPC.scale, effects, 0f);
+
+			return false;
 		}
 
 		// Phase escalation = increasing sickly-purple aura intensity in post, per

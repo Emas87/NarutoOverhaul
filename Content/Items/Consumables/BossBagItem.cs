@@ -26,8 +26,8 @@ namespace NarutoOverhaul.Content.Items.Consumables
 
 		public override void SetDefaults()
 		{
-			Item.width = 24;
-			Item.height = 24;
+			Item.width = 32;
+			Item.height = 32;
 			Item.maxStack = 999;
 			Item.consumable = true;
 			Item.expert = true;

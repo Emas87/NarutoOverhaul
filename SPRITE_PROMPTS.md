@@ -23,22 +23,22 @@ Every sprite in the mod is currently a placeholder (flat-colored PNG, a few hund
 
 | File | Canvas | Rarity | Prompt |
 |---|---|---|---|
-| AllKillingAshBonesItem.png | 24x24 | Red | Pale bone-white spear made of jagged bundled bone spikes, faint purple Rinnegan-tinted chakra aura along the shaft, strong red rarity glow outline, as a 2D game item icon sprite, transparent background. |
-| ChidoriItem.png | 28x28 | Orange | A clenched fist wreathed in crackling blue-white lightning, chirping electric arcs and sparks radiating outward, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
-| FireballItem.png | 24x24 | LightRed | A compact swirling orange-red fireball with flame licks, ember particles, and a hot white core, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| FrontLotusItem.png | 24x24 | Orange | A leg mid spinning kick wrapped in a red-orange chakra silhouette with dynamic speed lines behind it, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
-| GenjutsuIllusionItem.png | 22x22 | LightRed | A hypnotic purple-magenta spiral eye motif with wisps of violet smoke curling around it, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| GenjutsuNightmareItem.png | 36x36 | LightRed | A twisted screaming-face illusion mask half-formed from black smoke with jagged crimson eye highlights, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| GenjutsuSleepItem.png | 22x22 | LightRed | A soft indigo-purple crescent moon with drifting sleep-dust "Z" particles around it, dreamy glow, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| GentleFistItem.png | 20x20 | LightRed | A pale lavender-white open palm strike with small radiating chakra-point pressure rings, soft white-blue glow, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| GreatBreakthroughItem.png | 26x18 | LightRed | A crescent blade of compressed white-green wind with sharp cutting air-slash lines, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| IronLegItem.png | 24x24 | LightRed | A stone-grey armored shin and boot mid low sweeping kick, small cracked ground fragments and dust burst, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| AllKillingAshBonesItem.png | 30x30 | Red | Pale bone-white spear made of jagged bundled bone spikes, faint purple Rinnegan-tinted chakra aura along the shaft, strong red rarity glow outline, as a 2D game item icon sprite, transparent background. |
+| ChidoriItem.png | 34x34 | Orange | A clenched fist wreathed in crackling blue-white lightning, chirping electric arcs and sparks radiating outward, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
+| FireballItem.png | 30x30 | LightRed | A compact swirling orange-red fireball with flame licks, ember particles, and a hot white core, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| FrontLotusItem.png | 30x30 | Orange | A leg mid spinning kick wrapped in a red-orange chakra silhouette with dynamic speed lines behind it, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
+| GenjutsuIllusionItem.png | 28x28 | LightRed | A hypnotic purple-magenta spiral eye motif with wisps of violet smoke curling around it, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| GenjutsuNightmareItem.png | 40x40 | LightRed | A twisted screaming-face illusion mask half-formed from black smoke with jagged crimson eye highlights, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| GenjutsuSleepItem.png | 28x28 | LightRed | A soft indigo-purple crescent moon with drifting sleep-dust "Z" particles around it, dreamy glow, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| GentleFistItem.png | 26x26 | LightRed | A pale lavender-white open palm strike with small radiating chakra-point pressure rings, soft white-blue glow, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| GreatBreakthroughItem.png | 32x22 | LightRed | A crescent blade of compressed white-green wind with sharp cutting air-slash lines, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| IronLegItem.png | 30x30 | LightRed | A stone-grey armored shin and boot mid low sweeping kick, small cracked ground fragments and dust burst, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
 | LeafHurricaneItem.png | 44x44 | LightRed | A dynamic circular motion-blur silhouette of a spinning heel-drop kick with swirling green leaf particles, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| RasenganItem.png | 32x32 | LightRed | A swirling blue spiral sphere of chakra with visible inward-spinning ribbon layers, bright white core, small chakra wisps peeling off the edges, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| ShadowCloneItem.png | 24x24 | LightRed | Two overlapping translucent blue-tinted ninja silhouettes forming a hand seal together, faint smoke-poof particles, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| ShinraTenseiItem.png | 30x30 | Red | A dark violet-black repulsive shockwave ring radiating from a glowing Rinnegan eye at its center, small debris fragments flying outward, strong red rarity glow, as a 2D game item icon sprite, transparent background. |
-| SusanooItem.png | 36x36 | Red | A giant translucent purple ethereal ribcage and armored fist reaching forward, glowing rib outlines, strong red rarity glow, as a 2D game item icon sprite, transparent background. |
-| WaterDragonItem.png | 28x28 | LightRed | A curling serpentine dragon made of flowing blue water with foam highlights and droplets, jaws open, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| RasenganItem.png | 38x38 | LightRed | A swirling blue spiral sphere of chakra with visible inward-spinning ribbon layers, bright white core, small chakra wisps peeling off the edges, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| ShadowCloneItem.png | 30x30 | LightRed | Two overlapping translucent blue-tinted ninja silhouettes forming a hand seal together, faint smoke-poof particles, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| ShinraTenseiItem.png | 36x36 | Red | A dark violet-black repulsive shockwave ring radiating from a glowing Rinnegan eye at its center, small debris fragments flying outward, strong red rarity glow, as a 2D game item icon sprite, transparent background. |
+| SusanooItem.png | 40x40 | Red | A giant translucent purple ethereal ribcage and armored fist reaching forward, glowing rib outlines, strong red rarity glow, as a 2D game item icon sprite, transparent background. |
+| WaterDragonItem.png | 34x34 | LightRed | A curling serpentine dragon made of flowing blue water with foam highlights and droplets, jaws open, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
 
 ## Weapons — Tools & Summon Scrolls - Done
 
@@ -49,15 +49,15 @@ their own real-art pass on 2026-07-21 using these same prompts.
 
 | File | Canvas | Rarity | Prompt |
 |---|---|---|---|
-| ExplosiveKunaiItem.png | 18x18 | Blue | A steel kunai throwing knife with a ring pommel, a red explosive paper tag with kanji marking and a lit fuse wrapped around the grip, plain metallic shading, faint blue shimmer, pixel art sprite in the style of a hand-painted 16-bit SNES game asset, built from flat-color square pixel blocks with hard jagged outlines, not photorealistic, no soft blur or gradients, no lens-flare, as a 2D game item icon sprite, solid flat green background, no checkered pattern, no gradient. |
-| FumaShurikenItem.png | 26x26 | Blue | A large heavy black-iron fuma shuriken with four long curved folding blades and a spiked center hub, plain dull metallic shading, faint blue shimmer, pixel art sprite in the style of a hand-painted 16-bit SNES game asset, built from flat-color square pixel blocks with hard jagged outlines, not photorealistic, no soft blur or gradients, no lens-flare, as a 2D game item icon sprite, solid flat green background, no checkered pattern, no gradient. |
-| KunaiItem.png | 18x18 | White | A simple steel kunai throwing knife with a ring pommel and wrapped grip, plain metallic shading, no glow, pixel art sprite in the style of a hand-painted 16-bit SNES game asset, built from flat-color square pixel blocks with hard jagged outlines, not photorealistic, no soft blur or gradients, no lens-flare, as a 2D game item icon sprite, solid flat green background, no checkered pattern, no gradient. |
-| PaperBombItem.png | 14x20 | Blue | A small folded tan paper explosive tag bound with thin cord, red kanji-style ink markings, a coiled unlit fuse, plain paper shading, faint blue shimmer, pixel art sprite in the style of a hand-painted 16-bit SNES game asset, built from flat-color square pixel blocks with hard jagged outlines, not photorealistic, no soft blur or gradients, no lens-flare, as a 2D game item icon sprite, solid flat green background, no checkered pattern, no gradient. |
-| ShurikenItem.png | 18x18 | White | A four-pointed steel shuriken throwing star with sharp beveled edges, plain metallic shading, no glow, pixel art sprite in the style of a hand-painted 16-bit SNES game asset, built from flat-color square pixel blocks with hard jagged outlines, not photorealistic, no soft blur or gradients, no lens-flare, as a 2D game item icon sprite, solid flat green background, no checkered pattern, no gradient. |
-| NinjaHoundSummonScrollItem.png | 28x28 | Blue | A rolled tan parchment scroll tied with a blue ribbon, a paw-print seal stamp on the wrapper, faint blue shimmer, as a 2D game item icon sprite, transparent background. |
-| SlugSummonScrollItem.png | 28x28 | Blue | A rolled tan parchment scroll, wrapper stamped with a spiral slug-shell sigil, faint blue shimmer, as a 2D game item icon sprite, transparent background. |
-| SnakeSummonScrollItem.png | 28x28 | Blue | A rolled tan parchment scroll bound with purple cord, wrapper stamped with a coiled-snake sigil, faint blue shimmer, as a 2D game item icon sprite, transparent background. |
-| ToadSummonScrollItem.png | 28x28 | Blue | A rolled tan parchment scroll, wrapper stamped with a toad sigil, faint blue shimmer, as a 2D game item icon sprite, transparent background. |
+| ExplosiveKunaiItem.png | 26x26 | Blue | A steel kunai throwing knife with a ring pommel, a red explosive paper tag with kanji marking and a lit fuse wrapped around the grip, plain metallic shading, faint blue shimmer, pixel art sprite in the style of a hand-painted 16-bit SNES game asset, built from flat-color square pixel blocks with hard jagged outlines, not photorealistic, no soft blur or gradients, no lens-flare, as a 2D game item icon sprite, solid flat green background, no checkered pattern, no gradient. |
+| FumaShurikenItem.png | 32x32 | Blue | A large heavy black-iron fuma shuriken with four long curved folding blades and a spiked center hub, plain dull metallic shading, faint blue shimmer, pixel art sprite in the style of a hand-painted 16-bit SNES game asset, built from flat-color square pixel blocks with hard jagged outlines, not photorealistic, no soft blur or gradients, no lens-flare, as a 2D game item icon sprite, solid flat green background, no checkered pattern, no gradient. |
+| KunaiItem.png | 26x26 | White | A simple steel kunai throwing knife with a ring pommel and wrapped grip, plain metallic shading, no glow, pixel art sprite in the style of a hand-painted 16-bit SNES game asset, built from flat-color square pixel blocks with hard jagged outlines, not photorealistic, no soft blur or gradients, no lens-flare, as a 2D game item icon sprite, solid flat green background, no checkered pattern, no gradient. |
+| PaperBombItem.png | 20x28 | Blue | A small folded tan paper explosive tag bound with thin cord, red kanji-style ink markings, a coiled unlit fuse, plain paper shading, faint blue shimmer, pixel art sprite in the style of a hand-painted 16-bit SNES game asset, built from flat-color square pixel blocks with hard jagged outlines, not photorealistic, no soft blur or gradients, no lens-flare, as a 2D game item icon sprite, solid flat green background, no checkered pattern, no gradient. |
+| ShurikenItem.png | 26x26 | White | A four-pointed steel shuriken throwing star with sharp beveled edges, plain metallic shading, no glow, pixel art sprite in the style of a hand-painted 16-bit SNES game asset, built from flat-color square pixel blocks with hard jagged outlines, not photorealistic, no soft blur or gradients, no lens-flare, as a 2D game item icon sprite, solid flat green background, no checkered pattern, no gradient. |
+| NinjaHoundSummonScrollItem.png | 32x32 | Blue | A rolled tan parchment scroll tied with a blue ribbon, a paw-print seal stamp on the wrapper, faint blue shimmer, as a 2D game item icon sprite, transparent background. |
+| SlugSummonScrollItem.png | 32x32 | Blue | A rolled tan parchment scroll, wrapper stamped with a spiral slug-shell sigil, faint blue shimmer, as a 2D game item icon sprite, transparent background. |
+| SnakeSummonScrollItem.png | 32x32 | Blue | A rolled tan parchment scroll bound with purple cord, wrapper stamped with a coiled-snake sigil, faint blue shimmer, as a 2D game item icon sprite, transparent background. |
+| ToadSummonScrollItem.png | 32x32 | Blue | A rolled tan parchment scroll, wrapper stamped with a toad sigil, faint blue shimmer, as a 2D game item icon sprite, transparent background. |
 
 ## Accessories - Done
 
@@ -65,17 +65,17 @@ their own real-art pass on 2026-07-21 using these same prompts.
 
 | File | Canvas | Rarity | Prompt |
 |---|---|---|---|
-| ChakraPaperItem.png | 20x20 | LightRed | A single square of pale blue-white chakra-reactive paper, one corner crinkled and scorched from an elemental reaction, faint blue glow, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| ChakraWingsItem.png | 24x24 | Red | A small folded pair of glowing golden-white chakra wings pinned like a badge, radiant feather-light energy strands, strong red rarity glow, as a 2D game item icon sprite, transparent background. |
-| GenjutsuEmblemItem.png | 20x20 | Pink | A circular violet clan emblem badge engraved with a stylized closed hypnotic eye, pink rarity glow, as a 2D game item icon sprite, transparent background. |
-| GenjutsuVeilItem.png | 20x20 | LightRed | A sheer translucent purple-grey veil of cloth draped over an open hand, faint shimmer of concealment, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| IllusionCharmItem.png | 20x20 | LightRed | A small carved violet gemstone charm on a cord, faint swirling illusion-smoke aura around it, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| MonstrousStrengthGlovesItem.png | 20x20 | Green | Chunky reinforced brown-leather fingerless gloves with metal knuckle plates, faint green rarity glow, as a 2D game item icon sprite, transparent background. |
-| NinjutsuEmblemItem.png | 20x20 | Pink | A circular blue clan emblem badge engraved with a spiral chakra symbol, pink rarity glow, as a 2D game item icon sprite, transparent background. |
-| NinjutsuFocusSealItem.png | 20x20 | LightRed | A small paper seal tag covered in blue kanji-style ink markings with glowing chakra circuit lines, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| TaijutsuEmblemItem.png | 20x20 | Pink | A circular red-orange clan emblem badge engraved with a clenched-fist symbol, pink rarity glow, as a 2D game item icon sprite, transparent background. |
-| TaijutsuWrapsItem.png | 20x20 | LightRed | Red-and-white bandage hand wraps coiled into a loop, worn training-cloth texture, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| WeightedLegWarmersItem.png | 20x20 | LightRed | Heavy grey iron-weighted leg warmers with metal buckles, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| ChakraPaperItem.png | 28x28 | LightRed | A single square of pale blue-white chakra-reactive paper, one corner crinkled and scorched from an elemental reaction, faint blue glow, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| ChakraWingsItem.png | 32x32 | Red | A small folded pair of glowing golden-white chakra wings pinned like a badge, radiant feather-light energy strands, strong red rarity glow, as a 2D game item icon sprite, transparent background. |
+| GenjutsuEmblemItem.png | 28x28 | Pink | A circular violet clan emblem badge engraved with a stylized closed hypnotic eye, pink rarity glow, as a 2D game item icon sprite, transparent background. |
+| GenjutsuVeilItem.png | 28x28 | LightRed | A sheer translucent purple-grey veil of cloth draped over an open hand, faint shimmer of concealment, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| IllusionCharmItem.png | 28x28 | LightRed | A small carved violet gemstone charm on a cord, faint swirling illusion-smoke aura around it, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| MonstrousStrengthGlovesItem.png | 28x28 | Green | Chunky reinforced brown-leather fingerless gloves with metal knuckle plates, faint green rarity glow, as a 2D game item icon sprite, transparent background. |
+| NinjutsuEmblemItem.png | 28x28 | Pink | A circular blue clan emblem badge engraved with a spiral chakra symbol, pink rarity glow, as a 2D game item icon sprite, transparent background. |
+| NinjutsuFocusSealItem.png | 28x28 | LightRed | A small paper seal tag covered in blue kanji-style ink markings with glowing chakra circuit lines, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| TaijutsuEmblemItem.png | 28x28 | Pink | A circular red-orange clan emblem badge engraved with a clenched-fist symbol, pink rarity glow, as a 2D game item icon sprite, transparent background. |
+| TaijutsuWrapsItem.png | 28x28 | LightRed | Red-and-white bandage hand wraps coiled into a loop, worn training-cloth texture, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| WeightedLegWarmersItem.png | 28x28 | LightRed | Heavy grey iron-weighted leg warmers with metal buckles, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
 
 ## Armor — item icons - Done
 
@@ -83,16 +83,16 @@ their own real-art pass on 2026-07-21 using these same prompts.
 
 | File | Canvas | Rarity | Prompt |
 |---|---|---|---|
-| GenjutsuHelmetItem.png | 18x18 | Orange | A dark purple pointed hood with a violet eye-shaped emblem on the brow, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
-| GenjutsuBodyItem.png | 18x18 | Orange | A flowing dark purple robe with violet trim and a hypnotic-spiral clasp, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
-| GenjutsuLegsItem.png | 18x18 | Orange | Dark purple loose robe pants with violet wrap ties, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
-| NinjutsuHelmetItem.png | 18x18 | Orange | A navy-blue forehead-protector style headband with a small chakra-spiral metal plate, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
-| NinjutsuBodyItem.png | 18x18 | Orange | A dark navy flak-style jonin vest with pouches and a high collar, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
-| NinjutsuLegsItem.png | 18x18 | Orange | Navy-blue shinobi pants with a kunai holster strap, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
-| TaijutsuHelmetItem.png | 18x18 | Orange | A red cloth headband with a bold sun/flame emblem, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
-| TaijutsuBodyItem.png | 18x18 | Orange | A green sleeveless training gi with an orange wide obi belt, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
-| TaijutsuLegsItem.png | 18x18 | Orange | Green training pants with ankle wraps, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
-| LeafVillageHeadbandItem.png | 18x18 | Blue | A navy-blue cloth headband with a polished steel plate engraved with a spiral-leaf insignia, faint blue rarity glow, as a 2D game item icon sprite, transparent background. |
+| GenjutsuHelmetItem.png | 26x26 | Orange | A dark purple pointed hood with a violet eye-shaped emblem on the brow, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
+| GenjutsuBodyItem.png | 26x26 | Orange | A flowing dark purple robe with violet trim and a hypnotic-spiral clasp, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
+| GenjutsuLegsItem.png | 26x26 | Orange | Dark purple loose robe pants with violet wrap ties, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
+| NinjutsuHelmetItem.png | 26x26 | Orange | A navy-blue forehead-protector style headband with a small chakra-spiral metal plate, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
+| NinjutsuBodyItem.png | 26x26 | Orange | A dark navy flak-style jonin vest with pouches and a high collar, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
+| NinjutsuLegsItem.png | 26x26 | Orange | Navy-blue shinobi pants with a kunai holster strap, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
+| TaijutsuHelmetItem.png | 26x26 | Orange | A red cloth headband with a bold sun/flame emblem, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
+| TaijutsuBodyItem.png | 26x26 | Orange | A green sleeveless training gi with an orange wide obi belt, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
+| TaijutsuLegsItem.png | 26x26 | Orange | Green training pants with ankle wraps, warm orange rarity glow, as a 2D game item icon sprite, transparent background. |
+| LeafVillageHeadbandItem.png | 26x26 | Blue | A navy-blue cloth headband with a polished steel plate engraved with a spiral-leaf insignia, faint blue rarity glow, as a 2D game item icon sprite, transparent background. |
 
 ## Armor — equip-layer art - Done
 
@@ -121,29 +121,29 @@ their own real-art pass on 2026-07-21 using these same prompts.
 
 | File | Canvas | Rarity | Shared by | Prompt |
 |---|---|---|---|---|
-| ChakraCrystal.png | 20x26 | Blue | ChakraScroll1Item .. ChakraScroll7Item | A glowing faceted blue crystal shard pulsing with chakra energy, wisps of blue mist rising off it, faint blue rarity glow, as a 2D game item icon sprite, transparent background. |
-| StaminaCrystal.png | 20x26 | Orange | StaminaScroll1Item .. StaminaScroll7Item | A glowing faceted amber-orange crystal shard pulsing with stamina energy, warm orange mist rising off it, orange rarity glow, as a 2D game item icon sprite, transparent background. |
-| BossBagIcon.png | 24x24 | Expert | HakuBossBagItem, ShukakuBossBagItem, OrochimaruBossBagItem, KakuzuBossBagItem, PainBossBagItem, MadaraBossBagItem, KaguyaBossBagItem | A dark leather drawstring satchel bag with a small skull-and-bone expert-mode charm tied to the string, deep red-black trim glow, as a 2D game item icon sprite, transparent background. |
+| ChakraCrystal.png | 28x36 | Blue | ChakraScroll1Item .. ChakraScroll7Item | A glowing faceted blue crystal shard pulsing with chakra energy, wisps of blue mist rising off it, faint blue rarity glow, as a 2D game item icon sprite, transparent background. |
+| StaminaCrystal.png | 28x36 | Orange | StaminaScroll1Item .. StaminaScroll7Item | A glowing faceted amber-orange crystal shard pulsing with stamina energy, warm orange mist rising off it, orange rarity glow, as a 2D game item icon sprite, transparent background. |
+| BossBagIcon.png | 32x32 | Expert | HakuBossBagItem, ShukakuBossBagItem, OrochimaruBossBagItem, KakuzuBossBagItem, PainBossBagItem, MadaraBossBagItem, KaguyaBossBagItem | A dark leather drawstring satchel bag with a small skull-and-bone expert-mode charm tied to the string, deep red-black trim glow, as a 2D game item icon sprite, transparent background. |
 
 | File | Canvas | Rarity | Prompt |
 |---|---|---|---|
-| ChakraPotionItem.png | 20x26 | White | A small glass vial filled with glowing swirling blue liquid, cork stopper, plain glass shine, no glow, as a 2D game item icon sprite, transparent background. |
-| ChakraRegenPotionItem.png | 20x26 | White | A taller glass vial with lighter cyan bubbling liquid and rising bubbles, cork stopper, no glow, as a 2D game item icon sprite, transparent background. |
-| StaminaPotionItem.png | 20x26 | White | A small glass vial filled with glowing orange-amber liquid, cork stopper, no glow, as a 2D game item icon sprite, transparent background. |
-| StaminaRegenPotionItem.png | 20x26 | White | A taller glass vial with lighter yellow-orange bubbling liquid and rising bubbles, cork stopper, no glow, as a 2D game item icon sprite, transparent background. |
-| GenjutsuMasteryScrollItem.png | 24x24 | LightRed | An ornate sealed purple scroll with a wax seal bearing a hypnotic-eye sigil and hanging tassels, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| NinjutsuMasteryScrollItem.png | 24x24 | LightRed | An ornate sealed blue scroll with a wax seal bearing a spiral chakra sigil and hanging tassels, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| TaijutsuMasteryScrollItem.png | 24x24 | LightRed | An ornate sealed red-orange scroll with a wax seal bearing a fist sigil and hanging tassels, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| HakuSummonItem.png | 24x24 | LightRed | A jagged translucent icicle-shard charm bound with cord, faint frosty blue-white glow, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| KaguyaSummonItem.png | 24x24 | LightRed | A floating cracked crystal shard with a swirling violet dimensional rift visible inside the crack, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| KakuzuSummonItem.png | 24x24 | LightRed | A folded bounty-hunter contract paper with a dark thread stitched through it and a black wax seal, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| MadaraSummonItem.png | 24x24 | LightRed | A dark ritual paper talisman covered in glowing red kanji-style markings, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| OrochimaruSummonItem.png | 24x24 | LightRed | A small scroll marked with a purple three-tomoe cursed-seal insignia and a faint sickly purple aura, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| PainSummonItem.png | 24x24 | LightRed | A metal seal talisman engraved with a rippling concentric-circle Rinnegan eye pattern, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| TailedBeastSummonItem.png | 24x24 | LightRed | A tan cloth headband with a sand-village hourglass insignia plate and faint golden sand particles drifting off it, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| OtsutsukiChakraFragmentItem.png | 20x20 | Purple | A small radiant violet crystalline fragment with a swirling rainbow-white energy core and ornate ripple patterns, strong purple rarity glow, as a 2D game item icon sprite, transparent background. |
-| RamenItem.png | 22x20 | White | A ceramic bowl of ramen noodles with visible broth, a pork slice, and green onion garnish, rising steam wisps, no glow, as a 2D game item icon sprite, transparent background. |
-| ShinobiHandbookItem.png | 20x24 | White | A small worn tan leather-bound handbook with a red diagonal cover strap, no glow, as a 2D game item icon sprite, transparent background. |
+| ChakraPotionItem.png | 28x36 | White | A small glass vial filled with glowing swirling blue liquid, cork stopper, plain glass shine, no glow, as a 2D game item icon sprite, transparent background. |
+| ChakraRegenPotionItem.png | 28x36 | White | A taller glass vial with lighter cyan bubbling liquid and rising bubbles, cork stopper, no glow, as a 2D game item icon sprite, transparent background. |
+| StaminaPotionItem.png | 28x36 | White | A small glass vial filled with glowing orange-amber liquid, cork stopper, no glow, as a 2D game item icon sprite, transparent background. |
+| StaminaRegenPotionItem.png | 28x36 | White | A taller glass vial with lighter yellow-orange bubbling liquid and rising bubbles, cork stopper, no glow, as a 2D game item icon sprite, transparent background. |
+| GenjutsuMasteryScrollItem.png | 32x32 | LightRed | An ornate sealed purple scroll with a wax seal bearing a hypnotic-eye sigil and hanging tassels, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| NinjutsuMasteryScrollItem.png | 32x32 | LightRed | An ornate sealed blue scroll with a wax seal bearing a spiral chakra sigil and hanging tassels, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| TaijutsuMasteryScrollItem.png | 32x32 | LightRed | An ornate sealed red-orange scroll with a wax seal bearing a fist sigil and hanging tassels, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| HakuSummonItem.png | 32x32 | LightRed | A jagged translucent icicle-shard charm bound with cord, faint frosty blue-white glow, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| KaguyaSummonItem.png | 32x32 | LightRed | A floating cracked crystal shard with a swirling violet dimensional rift visible inside the crack, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| KakuzuSummonItem.png | 32x32 | LightRed | A folded bounty-hunter contract paper with a dark thread stitched through it and a black wax seal, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| MadaraSummonItem.png | 32x32 | LightRed | A dark ritual paper talisman covered in glowing red kanji-style markings, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| OrochimaruSummonItem.png | 32x32 | LightRed | A small scroll marked with a purple three-tomoe cursed-seal insignia and a faint sickly purple aura, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| PainSummonItem.png | 32x32 | LightRed | A metal seal talisman engraved with a rippling concentric-circle Rinnegan eye pattern, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| TailedBeastSummonItem.png | 32x32 | LightRed | A tan cloth headband with a sand-village hourglass insignia plate and faint golden sand particles drifting off it, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| OtsutsukiChakraFragmentItem.png | 28x28 | Purple | A small radiant violet crystalline fragment with a swirling rainbow-white energy core and ornate ripple patterns, strong purple rarity glow, as a 2D game item icon sprite, transparent background. |
+| RamenItem.png | 30x28 | White | A ceramic bowl of ramen noodles with visible broth, a pork slice, and green onion garnish, rising steam wisps, no glow, as a 2D game item icon sprite, transparent background. |
+| ShinobiHandbookItem.png | 28x32 | White | A small worn tan leather-bound handbook with a red diagonal cover strap, no glow, as a 2D game item icon sprite, transparent background. |
 
 ## Materials - Done
 
@@ -151,12 +151,12 @@ their own real-art pass on 2026-07-21 using these same prompts.
 
 | File | Canvas | Rarity | Prompt |
 |---|---|---|---|
-| CursedSnakeFangItem.png | 18x18 | LightRed | A curved purple-tinted fang dripping a single venom drop, faint sickly purple aura, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| IceMirrorShardItem.png | 18x18 | LightRed | A jagged translucent icy-blue mirror shard reflecting a faint distorted glint, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| KakuzuHeartItem.png | 18x18 | LightRed | A dark red anatomical heart with visible dark thread stitching through it and a faint chakra-pulse glow, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| RinneganFragmentItem.png | 18x18 | LightRed | A shard of a violet eye with concentric ripple rings and a small tomoe mark, faint violet glow, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| SandCoreItem.png | 18x18 | LightRed | A cracked golden-tan sand orb with a faint teal chakra glow leaking from its cracks, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
-| SusanooCoreItem.png | 18x18 | LightRed | A glowing violet ribbed crystal core shaped like a miniature ribcage fragment, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| CursedSnakeFangItem.png | 26x26 | LightRed | A curved purple-tinted fang dripping a single venom drop, faint sickly purple aura, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| IceMirrorShardItem.png | 26x26 | LightRed | A jagged translucent icy-blue mirror shard reflecting a faint distorted glint, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| KakuzuHeartItem.png | 26x26 | LightRed | A dark red anatomical heart with visible dark thread stitching through it and a faint chakra-pulse glow, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| RinneganFragmentItem.png | 26x26 | LightRed | A shard of a violet eye with concentric ripple rings and a small tomoe mark, faint violet glow, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| SandCoreItem.png | 26x26 | LightRed | A cracked golden-tan sand orb with a faint teal chakra glow leaking from its cracks, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
+| SusanooCoreItem.png | 26x26 | LightRed | A glowing violet ribbed crystal core shaped like a miniature ribcage fragment, pink-red rarity glow, as a 2D game item icon sprite, transparent background. |
 
 ## Placeable - Done
 

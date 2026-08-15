@@ -33,8 +33,13 @@ namespace NarutoOverhaul.Common.Players
 	// cause of the original "can't toggle any form" report turned out to be unbound keybinds (see
 	// ShinobiHandbookItem), not low Chakra - full pools at world entry (ChakraPlayer.Initialize
 	// already starts you at MaxChakra) are enough headroom to activate any form.
+	//
+	// DISABLED 2026-08-11 - all 8 forms validated in-game (see totest.md), moving on to
+	// Summons/minions testing. Re-enable (uncomment the OnEnterWorld body) if transformations ever
+	// need retesting.
 	public class TransformationTestKitPlayer : ModPlayer
 	{
+		/*
 		public override void OnEnterWorld()
 		{
 			StoryProgressSystem.DownedShukaku = true;
@@ -55,5 +60,6 @@ namespace NarutoOverhaul.Common.Players
 				Player.QuickSpawnItem(Player.GetSource_Misc("TransformationTestKit"), kunaiType, 10);
 			}
 		}
+		*/
 	}
 }

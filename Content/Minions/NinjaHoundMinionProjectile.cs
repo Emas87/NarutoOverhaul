@@ -1,5 +1,4 @@
 using NarutoOverhaul.Content.Buffs;
-using Terraria;
 using Terraria.ModLoader;
 
 namespace NarutoOverhaul.Content.Minions
@@ -23,12 +22,6 @@ namespace NarutoOverhaul.Content.Minions
 		{
 			Projectile.damage = 11;
 			Projectile.knockBack = 2f;
-		}
-
-		protected override void UpdateVisuals(Player owner, NPC target)
-		{
-			Projectile.rotation = Projectile.velocity.ToRotation();
-			Projectile.spriteDirection = Projectile.velocity.X < 0 ? -1 : 1;
 		}
 	}
 }

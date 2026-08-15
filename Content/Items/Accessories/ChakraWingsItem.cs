@@ -28,8 +28,8 @@ namespace NarutoOverhaul.Content.Items.Accessories
 
 		public override void SetDefaults()
 		{
-			Item.width = 24;
-			Item.height = 24;
+			Item.width = 32;
+			Item.height = 32;
 			Item.accessory = true;
 			Item.value = Item.sellPrice(gold: 30);
 			Item.rare = ItemRarityID.Red;

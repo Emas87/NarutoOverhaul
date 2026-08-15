@@ -19,8 +19,8 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		public override void SetDefaults()
 		{
-			Item.width = 20;
-			Item.height = 20;
+			Item.width = 26;
+			Item.height = 26;
 			Item.damage = 22;
 			Item.DamageType = ModContent.GetInstance<TaijutsuDamageClass>();
 			// Thrust = fixed horizontal jab in the player's facing direction, not an overhead sword

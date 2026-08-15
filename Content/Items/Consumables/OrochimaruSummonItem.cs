@@ -11,8 +11,8 @@ namespace NarutoOverhaul.Content.Items.Consumables
 	{
 		public override void SetDefaults()
 		{
-			Item.width = 24;
-			Item.height = 24;
+			Item.width = 32;
+			Item.height = 32;
 			Item.maxStack = 20;
 			Item.consumable = true;
 			Item.useStyle = ItemUseStyleID.HoldUp;
@@ -33,7 +33,12 @@ namespace NarutoOverhaul.Content.Items.Consumables
 		{
 			if (player.whoAmI == Main.myPlayer)
 			{
-				NPC.SpawnOnPlayer(player.whoAmI, ModContent.NPCType<OrochimaruBoss>());
+				// NPC.SpawnOnPlayer's generic fallback picks a random surface tile within a wide
+				// radius and drops the NPC's top-left corner exactly on it, with no guarantee the
+				// spot isn't buried in solid ground - this is what caused Shukaku (see
+				// TailedBeastSummonItem) to "not show up" too. Spawning directly above the player
+				// guarantees he's on-screen and falls into view under normal gravity.
+				NPC.NewNPC(player.GetSource_ItemUse(Item), (int)player.Center.X, (int)player.Center.Y - 300, ModContent.NPCType<OrochimaruBoss>());
 			}
 
 			return true;

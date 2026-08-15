@@ -15,8 +15,8 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		public override void SetDefaults()
 		{
-			Item.width = 32;
-			Item.height = 32;
+			Item.width = 38;
+			Item.height = 38;
 			Item.damage = 45;
 			Item.DamageType = ModContent.GetInstance<NinjutsuDamageClass>();
 			Item.noMelee = true; // all damage comes from the projectile, not the swing

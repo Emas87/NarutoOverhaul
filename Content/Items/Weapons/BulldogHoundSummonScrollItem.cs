@@ -14,8 +14,8 @@ namespace NarutoOverhaul.Content.Items.Weapons
 			Item.damage = 14;
 			Item.DamageType = DamageClass.Summon;
 			Item.mana = 8;
-			Item.width = 28;
-			Item.height = 28;
+			Item.width = 32;
+			Item.height = 32;
 			Item.useTime = 28;
 			Item.useAnimation = 28;
 			Item.useStyle = ItemUseStyleID.Swing;

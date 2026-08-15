@@ -67,6 +67,12 @@ namespace NarutoOverhaul.Common.Players
 		{
 			potionSicknessStacks = System.Math.Min(PotionSicknessConstants.MaxStacks, potionSicknessStacks + 1);
 			potionSicknessTimer = PotionSicknessConstants.Duration;
+
+			// Visible counterpart to the two lines above - same Duration, so its own countdown timer
+			// always matches exactly how much longer potionSicknessTimer has left, telling the player
+			// why their potions feel weaker and how long until they're back to full strength instead
+			// of a silent internal-only stack counter.
+			Player.AddBuff(ModContent.BuffType<StaminaPotionSicknessDebuff>(), PotionSicknessConstants.Duration);
 		}
 
 		public override void ResetEffects()

@@ -87,33 +87,33 @@ Buffs: {
 	}
 
 	NinjaHoundMinionBuff: {
-		DisplayName: Ninja Hound
-		Description: A summoned ninja hound is fighting for you
+		DisplayName: Pakkun
+		Description: Pakkun is fighting for you
 	}
 
 	BulldogHoundMinionBuff: {
-		DisplayName: Bulldog Hound
-		Description: A summoned bulldog hound is fighting for you
+		DisplayName: Bull
+		Description: Bull is fighting for you
 	}
 
 	ScoutHoundMinionBuff: {
-		DisplayName: Scout Hound
-		Description: A summoned scout hound is fighting for you
+		DisplayName: Bisuke
+		Description: Bisuke is fighting for you
 	}
 
 	SlugMinionBuff: {
-		DisplayName: Slug Summon
-		Description: A summoned slug is fighting for you
+		DisplayName: Katsuyu
+		Description: Katsuyu is fighting for you
 	}
 
 	SnakeMinionBuff: {
-		DisplayName: Snake Summon
-		Description: A summoned snake is fighting for you
+		DisplayName: Manda
+		Description: Manda is fighting for you
 	}
 
 	ToadMinionBuff: {
-		DisplayName: Toad Summon
-		Description: A summoned toad is fighting for you
+		DisplayName: Gamabunta
+		Description: Gamabunta is fighting for you
 	}
 
 	ChakraRegenBuff: {
@@ -149,6 +149,21 @@ Buffs: {
 	CurseMarkBuff: {
 		DisplayName: Curse Mark
 		Description: The Cursed Seal spreads - great power, paid for in life
+	}
+
+	RamenComfortBuff: {
+		DisplayName: Ramen Comfort
+		Description: A hearty bowl within reach - minor life regen while nearby
+	}
+
+	ChakraPotionSicknessDebuff: {
+		DisplayName: Chakra Potion Sickness
+		Description: Chakra potions restore less from drinking too many too fast - wears off on its own
+	}
+
+	StaminaPotionSicknessDebuff: {
+		DisplayName: Stamina Potion Sickness
+		Description: Stamina potions restore less from drinking too many too fast - wears off on its own
 	}
 }
 
@@ -324,33 +339,33 @@ Items: {
 	}
 
 	NinjaHoundSummonScrollItem: {
-		DisplayName: Hound Summoning Scroll I
-		Tooltip: Kuchiyose - summons a ninja hound to fight at your side
+		DisplayName: Pakkun Scroll
+		Tooltip: Kuchiyose - summons Pakkun, Kakashi's ninja hound, to fight at your side
 	}
 
 	BulldogHoundSummonScrollItem: {
-		DisplayName: Hound Summoning Scroll II
-		Tooltip: Kuchiyose - summons a stocky bulldog hound, hits harder but runs slower
+		DisplayName: Bull Scroll
+		Tooltip: Kuchiyose - summons Bull, Kakashi's stocky bulldog hound, hits harder but runs slower
 	}
 
 	ScoutHoundSummonScrollItem: {
-		DisplayName: Hound Summoning Scroll III
-		Tooltip: Kuchiyose - summons a tracker hound that engages enemies from much further away
+		DisplayName: Bisuke Scroll
+		Tooltip: Kuchiyose - summons Bisuke, Kakashi's tracker hound, engages enemies from much further away
 	}
 
 	SlugSummonScrollItem: {
-		DisplayName: Slug Summoning Scroll
-		Tooltip: Kuchiyose - summons a slug to fight at your side
+		DisplayName: Katsuyu Scroll
+		Tooltip: Kuchiyose - summons Katsuyu, Tsunade's slug, to fight at your side
 	}
 
 	SnakeSummonScrollItem: {
-		DisplayName: Snake Summoning Scroll
-		Tooltip: Kuchiyose - summons a snake to fight at your side
+		DisplayName: Manda Scroll
+		Tooltip: Kuchiyose - summons Manda, Orochimaru's snake, to fight at your side
 	}
 
 	ToadSummonScrollItem: {
-		DisplayName: Toad Summoning Scroll
-		Tooltip: Kuchiyose - summons a toad to fight at your side
+		DisplayName: Gamabunta Scroll
+		Tooltip: Kuchiyose - summons Gamabunta, the chief toad, to fight at your side
 	}
 
 	ChakraPotionItem: {
@@ -758,7 +773,7 @@ NPCs: {
 	KaguyaBoss.DisplayName: Kaguya
 
 	ShinobiVendorNPC: {
-		DisplayName: Tenten
+		DisplayName: Ten Ten
 
 		TownNPCMood: {
 			Content: My tools are all in order. Can't complain.
@@ -829,12 +844,12 @@ Projectiles: {
 	GenjutsuSleepProjectile.DisplayName: Sleeping Genjutsu
 	GreatBreakthroughProjectile.DisplayName: Great Breakthrough
 	WaterDragonProjectile.DisplayName: Water Dragon
-	NinjaHoundMinionProjectile.DisplayName: Ninja Hound
-	BulldogHoundMinionProjectile.DisplayName: Bulldog Hound
-	ScoutHoundMinionProjectile.DisplayName: Scout Hound
-	SlugMinionProjectile.DisplayName: Slug
-	SnakeMinionProjectile.DisplayName: Snake Summon
-	ToadMinionProjectile.DisplayName: Toad
+	NinjaHoundMinionProjectile.DisplayName: Pakkun
+	BulldogHoundMinionProjectile.DisplayName: Bull
+	ScoutHoundMinionProjectile.DisplayName: Bisuke
+	SlugMinionProjectile.DisplayName: Katsuyu
+	SnakeMinionProjectile.DisplayName: Manda
+	ToadMinionProjectile.DisplayName: Gamabunta
 	ShadowCloneProjectile.DisplayName: Shadow Clone
 	ChidoriProjectile.DisplayName: Chidori
 	SusanooProjectile.DisplayName: Susanoo
@@ -865,6 +880,10 @@ Projectiles: {
 	LeafHurricaneKickProjectile.DisplayName: Leaf Hurricane Kick Projectile
 	SubstitutionLogProjectile.DisplayName: Substitution Log Projectile
 	MinatoKunaiProjectile.DisplayName: Minato Kunai
+	KaguyaAshBoneProjectile.DisplayName: Kaguya Ash Bone Projectile
+	MadaraFireballProjectile.DisplayName: Madara Fireball Projectile
+	PainOrbProjectile.DisplayName: Pain Orb Projectile
+	KaguyaBlessingBoltProjectile.DisplayName: Kaguya Blessing Bolt Projectile
 }
 
 DamageClasses: {

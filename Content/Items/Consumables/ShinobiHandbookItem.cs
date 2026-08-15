@@ -14,8 +14,8 @@ namespace NarutoOverhaul.Content.Items.Consumables
 	{
 		public override void SetDefaults()
 		{
-			Item.width = 20;
-			Item.height = 24;
+			Item.width = 28;
+			Item.height = 32;
 			Item.maxStack = 1;
 			Item.rare = ItemRarityID.White;
 			Item.value = 0;

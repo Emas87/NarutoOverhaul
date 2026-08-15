@@ -12,8 +12,8 @@ namespace NarutoOverhaul.Content.Items.Consumables
 	{
 		public override void SetDefaults()
 		{
-			Item.width = 22;
-			Item.height = 22;
+			Item.width = 30;
+			Item.height = 30;
 			Item.useStyle = ItemUseStyleID.HoldUp;
 			Item.useAnimation = 30;
 			Item.useTime = 30;
