@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.Players;
 using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -16,11 +17,17 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 	{
 		public const float StaminaCost = 8f;
 		public const float ArmorPenetration = 40f;
+		// Forward nudge applied on every strike - Gentle Fist previously had no dash at all, unlike
+		// the 3 kick weapons' DashSpeed lunge-on-hit; a small on-use nudge brings it into the same
+		// "dash class" identity without turning a precision punch into a lunging attack.
+		public const float OnUseDashSpeed = 2.5f;
 
 		public override void SetDefaults()
 		{
-			Item.width = 26;
-			Item.height = 26;
+			// Widened from the item's old 26x26 nominal hitbox - was noticeably tighter than the kick
+			// weapons' own hitboxes even though Gentle Fist is meant to land as reliably as they do.
+			Item.width = 36;
+			Item.height = 36;
 			Item.damage = 22;
 			Item.DamageType = ModContent.GetInstance<TaijutsuDamageClass>();
 			// Thrust = fixed horizontal jab in the player's facing direction, not an overhead sword
@@ -32,7 +39,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			Item.autoReuse = true;
 			// No held weapon graphic - this is a bare-handed strike, not a sword swing.
 			Item.noUseGraphic = true;
-			Item.knockBack = 6f;
+			Item.knockBack = 9f;
 			Item.value = Item.sellPrice(gold: 3);
 			Item.rare = ItemRarityID.LightRed;
 			Item.UseSound = SoundID.Item1;
@@ -47,6 +54,14 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 		{
 			player.GetModPlayer<StaminaPlayer>().TrySpendStamina(StaminaCost);
 			ChakraVFX.SpawnImpactBurst(player.Center + new Vector2(player.direction * 20f, 0f), 0.9f);
+			// Large body-covering blast - thin precise chakra-point flares along the arm/torso rather
+			// than a big blunt kick blast, matching Gentle Fist's surgical/armor-pen flavor.
+			ChakraVFX.SpawnPlayerAnchoredBurst<GentleFistBlastProjectile>(player, new Vector2(16f, 0f));
+
+			if (player.whoAmI == Main.myPlayer)
+			{
+				player.velocity.X = player.direction * OnUseDashSpeed;
+			}
 		}
 
 		public override void ModifyHitNPC(Player player, NPC target, ref NPC.HitModifiers modifiers)
@@ -56,7 +71,8 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
 		{
-			ChakraVFX.SpawnImpactBurst(target.Center, 1.1f);
+			ChakraVFX.SpawnImpactBurst(target.Center, 1.3f);
+			ChakraVFX.SpawnDirectionalBurst(target.Center, new Vector2(player.direction, -0.2f), speed: 4f, scale: 1f);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)

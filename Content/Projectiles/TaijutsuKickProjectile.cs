@@ -19,6 +19,11 @@ namespace NarutoOverhaul.Content.Projectiles
 		protected abstract float SweepLimitDegrees { get; }
 		protected abstract int SweepTicks { get; }
 
+		// The actual damage hitbox (square, centered on the player). Overridable per weapon so a
+		// wider/longer kick actually reaches as far as its sweep animation implies - was flat 30 for
+		// every kick regardless of reach, which read as "the kick whiffs even when it visibly lands."
+		protected virtual int HitboxSize => 30;
+
 		// Forward shove applied to the player on a successful hit - the "dash through the kick"
 		// feel. 0 disables it for weapons that shouldn't lunge.
 		protected virtual float DashSpeed => 0f;
@@ -27,8 +32,8 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		public sealed override void SetDefaults()
 		{
-			Projectile.width = 30;
-			Projectile.height = 30;
+			Projectile.width = HitboxSize;
+			Projectile.height = HitboxSize;
 			Projectile.aiStyle = -1;
 			Projectile.friendly = true;
 			Projectile.hostile = false;

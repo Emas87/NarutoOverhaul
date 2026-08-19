@@ -1,164 +1,42 @@
-using System.Collections.Generic;
 using NarutoOverhaul.Common.Systems;
-using NarutoOverhaul.Content.Items.Accessories;
-using NarutoOverhaul.Content.Items.Armor;
 using NarutoOverhaul.Content.Items.Consumables;
-using NarutoOverhaul.Content.Items.Materials;
-using NarutoOverhaul.Content.Items.Weapons;
 using NarutoOverhaul.Content.Items.Weapons.Jutsu;
 using NarutoOverhaul.Content.NPCs.Town;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace NarutoOverhaul.Common.Players
 {
 	// Gives a new character the Shinobi Handbook (keybind onboarding - see ShinobiHandbookItem) at
-	// spawn, same convention as vanilla's own starting Copper Shortsword/Guide item.
+	// spawn, same intent as vanilla's own starting Copper Shortsword/Guide item.
+	//
+	// Root-caused 2026-08-18: this used to hook ModifyStartingInventory and write straight into
+	// Player.inventory there, which looked reasonable but never actually worked - decompiling
+	// tModLoader's own PlayerLoader.GetStartingItems (via ilspycmd against tModLoader.dll) shows
+	// ModifyStartingInventory/AddStartingItems are wired to exactly one call site, Player.DropItems,
+	// i.e. they only feed the mediumcore-death "what do I keep" calculation, not actual new-
+	// character inventory setup. There is no dedicated "new character created" mod hook at all -
+	// the fix is OnEnterWorld (already used below for the story-unlock/NPC-spawn test hooks) gated
+	// on a persisted one-time flag, same SaveData/LoadData bool-flag convention as
+	// CurseMarkPlayer/MoonLordBlessingPlayer.
 	public class StarterItemPlayer : ModPlayer
 	{
 		// Player.inventory (58 slots) is main inventory + 4 ammo + 4 coin slots - only searching the
-		// first 50 keeps the handbook out of the ammo/coin slots.
+		// first 50 keeps granted items out of the ammo/coin slots.
 		private const int MainInventorySlots = 50;
 
-		// TEMP: boss summon items, so the new [AutoloadBossHead] icons can be checked against a real
-		// fight (health bar + minimap) without crafting each summon first. Remove once boss head
-		// icon testing is done.
-		private static readonly int[] BossSummonTestItemTypes =
+		private bool hasGivenStarterItems;
+
+		public override void SaveData(TagCompound tag)
 		{
-			ModContent.ItemType<HakuSummonItem>(),
-			ModContent.ItemType<KakuzuSummonItem>(),
-			ModContent.ItemType<OrochimaruSummonItem>(),
-			ModContent.ItemType<PainSummonItem>(),
-			ModContent.ItemType<MadaraSummonItem>(),
-			ModContent.ItemType<KaguyaSummonItem>(),
-			ModContent.ItemType<TailedBeastSummonItem>(),
-		};
-
-		// TEMP: every item whose icon was regenerated in the 2026-08-14 icon-clarity pass (see
-		// SPRITE_PROMPTS.md), one of each, so all 82 new icons can be checked in the inventory grid
-		// at once instead of crafting/finding each individually. Remove once icon testing is done.
-		private static readonly int[] IconTestItemTypes =
-		{
-			// Accessories
-			ModContent.ItemType<ChakraPaperItem>(),
-			ModContent.ItemType<ChakraWingsItem>(),
-			ModContent.ItemType<GenjutsuEmblemItem>(),
-			ModContent.ItemType<GenjutsuVeilItem>(),
-			ModContent.ItemType<IllusionCharmItem>(),
-			ModContent.ItemType<MonstrousStrengthGlovesItem>(),
-			ModContent.ItemType<NinjutsuEmblemItem>(),
-			ModContent.ItemType<NinjutsuFocusSealItem>(),
-			ModContent.ItemType<SubstitutionScrollItem>(),
-			ModContent.ItemType<TaijutsuEmblemItem>(),
-			ModContent.ItemType<TaijutsuWrapsItem>(),
-			ModContent.ItemType<WeightedLegWarmersItem>(),
-
-			// Armor
-			ModContent.ItemType<CloudVillageHeadbandItem>(),
-			ModContent.ItemType<GenjutsuBodyItem>(),
-			ModContent.ItemType<GenjutsuHelmetItem>(),
-			ModContent.ItemType<GenjutsuLegsItem>(),
-			ModContent.ItemType<LeafVillageHeadbandItem>(),
-			ModContent.ItemType<MistVillageHeadbandItem>(),
-			ModContent.ItemType<NinjutsuBodyItem>(),
-			ModContent.ItemType<NinjutsuHelmetItem>(),
-			ModContent.ItemType<NinjutsuLegsItem>(),
-			ModContent.ItemType<SandVillageHeadbandItem>(),
-			ModContent.ItemType<StoneVillageHeadbandItem>(),
-			ModContent.ItemType<TaijutsuBodyItem>(),
-			ModContent.ItemType<TaijutsuHelmetItem>(),
-			ModContent.ItemType<TaijutsuLegsItem>(),
-
-			// Consumables (shared-icon families represented by one member each)
-			ModContent.ItemType<HakuBossBagItem>(),
-			ModContent.ItemType<ChakraScroll1Item>(),
-			ModContent.ItemType<StaminaScroll1Item>(),
-			ModContent.ItemType<ChakraPotionItem>(),
-			ModContent.ItemType<ChakraRegenPotionItem>(),
-			ModContent.ItemType<CursedSealFragmentItem>(),
-			ModContent.ItemType<GenjutsuMasteryScrollItem>(),
-			ModContent.ItemType<NinjutsuMasteryScrollItem>(),
-			ModContent.ItemType<TaijutsuMasteryScrollItem>(),
-			ModContent.ItemType<OtsutsukiChakraFragmentItem>(),
-			ModContent.ItemType<RamenItem>(),
-			ModContent.ItemType<SharinganAwakeningItem>(),
-			ModContent.ItemType<StaminaPotionItem>(),
-			ModContent.ItemType<StaminaRegenPotionItem>(),
-
-			// Materials
-			ModContent.ItemType<CursedSnakeFangItem>(),
-			ModContent.ItemType<IceMirrorShardItem>(),
-			ModContent.ItemType<KakuzuHeartItem>(),
-			ModContent.ItemType<RinneganFragmentItem>(),
-			ModContent.ItemType<SandCoreItem>(),
-			ModContent.ItemType<SusanooCoreItem>(),
-
-			// Weapons
-			ModContent.ItemType<BulldogHoundSummonScrollItem>(),
-			ModContent.ItemType<ExplosiveKunaiItem>(),
-			ModContent.ItemType<FumaShurikenItem>(),
-			ModContent.ItemType<KunaiItem>(),
-			ModContent.ItemType<MinatoKunaiItem>(),
-			ModContent.ItemType<NinjaHoundSummonScrollItem>(),
-			ModContent.ItemType<PaperBombItem>(),
-			ModContent.ItemType<ScoutHoundSummonScrollItem>(),
-			ModContent.ItemType<ShurikenItem>(),
-			ModContent.ItemType<SlugSummonScrollItem>(),
-			ModContent.ItemType<SnakeSummonScrollItem>(),
-			ModContent.ItemType<ToadSummonScrollItem>(),
-
-			// Weapons/Jutsu
-			ModContent.ItemType<AllKillingAshBonesItem>(),
-			ModContent.ItemType<ChidoriItem>(),
-			ModContent.ItemType<FireballItem>(),
-			ModContent.ItemType<FrontLotusItem>(),
-			ModContent.ItemType<GenjutsuIllusionItem>(),
-			ModContent.ItemType<GenjutsuNightmareItem>(),
-			ModContent.ItemType<GenjutsuSleepItem>(),
-			ModContent.ItemType<GentleFistItem>(),
-			ModContent.ItemType<GreatBreakthroughItem>(),
-			ModContent.ItemType<IronLegItem>(),
-			ModContent.ItemType<LeafHurricaneItem>(),
-			ModContent.ItemType<RasenganItem>(),
-			ModContent.ItemType<ShadowCloneItem>(),
-			ModContent.ItemType<ShinraTenseiItem>(),
-			ModContent.ItemType<SusanooItem>(),
-			ModContent.ItemType<WaterDragonItem>(),
-		};
-
-		public override void ModifyStartingInventory(IReadOnlyDictionary<string, List<Item>> itemsByMod, bool mediumCoreDeath)
-		{
-			if (mediumCoreDeath)
-			{
-				return;
-			}
-
-			for (int i = 0; i < MainInventorySlots; i++)
-			{
-				if (Player.inventory[i].IsAir)
-				{
-					Player.inventory[i] = new Item(ModContent.ItemType<ShinobiHandbookItem>());
-					break;
-				}
-			}
-
-			foreach (int itemType in BossSummonTestItemTypes)
-			{
-				GiveIfRoom(itemType);
-			}
+			tag["hasGivenStarterItems"] = hasGivenStarterItems;
 		}
 
-		private void GiveIfRoom(int itemType, int stack = 1)
+		public override void LoadData(TagCompound tag)
 		{
-			for (int i = 0; i < MainInventorySlots; i++)
-			{
-				if (Player.inventory[i].IsAir)
-				{
-					Player.inventory[i] = new Item(itemType, stack);
-					return;
-				}
-			}
+			hasGivenStarterItems = tag.GetBool("hasGivenStarterItems");
 		}
 
 		// TEMP: normally these four only move in once a valid empty house exists for them (plain
@@ -182,20 +60,49 @@ namespace NarutoOverhaul.Common.Players
 		{
 			ForceStoryProgressUnlock();
 			ForceTownNpcSpawn();
+			GiveStarterItemsOnce();
+		}
 
-			foreach (int itemType in BossSummonTestItemTypes)
+		private void GiveStarterItemsOnce()
+		{
+			if (hasGivenStarterItems)
 			{
-				if (!Player.HasItem(itemType))
-				{
-					Player.QuickSpawnItem(Player.GetSource_Misc("BossTestKit"), itemType);
-				}
+				return;
 			}
 
-			foreach (int itemType in IconTestItemTypes)
+			hasGivenStarterItems = true;
+
+			GiveItem(ModContent.ItemType<ShinobiHandbookItem>());
+
+			// TEMP: the reworked Taijutsu kit (bigger blast VFX/hitbox/knockback/dash - see
+			// TaijutsuKickProjectile) needs hands-on testing, so hand all four straight to a new
+			// character instead of requiring a fresh Shukaku/Kakuzu grind first (ForceStoryProgressUnlock
+			// above already unlocks CanUseItem's story gates). Remove once testing is done.
+			GiveItem(ModContent.ItemType<IronLegItem>());
+			GiveItem(ModContent.ItemType<FrontLotusItem>());
+			GiveItem(ModContent.ItemType<LeafHurricaneItem>());
+			GiveItem(ModContent.ItemType<GentleFistItem>());
+
+			// TEMP: same reasoning as the Taijutsu kit above - Genjutsu Nightmare just got the same
+			// large blast-VFX treatment (GenjutsuNightmareBlastProjectile) and needs hands-on testing.
+			// Remove once testing is done.
+			GiveItem(ModContent.ItemType<GenjutsuNightmareItem>());
+
+			// TEMP: Susanoo's SusanooProjectile just had its pivot bug fixed (continuous
+			// Projectile.rotation spin on a non-symmetric 170x130 avatar sprite, plus a missing
+			// PreDraw override so the default draw anchored on the much-smaller 64x64 hitbox instead
+			// of the real frame size) - needs hands-on testing. Remove once testing is done.
+			GiveItem(ModContent.ItemType<SusanooItem>());
+		}
+
+		private void GiveItem(int itemType)
+		{
+			for (int i = 0; i < MainInventorySlots; i++)
 			{
-				if (!Player.HasItem(itemType))
+				if (Player.inventory[i].IsAir)
 				{
-					Player.QuickSpawnItem(Player.GetSource_Misc("IconTestKit"), itemType);
+					Player.inventory[i] = new Item(itemType);
+					return;
 				}
 			}
 		}

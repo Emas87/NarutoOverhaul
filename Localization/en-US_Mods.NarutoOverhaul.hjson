@@ -884,6 +884,11 @@ Projectiles: {
 	MadaraFireballProjectile.DisplayName: Madara Fireball Projectile
 	PainOrbProjectile.DisplayName: Pain Orb Projectile
 	KaguyaBlessingBoltProjectile.DisplayName: Kaguya Blessing Bolt Projectile
+	FrontLotusBlastProjectile.DisplayName: Front Lotus Blast Projectile
+	GentleFistBlastProjectile.DisplayName: Gentle Fist Blast Projectile
+	IronLegBlastProjectile.DisplayName: Iron Leg Blast Projectile
+	LeafHurricaneBlastProjectile.DisplayName: Leaf Hurricane Blast Projectile
+	GenjutsuNightmareBlastProjectile.DisplayName: Genjutsu Nightmare Blast Projectile
 }
 
 DamageClasses: {

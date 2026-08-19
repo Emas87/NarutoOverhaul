@@ -4,6 +4,7 @@ using NarutoOverhaul.Common.Players;
 using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
 using NarutoOverhaul.Content.Projectiles;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -35,7 +36,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			Item.autoReuse = true;
 			// Heaviest hit in Taijutsu's kit - the knockback should feel like it, on top of the
 			// per-hit bonus in FrontLotusKickProjectile.ModifyKickHit.
-			Item.knockBack = 11f;
+			Item.knockBack = 13f;
 			Item.value = Item.sellPrice(gold: 14);
 			Item.rare = ItemRarityID.Orange;
 			Item.UseSound = SoundID.Item1;
@@ -52,11 +53,24 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			return StoryProgressSystem.DownedKakuzu && player.GetModPlayer<StaminaPlayer>().Stamina >= StaminaCost;
 		}
 
+		// Forward nudge applied on every swing (not just on a landed hit, unlike
+		// FrontLotusKickProjectile's DashSpeed lunge) so Taijutsu reads as a dash class even on a
+		// whiff. Strongest on-use nudge in the kit, matching its strongest on-hit DashSpeed.
+		public const float OnUseDashSpeed = 6f;
+
 		public override void UseAnimation(Player player)
 		{
 			// Kick-flash in front of the player, syncing the swing to a visible strike instead of a
 			// bare-handed no-op (noUseGraphic means there's otherwise no weapon sprite at all).
 			ChakraVFX.SpawnImpactBurst(player.Center + new Vector2(player.direction * 24f, 0f), 1.3f);
+			// Large body-covering blast - a narrow piercing thrust, matching its armor-pen + longest
+			// dash identity.
+			ChakraVFX.SpawnPlayerAnchoredBurst<FrontLotusBlastProjectile>(player, new Vector2(24f, 12f));
+
+			if (player.whoAmI == Main.myPlayer)
+			{
+				player.velocity.X = player.direction * OnUseDashSpeed;
+			}
 		}
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)

@@ -70,6 +70,22 @@ namespace NarutoOverhaul.Common.VFX
 		public static void SpawnWoodBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<WoodBurstProjectile>(position, scale, rotation);
 		public static void SpawnImpactBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<ImpactBurstProjectile>(position, scale, rotation);
 
+		// Player-tracking counterpart to SpawnBurstEffect<T> above, for the large Taijutsu kick/punch
+		// "blast" VFX that needs to follow the owner through their swing instead of flashing once at
+		// a fixed point. `offset` is in the owner's un-flipped facing direction (+X = in front of
+		// them); PlayerAnchoredBurstEffectProjectile flips it per-tick off the owner's actual
+		// direction. Same MP double-spawn guard as SpawnBurstEffect<T>.
+		public static void SpawnPlayerAnchoredBurst<T>(Player owner, Vector2 offset) where T : ModProjectile
+		{
+			if (Main.netMode == NetmodeID.MultiplayerClient)
+			{
+				return;
+			}
+
+			int type = ModContent.ProjectileType<T>();
+			Projectile.NewProjectile(new EntitySource_Misc("playerAnchoredBurst"), owner.Center, Vector2.Zero, type, 0, 0f, owner.whoAmI, offset.X, offset.Y);
+		}
+
 		// The log a Substitution dodge leaves behind - see SubstitutionLogProjectile. Given a small
 		// upward hop plus a bit of the incoming hit's own sideways kick so it visibly tumbles instead
 		// of just dropping straight down. Same multiplayer double-spawn guard as SpawnBurstEffect.

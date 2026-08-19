@@ -1,9 +1,11 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.GlobalNPCs;
 using NarutoOverhaul.Common.Players;
 using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
 using NarutoOverhaul.Content.Buffs;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -49,6 +51,10 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 		{
 			chakraSpent = player.GetModPlayer<ChakraPlayer>().TrySpendChakra(ChakraCost);
 			ChakraVFX.SpawnGenjutsuBurst(player.Center, 1.2f);
+			// Large body-covering pulse - a warping eye-rift with shadow tendrils, centered on the
+			// caster (not offset toward a facing direction like the Taijutsu kicks - this is an
+			// illusion pulse around the caster, not a directional strike).
+			ChakraVFX.SpawnPlayerAnchoredBurst<GenjutsuNightmareBlastProjectile>(player, Vector2.Zero);
 		}
 
 		public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)

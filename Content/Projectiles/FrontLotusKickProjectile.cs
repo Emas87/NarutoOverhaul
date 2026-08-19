@@ -13,7 +13,9 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		protected override float SweepLimitDegrees => 50f;
 		protected override int SweepTicks => 22;
-		protected override float DashSpeed => 11f;
+		// Longest reach in the kit - the widest hit-hitbox to match.
+		protected override int HitboxSize => 50;
+		protected override float DashSpeed => 13f;
 
 		private bool peakBurstFired;
 
@@ -34,9 +36,10 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		protected override void OnKickHit(Player owner, NPC target)
 		{
-			ChakraVFX.SpawnImpactBurst(target.Center, 2.2f);
-			ChakraVFX.SpawnImpactBurst(target.Center + new Vector2(0f, 12f), 1.4f, 0.3f);
-			ChakraVFX.SpawnEarthBurst(target.Center + new Vector2(0f, 16f), 1.5f);
+			ChakraVFX.SpawnImpactBurst(target.Center, 2.6f);
+			ChakraVFX.SpawnImpactBurst(target.Center + new Vector2(0f, 12f), 1.7f, 0.3f);
+			ChakraVFX.SpawnEarthBurst(target.Center + new Vector2(0f, 16f), 1.8f);
+			ChakraVFX.SpawnDirectionalBurst(target.Center, new Vector2(owner.direction, -0.2f), speed: 7f, scale: 1.5f);
 		}
 	}
 }

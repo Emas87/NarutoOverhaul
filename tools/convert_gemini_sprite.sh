@@ -19,7 +19,13 @@
 # channel by a wide margin, which catches spill without needing a color-distance threshold that
 # fights the subject's own grays.
 #
-# Usage: convert_gemini_sprite.sh <input_image> <output_png> <width> <height> [bg_color=#545454] [fuzz=12%] [crop=WxH+X+Y]
+# Usage: convert_gemini_sprite.sh <input_image> <output_png> <width> <height> [bg_color=#545454] [fuzz=18] [crop=WxH+X+Y]
+#   fuzz: plain number, no "%" (this script appends it). Default raised from 12->18 after finding
+#   that Gemini's baked-in "flat" background is actually full of JPEG compression noise - a fuzz-18%
+#   alpha mask sweep (12/18/25/32/40) showed 12% leaves speckled opaque noise across the ENTIRE
+#   background (not just edges - confirmed via `-alpha extract` mask dump), which then contaminates
+#   downscaled colors regardless of resize filter. 18% is the elbow where the mask cleans up
+#   (alpha coverage drops from ~57% to ~20% and plateaus) without visibly eating into the subject.
 #   crop: optional manual crop region (ImageMagick geometry, e.g. 458x441+475+163) applied instead
 #   of auto -trim. Needed when the art has a decorative element (motion-blur rings, glow halo) in
 #   the same hue family as the background - auto-trim's bounding box then includes it, and no
@@ -38,7 +44,7 @@ output="$2"
 width="$3"
 height="$4"
 bg_color="${5:-#545454}"
-fuzz="${6:-12}%"
+fuzz="${6:-18}%"
 crop="${7:-}"
 
 tmp1=$(mktemp --suffix=.png)
@@ -64,7 +70,17 @@ corner_h=$((img_height - corner_y))
 convert "$tmp1" -channel A -region "${corner_w}x${corner_h}+${corner_x}+${corner_y}" -evaluate set 0 +region +channel "$tmp2"
 
 # 3. Crop to the actual subject (manual crop if given, otherwise auto-trim), then nearest-neighbor
-# resize into the exact target canvas.
+# resize into the exact target canvas. Tried switching this to -filter box (proper averaging
+# downscale) to fix perceived blur, on the theory that nearest-neighbor's random-pixel-picking on a
+# 10-20x shrink was the culprit - but A/B tested side by side at real icon size, box's averaging
+# blends neighboring colors into semi-transparent/blended edge pixels, which reads as SOFT rather
+# than crisp for flat pixel art (confirmed: worse to the eye despite a lower raw edge-color-count
+# score - that metric doesn't capture "blended" vs "aliased" the way it looks in practice). The
+# actual bulk of the "blur" turned out to be a separate bug: fuzz 12% left JPEG-compression-noise
+# speckle opaque across the WHOLE background (not just edges - visible via `-alpha extract`), which
+# got baked into every downscaled pixel as spill regardless of filter. Fixed by raising the default
+# fuzz to 18 instead (see top-of-file comment). With clean background, point sampling is genuinely
+# crisper for this flat-color pixel-art style, so it stays.
 if [ -n "$crop" ]; then
 	convert "$tmp2" -crop "$crop" +repage -filter point -resize "${width}x${height}" \
 		-background none -gravity center -extent "${width}x${height}" \
