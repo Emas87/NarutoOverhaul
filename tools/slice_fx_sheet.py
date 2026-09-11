@@ -83,6 +83,13 @@ ROW_MARGIN = 10
 def slice_sheet(sheet_path, rows, frame_w, frame_h, bg_name, bg_rgb, row_margin=ROW_MARGIN):
     sheet = Image.open(sheet_path).convert("RGBA")
     src_row_h = sheet.height // rows
+    if row_margin * 2 >= src_row_h:
+        raise ValueError(
+            f"--row-margin {row_margin} is too large for this sheet: each of the {rows} rows "
+            f"is only {src_row_h}px tall ({sheet.height}px / {rows} rows), so trimming "
+            f"{row_margin}px off both the top and bottom would leave nothing (or a negative "
+            f"crop). Pass a smaller --row-margin, or check --rows matches the actual sheet."
+        )
     frames = []
     for i in range(rows):
         y0 = i * src_row_h + row_margin
@@ -106,7 +113,11 @@ def main():
     args = ap.parse_args()
 
     bg_rgb = BG_PRESETS[args.bg] if args.bg in BG_PRESETS else tuple(int(c) for c in args.bg.split(","))
-    frames = slice_sheet(args.sheet, args.rows, args.frame_w, args.frame_h, args.bg, bg_rgb, args.row_margin)
+    try:
+        frames = slice_sheet(args.sheet, args.rows, args.frame_w, args.frame_h, args.bg, bg_rgb, args.row_margin)
+    except ValueError as e:
+        print(f"error: {e}", file=sys.stderr)
+        sys.exit(1)
 
     if args.review_dir:
         review_dir = Path(args.review_dir)

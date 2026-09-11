@@ -35,7 +35,14 @@ def _read_7bit_string(f):
     result = 0
     shift = 0
     while True:
-        b = f.read(1)[0]
+        b = f.read(1)
+        if not b:
+            raise EOFError(
+                f"Unexpected end of file while reading a 7-bit-encoded string length "
+                f"at offset {f.tell()} - the .tmod file is truncated or its format "
+                f"doesn't match what this script expects."
+            )
+        b = b[0]
         result |= (b & 0x7F) << shift
         if not (b & 0x80):
             break

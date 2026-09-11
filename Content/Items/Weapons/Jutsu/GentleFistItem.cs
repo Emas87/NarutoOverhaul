@@ -22,6 +22,11 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 		// "dash class" identity without turning a precision punch into a lunging attack.
 		public const float OnUseDashSpeed = 2.5f;
 
+		// Set by UseAnimation, read by ModifyHitNPC/OnHitNPC — the armor-pen and
+		// impact VFX bonuses should only land when this swing actually paid its
+		// stamina cost, matching Rasengan's own TrySpendChakra gate.
+		private bool _staminaSpent;
+
 		public override void SetDefaults()
 		{
 			// Widened from the item's old 26x26 nominal hitbox - was noticeably tighter than the kick
@@ -52,7 +57,11 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		public override void UseAnimation(Player player)
 		{
-			player.GetModPlayer<StaminaPlayer>().TrySpendStamina(StaminaCost);
+			_staminaSpent = player.GetModPlayer<StaminaPlayer>().TrySpendStamina(StaminaCost);
+			if (!_staminaSpent)
+			{
+				return;
+			}
 			ChakraVFX.SpawnImpactBurst(player.Center + new Vector2(player.direction * 20f, 0f), 0.9f);
 			// Large body-covering blast - thin precise chakra-point flares along the arm/torso rather
 			// than a big blunt kick blast, matching Gentle Fist's surgical/armor-pen flavor.
@@ -66,11 +75,19 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		public override void ModifyHitNPC(Player player, NPC target, ref NPC.HitModifiers modifiers)
 		{
+			if (!_staminaSpent)
+			{
+				return;
+			}
 			modifiers.ArmorPenetration += ArmorPenetration;
 		}
 
 		public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
 		{
+			if (!_staminaSpent)
+			{
+				return;
+			}
 			ChakraVFX.SpawnImpactBurst(target.Center, 1.3f);
 			ChakraVFX.SpawnDirectionalBurst(target.Center, new Vector2(player.direction, -0.2f), speed: 4f, scale: 1f);
 		}
