@@ -8,3 +8,4 @@ tools/.venv/
 # Third-party reference art (vanilla Terraria / other Workshop mods) used only as a local
 # AI-art-generation input - not ours to redistribute, and not shipped in the mod itself.
 tools/reference/
+__pycache__/
