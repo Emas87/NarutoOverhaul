@@ -65,6 +65,11 @@ namespace NarutoOverhaul.Common.Players
 
 		private void GiveStarterItemsOnce()
 		{
+			if (Main.netMode == NetmodeID.MultiplayerClient)
+			{
+				return;
+			}
+
 			if (hasGivenStarterItems)
 			{
 				return;

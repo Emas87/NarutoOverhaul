@@ -13,14 +13,17 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 	// Neji's fighting style, unlocked from the Chunin Exams arc (Shukaku fight). A direct melee
 	// strike (not a projectile jutsu like Rasengan) that ignores a chunk of the target's defense -
 	// chakra-guided precision strikes to the target's tenketsu points rather than raw damage.
-	public class GentleFistItem : ModItem
+	public class GentleFistItem : TaijutsuKickItemBase<GentleFistBlastProjectile>
 	{
-		public const float StaminaCost = 8f;
 		public const float ArmorPenetration = 40f;
+		public override float StaminaCost => 8f;
+		protected override Vector2 BlastOffset => new Vector2(16f, 0f);
 		// Forward nudge applied on every strike - Gentle Fist previously had no dash at all, unlike
 		// the 3 kick weapons' DashSpeed lunge-on-hit; a small on-use nudge brings it into the same
 		// "dash class" identity without turning a precision punch into a lunging attack.
-		public const float OnUseDashSpeed = 2.5f;
+		protected override float OnUseDashSpeed => 2.5f;
+		protected override float ImpactBurstOffsetX => 20f;
+		protected override float ImpactBurstScale => 0.9f;
 
 		// Set by UseAnimation, read by ModifyHitNPC/OnHitNPC — the armor-pen and
 		// impact VFX bonuses should only land when this swing actually paid its
@@ -62,15 +65,9 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			{
 				return;
 			}
-			ChakraVFX.SpawnImpactBurst(player.Center + new Vector2(player.direction * 20f, 0f), 0.9f);
 			// Large body-covering blast - thin precise chakra-point flares along the arm/torso rather
 			// than a big blunt kick blast, matching Gentle Fist's surgical/armor-pen flavor.
-			ChakraVFX.SpawnPlayerAnchoredBurst<GentleFistBlastProjectile>(player, new Vector2(16f, 0f));
-
-			if (player.whoAmI == Main.myPlayer)
-			{
-				player.velocity.X = player.direction * OnUseDashSpeed;
-			}
+			base.UseAnimation(player);
 		}
 
 		public override void ModifyHitNPC(Player player, NPC target, ref NPC.HitModifiers modifiers)

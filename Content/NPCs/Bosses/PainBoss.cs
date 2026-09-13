@@ -563,8 +563,11 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 			if (NPC.Distance(target.Center) <= PretaDrainRadius && StateTimer % 10 == 0)
 			{
-				target.GetModPlayer<ChakraPlayer>().TrySpendChakra(8f);
-				ChakraPlayer.SendCorrection(target); // server-only drain - tell the owning client
+				if (Main.netMode != NetmodeID.MultiplayerClient)
+				{
+					target.GetModPlayer<ChakraPlayer>().TrySpendChakra(8f);
+					ChakraPlayer.SendCorrection(target); // server-only drain - tell the owning client
+				}
 				ChakraVFX.SpawnGenjutsuBurst(target.Center, 0.5f);
 			}
 

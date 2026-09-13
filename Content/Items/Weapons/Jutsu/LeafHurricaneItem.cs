@@ -16,9 +16,11 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 	// unlike Gentle Fist's single precise strike. Damage comes from LeafHurricaneKickProjectile (a
 	// player-anchored, invisible projectile) rather than the item's own hitbox - see
 	// TaijutsuKickProjectile for why (real body-rotation kick animation).
-	public class LeafHurricaneItem : ModItem
+	public class LeafHurricaneItem : TaijutsuKickItemBase<LeafHurricaneBlastProjectile>
 	{
-		public const float StaminaCost = 12f;
+		public override float StaminaCost => 12f;
+		protected override Vector2 BlastOffset => new Vector2(0f, 16f);
+		protected override float OnUseDashSpeed => 3f;
 
 		public override void SetDefaults()
 		{
@@ -49,33 +51,15 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			return StoryProgressSystem.DownedShukaku && player.GetModPlayer<StaminaPlayer>().Stamina >= StaminaCost;
 		}
 
-		// Forward nudge applied on every swing (not just on a landed hit, unlike
-		// LeafHurricaneKickProjectile's DashSpeed lunge) so Taijutsu reads as a dash class even on a
-		// whiff. Weakest on-use nudge in the kit - the wide hitbox already covers ground.
-		public const float OnUseDashSpeed = 3f;
-
-		public override void UseAnimation(Player player)
+		// Wide sweeping kick - two flashes on either side to read as a spin, not a single punch, plus
+		// a ring of plain dust connecting them so the sweep reads as one continuous motion instead of
+		// two disconnected flashes (Iron Leg/Front Lotus are single decisive kicks, so they use the
+		// base single-flash shape as-is).
+		protected override void PlayImpactFlash(Player player)
 		{
-			// Wide sweeping kick - two flashes on either side to read as a spin, not a single punch,
-			// plus a ring of plain dust connecting them so the sweep reads as one continuous motion
-			// instead of two disconnected flashes (Iron Leg/Front Lotus are single decisive kicks,
-			// so they don't get this).
 			ChakraVFX.SpawnImpactBurst(player.Center + new Vector2(player.direction * 30f, 0f), 1.4f);
 			ChakraVFX.SpawnImpactBurst(player.Center + new Vector2(-player.direction * 30f, 0f), 1.1f);
 			ChakraVFX.SpawnBurst(player.Center, DustID.Cloud, count: 6, scale: 1.3f);
-			// Large body-covering blast - a full rotating ring around the lower body, matching the
-			// spin-kick's wide arc.
-			ChakraVFX.SpawnPlayerAnchoredBurst<LeafHurricaneBlastProjectile>(player, new Vector2(0f, 16f));
-
-			if (player.whoAmI == Main.myPlayer)
-			{
-				player.velocity.X = player.direction * OnUseDashSpeed;
-			}
-		}
-
-		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-		{
-			return player.GetModPlayer<StaminaPlayer>().TrySpendStamina(StaminaCost);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)

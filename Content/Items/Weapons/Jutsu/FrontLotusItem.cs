@@ -17,9 +17,12 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 	// Damage comes from FrontLotusKickProjectile (a player-anchored, invisible projectile) rather
 	// than the item's own hitbox - see TaijutsuKickProjectile for why (real body-rotation kick
 	// animation plus the dash-through lunge).
-	public class FrontLotusItem : ModItem
+	public class FrontLotusItem : TaijutsuKickItemBase<FrontLotusBlastProjectile>
 	{
-		public const float StaminaCost = 16f;
+		public override float StaminaCost => 16f;
+		protected override Vector2 BlastOffset => new Vector2(24f, 12f);
+		protected override float OnUseDashSpeed => 6f;
+		protected override float ImpactBurstScale => 1.3f;
 
 		public override void SetDefaults()
 		{
@@ -51,31 +54,6 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 		public override bool CanUseItem(Player player)
 		{
 			return StoryProgressSystem.DownedKakuzu && player.GetModPlayer<StaminaPlayer>().Stamina >= StaminaCost;
-		}
-
-		// Forward nudge applied on every swing (not just on a landed hit, unlike
-		// FrontLotusKickProjectile's DashSpeed lunge) so Taijutsu reads as a dash class even on a
-		// whiff. Strongest on-use nudge in the kit, matching its strongest on-hit DashSpeed.
-		public const float OnUseDashSpeed = 6f;
-
-		public override void UseAnimation(Player player)
-		{
-			// Kick-flash in front of the player, syncing the swing to a visible strike instead of a
-			// bare-handed no-op (noUseGraphic means there's otherwise no weapon sprite at all).
-			ChakraVFX.SpawnImpactBurst(player.Center + new Vector2(player.direction * 24f, 0f), 1.3f);
-			// Large body-covering blast - a narrow piercing thrust, matching its armor-pen + longest
-			// dash identity.
-			ChakraVFX.SpawnPlayerAnchoredBurst<FrontLotusBlastProjectile>(player, new Vector2(24f, 12f));
-
-			if (player.whoAmI == Main.myPlayer)
-			{
-				player.velocity.X = player.direction * OnUseDashSpeed;
-			}
-		}
-
-		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-		{
-			return player.GetModPlayer<StaminaPlayer>().TrySpendStamina(StaminaCost);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
