@@ -26,26 +26,26 @@ still-unfixed because this fix commit (`3d0abf5`) was local-only and hadn't reac
 `origin/master` yet when that report ran against remote HEAD. The commit is now merged into
 master via this run.
 
+## Resolved this run (2026-09-14 /fix-unfixes, verified via dotnet build + manual test)
+- **generate_armor_sheet.py silently clipped the bottom of a Head frame** (medium): when
+  `anchor == "top"`, `_center_on_canvas` now scales against `canvas_h - HEAD_TOP_MARGIN` instead
+  of the full canvas height, so a full-height Head frame fits below the 10px top margin instead
+  of clipping at the bottom. Verified: simulated a full-height (40x56) frame through
+  `_center_on_canvas(..., anchor="top")` - bbox bottom now stays within the 56px canvas and the
+  top margin is respected (was clipping past the canvas edge before the fix).
+- **extract_tmod.py never closed the `.tmod` file handle it opened** (improvement): `parse_tmod`
+  now reads the file inside a `with` block and returns raw bytes instead of a live handle;
+  `extract_file` slices the in-memory bytes instead of seeking a file object. Verified against a
+  real installed mod (`NarutoOverhaul.tmod`, 207 files) - `list` and `extract` (decoding a
+  `.rawimg` to `.png`) both still work correctly.
+
 ## Unfixed high-severity bugs
-None this run - the newest report (2026-09-14) contains 0 high-severity bugs (2 medium already
-resolved above, 1 low + 1 improvement remain, both Python tooling not verifiable via `dotnet
-build` alone):
-
-### generate_armor_sheet.py can still silently clip the bottom of a Head frame
-- Report: .bug-reports/2026-09-14.md
-- Location: tools/generate_armor_sheet.py:162 (`HEAD_TOP_MARGIN`), :165-176 (`_center_on_canvas`), :213 (`build`)
-- Severity: medium
-- What the fix would be: when `anchor == "top"`, compute `scale` against `canvas_h - HEAD_TOP_MARGIN` (46) instead of the full `canvas_h` (56), so a full-height Head frame scales down enough to fit below the 10px top margin instead of silently clipping at the bottom.
-
-### extract_tmod.py still never closes the `.tmod` file handle it opens (improvement)
-- Report: .bug-reports/2026-09-14.md
-- Location: tools/extract_tmod.py:53-71 (`parse_tmod`), used in `main()` at :99-123
-- Severity: improvement (robustness)
-- What the fix would be: use `with open(path, "rb") as f:` in `parse_tmod` (returning read bytes/entries instead of a live handle), or at minimum add `f.close()` at the end of both branches in `main()`.
+None this run.
 
 ## Design decisions
-None this run - no finding in the 2026-09-14 report needs a product/design decision.
+None this run - no finding needs a product/design decision.
 
 ## Public API / format / contract changes
-None this run - `TaijutsuKickItemBase<TBlast>` is new internal scaffolding; no existing public
-API, on-disk format, or network contract changed.
+None this run - `TaijutsuKickItemBase<TBlast>` is new internal scaffolding; `parse_tmod`'s return
+shape changed (file handle -> raw bytes) but it's a repo-internal dev tool with one caller
+(`main()` in the same file), not a public API.
