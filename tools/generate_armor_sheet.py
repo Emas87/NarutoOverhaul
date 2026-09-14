@@ -164,7 +164,8 @@ HEAD_TOP_MARGIN = 10
 
 def _center_on_canvas(frame, canvas_w, canvas_h, anchor="bottom"):
     canvas = Image.new("RGBA", (canvas_w, canvas_h), (0, 0, 0, 0))
-    scale = min(canvas_w / frame.width, canvas_h / frame.height, 1.0)
+    available_h = canvas_h - HEAD_TOP_MARGIN if anchor == "top" else canvas_h
+    scale = min(canvas_w / frame.width, available_h / frame.height, 1.0)
     if scale < 1.0:
         frame = frame.resize((max(1, int(frame.width * scale)), max(1, int(frame.height * scale))), Image.NEAREST)
     x = (canvas_w - frame.width) // 2

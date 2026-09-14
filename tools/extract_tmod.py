@@ -51,38 +51,39 @@ def _read_7bit_string(f):
 
 
 def parse_tmod(path):
-    """Returns (open file handle, mod name, mod version, list of [name, length, compressedLength, offset])."""
-    f = open(path, "rb")
-    magic = f.read(4)
-    if magic != b"TMOD":
-        sys.exit(f"Not a .tmod file (bad magic {magic!r}): {path}")
-    f.seek(0)
-    f.read(4)
-    _tml_version = _read_7bit_string(f)
-    _hash = f.read(20)
-    _signature = f.read(256)
-    _datalen = struct.unpack("<i", f.read(4))[0]
-    name = _read_7bit_string(f)
-    modversion = _read_7bit_string(f)
-    numfiles = struct.unpack("<i", f.read(4))[0]
-    entries = []
-    for _ in range(numfiles):
-        ename = _read_7bit_string(f)
-        length = struct.unpack("<i", f.read(4))[0]
-        clength = struct.unpack("<i", f.read(4))[0]
-        entries.append([ename, length, clength, None])
-    offset = f.tell()
+    """Returns (raw file-table-relative data bytes, mod name, mod version,
+    list of [name, length, compressedLength, offset-into-data])."""
+    with open(path, "rb") as f:
+        magic = f.read(4)
+        if magic != b"TMOD":
+            sys.exit(f"Not a .tmod file (bad magic {magic!r}): {path}")
+        f.seek(0)
+        f.read(4)
+        _tml_version = _read_7bit_string(f)
+        _hash = f.read(20)
+        _signature = f.read(256)
+        _datalen = struct.unpack("<i", f.read(4))[0]
+        name = _read_7bit_string(f)
+        modversion = _read_7bit_string(f)
+        numfiles = struct.unpack("<i", f.read(4))[0]
+        entries = []
+        for _ in range(numfiles):
+            ename = _read_7bit_string(f)
+            length = struct.unpack("<i", f.read(4))[0]
+            clength = struct.unpack("<i", f.read(4))[0]
+            entries.append([ename, length, clength, None])
+        data = f.read()
+    offset = 0
     for e in entries:
         e[3] = offset
         offset += e[2]
-    return f, name, modversion, entries
+    return data, name, modversion, entries
 
 
-def extract_file(f, entry):
+def extract_file(data, entry):
     """Returns raw decompressed bytes for one file table entry."""
     _name, length, clength, off = entry
-    f.seek(off)
-    raw = f.read(clength)
+    raw = data[off : off + clength]
     if clength != length:
         raw = zlib.decompress(raw, -15)  # raw deflate, no zlib/gzip header
     return raw
@@ -100,7 +101,7 @@ def main():
     if len(sys.argv) < 3:
         sys.exit(__doc__)
     cmd, tmod_path = sys.argv[1], sys.argv[2]
-    f, name, modversion, entries = parse_tmod(tmod_path)
+    data, name, modversion, entries = parse_tmod(tmod_path)
     print(f"Mod: {name} v{modversion}, {len(entries)} files", file=sys.stderr)
 
     if cmd == "list":
@@ -113,7 +114,7 @@ def main():
         matches = [e for e in entries if e[0] == in_path]
         if not matches:
             sys.exit(f"No such file in archive: {in_path}")
-        raw = extract_file(f, matches[0])
+        raw = extract_file(data, matches[0])
         if in_path.lower().endswith(".rawimg"):
             img, version = rawimg_to_pil(raw)
             img.save(out_path)
