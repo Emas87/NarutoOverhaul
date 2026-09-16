@@ -85,7 +85,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			{
 				return;
 			}
-			ChakraVFX.SpawnImpactBurst(target.Center, 1.3f);
+			ChakraVFX.SpawnBurstEffect<ImpactBurstProjectile>(target.Center, 1.3f);
 			ChakraVFX.SpawnDirectionalBurst(target.Center, new Vector2(player.direction, -0.2f), speed: 4f, scale: 1f);
 		}
 

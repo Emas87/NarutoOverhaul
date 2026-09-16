@@ -14,6 +14,7 @@ using Terraria.GameContent.Bestiary;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.NPCs.Bosses
 {
@@ -280,7 +281,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		private void OnPhaseTransition()
 		{
 			NPC.velocity = Vector2.Zero;
-			ChakraVFX.SpawnBoneBurst(NPC.Center, 2.5f);
+			ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(NPC.Center, 2.5f);
 			SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
 
 			if (CurrentPhase == Phase.Final)
@@ -296,7 +297,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 				// Second burst at the new (origin) position - the first one above marked departure
 				// from wherever the fight had wandered to, this one marks arrival back at the origin.
-				ChakraVFX.SpawnBoneBurst(NPC.Center, 4f);
+				ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(NPC.Center, 4f);
 				SoundEngine.PlaySound(SoundID.Item28, NPC.Center);
 			}
 
@@ -368,8 +369,8 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			NPC.velocity.Y = FinalPhaseGravityPulseVelocity;
 			target.velocity.Y = FinalPhasePlayerPulseVelocity;
 
-			ChakraVFX.SpawnBoneBurst(NPC.Center, 1.5f);
-			ChakraVFX.SpawnBoneBurst(target.Center, 1.5f);
+			ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(NPC.Center, 1.5f);
+			ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(target.Center, 1.5f);
 			SoundEngine.PlaySound(SoundID.Item14, target.Center);
 		}
 
@@ -418,12 +419,12 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		private void DoTeleport(Player target)
 		{
-			ChakraVFX.SpawnBoneBurst(NPC.Center, 1.6f);
+			ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(NPC.Center, 1.6f);
 
 			NPC.Center = FindClearTeleportCenter(target.Center, TeleportRadius);
 			NPC.velocity = Vector2.Zero;
 
-			ChakraVFX.SpawnBoneBurst(NPC.Center, 1.6f);
+			ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(NPC.Center, 1.6f);
 			SoundEngine.PlaySound(SoundID.Item28, NPC.Center);
 
 			CurrentAttack = AttackState.Recover;
@@ -473,7 +474,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				for (int i = 0; i < PortalCount; i++)
 				{
 					portalPositions[i] = target.Center + Main.rand.NextVector2CircularEdge(180f, 180f);
-					ChakraVFX.SpawnBoneBurst(portalPositions[i], 0.9f);
+					ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(portalPositions[i], 0.9f);
 				}
 
 				NPC.netUpdate = true; // push the freshly rolled portalPositions through SendExtraAI
@@ -483,7 +484,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			{
 				foreach (Vector2 portal in portalPositions)
 				{
-					ChakraVFX.SpawnBoneBurst(portal, 2.5f);
+					ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(portal, 2.5f);
 					SoundEngine.PlaySound(SoundID.Item14, portal);
 
 					if (Main.netMode != NetmodeID.MultiplayerClient)
@@ -780,7 +781,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 			if (landingSpot.HasValue)
 			{
-				ChakraVFX.SpawnBoneBurst(NPC.Center, 2.5f);
+				ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(NPC.Center, 2.5f);
 				SoundEngine.PlaySound(SoundID.Item28, NPC.Center);
 
 				target.Teleport(landingSpot.Value);
@@ -794,7 +795,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				NPC.Center = FindClearTeleportCenter(landingSpot.Value, TeleportRadius);
 				NPC.velocity = Vector2.Zero;
 
-				ChakraVFX.SpawnBoneBurst(NPC.Center, 2.5f);
+				ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(NPC.Center, 2.5f);
 				SoundEngine.PlaySound(SoundID.Item28, NPC.Center);
 			}
 
@@ -936,7 +937,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		public override void HitEffect(NPC.HitInfo hit)
 		{
-			ChakraVFX.SpawnBoneBurst(NPC.Center, 0.5f);
+			ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(NPC.Center, 0.5f);
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

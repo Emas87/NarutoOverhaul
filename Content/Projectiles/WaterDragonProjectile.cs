@@ -4,6 +4,7 @@ using NarutoOverhaul.Common.Projectiles;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -54,7 +55,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		public override void OnKill(int timeLeft)
 		{
-			Common.VFX.ChakraVFX.SpawnWaterBurst(Projectile.Center, 2.25f);
+			Common.VFX.ChakraVFX.SpawnBurstEffect<WaterBurstProjectile>(Projectile.Center, 2.25f);
 		}
 
 		// The sprite sheet's 130x130 frames are much bigger than the hitbox. Terraria's default

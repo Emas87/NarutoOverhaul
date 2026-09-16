@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.VFX;
 using Terraria;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -23,10 +24,10 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		protected override void OnKickHit(Player owner, NPC target)
 		{
-			ChakraVFX.SpawnImpactBurst(target.Center, 2.1f);
+			ChakraVFX.SpawnBurstEffect<ImpactBurstProjectile>(target.Center, 2.1f);
 			// Ground-impact-style secondary flash (distinct sprite from the plain impact burst) -
 			// sells the "heavy stomping kick" weight.
-			ChakraVFX.SpawnEarthBurst(target.Center, 1.4f);
+			ChakraVFX.SpawnBurstEffect<EarthBurstProjectile>(target.Center, 1.4f);
 			// Dust kicked away in the knockback direction, not just a static flash at the hit point -
 			// sells the "great knockback" identity even in a still screenshot.
 			ChakraVFX.SpawnDirectionalBurst(target.Center, new Vector2(owner.direction, -0.2f), speed: 6f, scale: 1.4f);

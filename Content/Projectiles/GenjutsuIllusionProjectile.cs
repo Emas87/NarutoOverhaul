@@ -4,6 +4,7 @@ using NarutoOverhaul.Common.VFX;
 using NarutoOverhaul.Content.Buffs;
 using Terraria;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -38,7 +39,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 			if (Main.rand.NextBool(2))
 			{
-				ChakraVFX.SpawnGenjutsuBurst(Projectile.Center, 0.5f);
+				ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(Projectile.Center, 0.5f);
 			}
 
 			animTicks++;
@@ -58,12 +59,12 @@ namespace NarutoOverhaul.Content.Projectiles
 			target.AddBuff(ModContent.BuffType<GenjutsuControlDebuff>(), duration);
 			target.GetGlobalNPC<GenjutsuGlobalNPC>().ControllingPlayerIndex = Projectile.owner;
 			target.netUpdate = true; // force an immediate sync so the server/other clients learn who's controlling this puppet
-			ChakraVFX.SpawnGenjutsuBurst(target.Center, 1.5f);
+			ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(target.Center, 1.5f);
 		}
 
 		public override void OnKill(int timeLeft)
 		{
-			ChakraVFX.SpawnGenjutsuBurst(Projectile.Center, 0.75f);
+			ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(Projectile.Center, 0.75f);
 		}
 	}
 }

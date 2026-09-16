@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -33,7 +34,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		public override void OnKill(int timeLeft)
 		{
-			Common.VFX.ChakraVFX.SpawnCorruptionBurst(Projectile.Center, 0.625f);
+			Common.VFX.ChakraVFX.SpawnBurstEffect<CorruptionBurstProjectile>(Projectile.Center, 0.625f);
 		}
 	}
 }

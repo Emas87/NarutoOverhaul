@@ -4,6 +4,7 @@ using NarutoOverhaul.Common.VFX;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 {
@@ -22,7 +23,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		protected virtual void PlayImpactFlash(Player player)
 		{
-			ChakraVFX.SpawnImpactBurst(player.Center + new Vector2(player.direction * ImpactBurstOffsetX, 0f), ImpactBurstScale);
+			ChakraVFX.SpawnBurstEffect<ImpactBurstProjectile>(player.Center + new Vector2(player.direction * ImpactBurstOffsetX, 0f), ImpactBurstScale);
 		}
 
 		protected void PlayBlast(Player player)
@@ -38,8 +39,17 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			}
 		}
 
+		private bool _staminaSpent;
+
 		public override void UseAnimation(Player player)
 		{
+			_staminaSpent = player.GetModPlayer<StaminaPlayer>().TrySpendStamina(StaminaCost);
+
+			if (!_staminaSpent)
+			{
+				return;
+			}
+
 			PlayImpactFlash(player);
 			PlayBlast(player);
 			ApplyDash(player);
@@ -47,7 +57,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			return player.GetModPlayer<StaminaPlayer>().TrySpendStamina(StaminaCost);
+			return _staminaSpent;
 		}
 	}
 }

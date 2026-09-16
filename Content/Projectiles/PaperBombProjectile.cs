@@ -4,6 +4,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -91,7 +92,7 @@ namespace NarutoOverhaul.Content.Projectiles
 			Projectile.Resize(BlastRadius, BlastRadius);
 			Projectile.timeLeft = 3;
 			SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
-			ChakraVFX.SpawnFireBurst(Projectile.Center, scale: 3.5f);
+			ChakraVFX.SpawnBurstEffect<FireBurstProjectile>(Projectile.Center, scale: 3.5f);
 			for (int i = 0; i < 12; i++)
 			{
 				Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Smoke);

@@ -13,6 +13,7 @@ using Terraria.ID;
 using NarutoOverhaul.Content.Items.Consumables;
 using NarutoOverhaul.Content.Items.Materials;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.NPCs.Bosses
 {
@@ -297,14 +298,14 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		private void DoSubstitution(Player target)
 		{
-			ChakraVFX.SpawnCorruptionBurst(NPC.Center, 2.5f);
+			ChakraVFX.SpawnBurstEffect<CorruptionBurstProjectile>(NPC.Center, 2.5f);
 			SoundEngine.PlaySound(SoundID.Item29, NPC.Center);
 
 			NPC.Center = FindClearTeleportCenter(target.Center, SubstitutionTeleportRadius);
 			NPC.velocity = Vector2.Zero;
 			NPC.life = System.Math.Min(NPC.lifeMax, NPC.life + (int)(NPC.lifeMax * SubstitutionHealFraction));
 
-			ChakraVFX.SpawnCorruptionBurst(NPC.Center, 2.5f);
+			ChakraVFX.SpawnBurstEffect<CorruptionBurstProjectile>(NPC.Center, 2.5f);
 
 			CurrentAttack = AttackState.Recover;
 			StateTimer = 0f;
@@ -518,7 +519,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		private void OnJumpLanding()
 		{
-			ChakraVFX.SpawnCorruptionBurst(NPC.Center, 2f);
+			ChakraVFX.SpawnBurstEffect<CorruptionBurstProjectile>(NPC.Center, 2f);
 			SoundEngine.PlaySound(SoundID.Item14, NPC.Center);
 
 			for (int i = 0; i < Main.maxPlayers; i++)
@@ -643,7 +644,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		public override void HitEffect(NPC.HitInfo hit)
 		{
-			ChakraVFX.SpawnCorruptionBurst(NPC.Center, 0.5f);
+			ChakraVFX.SpawnBurstEffect<CorruptionBurstProjectile>(NPC.Center, 0.5f);
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

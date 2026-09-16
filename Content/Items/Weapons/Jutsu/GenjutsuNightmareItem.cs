@@ -50,7 +50,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 		public override void UseAnimation(Player player)
 		{
 			chakraSpent = player.GetModPlayer<ChakraPlayer>().TrySpendChakra(ChakraCost);
-			ChakraVFX.SpawnGenjutsuBurst(player.Center, 1.2f);
+			ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(player.Center, 1.2f);
 			// Large body-covering pulse - a warping eye-rift with shadow tendrils, centered on the
 			// caster (not offset toward a facing direction like the Taijutsu kicks - this is an
 			// illusion pulse around the caster, not a directional strike).
@@ -69,7 +69,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			target.AddBuff(ModContent.BuffType<GenjutsuFearDebuff>(), duration);
 			target.GetGlobalNPC<GenjutsuGlobalNPC>().ControllingPlayerIndex = player.whoAmI;
 			target.netUpdate = true; // force an immediate sync so the server/other clients learn who's controlling this flee
-			ChakraVFX.SpawnGenjutsuBurst(target.Center, 1.5f);
+			ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(target.Center, 1.5f);
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)

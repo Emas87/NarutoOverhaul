@@ -4,6 +4,7 @@ using NarutoOverhaul.Common.VFX;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Items.Consumables
 {
@@ -41,7 +42,7 @@ namespace NarutoOverhaul.Content.Items.Consumables
 			float actualRestore = RestoreAmount * chakraPlayer.GetPotionEffectivenessMultiplier();
 			chakraPlayer.Chakra = System.Math.Min(chakraPlayer.MaxChakra, chakraPlayer.Chakra + actualRestore);
 			chakraPlayer.RegisterPotionUse();
-			ChakraVFX.SpawnChakraBurst(player.Center, 1f);
+			ChakraVFX.SpawnBurstEffect<ChakraBurstProjectile>(player.Center, 1f);
 			return true;
 		}
 

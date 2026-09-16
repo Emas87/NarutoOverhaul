@@ -3,6 +3,7 @@ using NarutoOverhaul.Content.Buffs;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Common.Players
 {
@@ -26,7 +27,7 @@ namespace NarutoOverhaul.Common.Players
 				return false;
 			}
 
-			ChakraVFX.SpawnSharinganBurst(Player.Center, 0.75f);
+			ChakraVFX.SpawnBurstEffect<SharinganBurstProjectile>(Player.Center, 0.75f);
 			Player.AddBuff(ModContent.BuffType<SharinganFocusBuff>(), FocusDuration);
 			return true;
 		}

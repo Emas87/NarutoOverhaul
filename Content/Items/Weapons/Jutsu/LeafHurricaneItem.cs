@@ -57,8 +57,8 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 		// base single-flash shape as-is).
 		protected override void PlayImpactFlash(Player player)
 		{
-			ChakraVFX.SpawnImpactBurst(player.Center + new Vector2(player.direction * 30f, 0f), 1.4f);
-			ChakraVFX.SpawnImpactBurst(player.Center + new Vector2(-player.direction * 30f, 0f), 1.1f);
+			ChakraVFX.SpawnBurstEffect<ImpactBurstProjectile>(player.Center + new Vector2(player.direction * 30f, 0f), 1.4f);
+			ChakraVFX.SpawnBurstEffect<ImpactBurstProjectile>(player.Center + new Vector2(-player.direction * 30f, 0f), 1.1f);
 			ChakraVFX.SpawnBurst(player.Center, DustID.Cloud, count: 6, scale: 1.3f);
 		}
 

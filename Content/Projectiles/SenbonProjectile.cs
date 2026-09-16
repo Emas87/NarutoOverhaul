@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -42,7 +43,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		public override void OnKill(int timeLeft)
 		{
-			Common.VFX.ChakraVFX.SpawnIceBurst(Projectile.Center, 0.5f);
+			Common.VFX.ChakraVFX.SpawnBurstEffect<IceBurstProjectile>(Projectile.Center, 0.5f);
 		}
 
 		// See KunaiProjectile.PreDraw - vanilla's default draw origin uses half the hitbox height,

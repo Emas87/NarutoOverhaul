@@ -10,6 +10,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.ID;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -118,7 +119,7 @@ namespace NarutoOverhaul.Content.Projectiles
 					}
 
 					SoundEngine.PlaySound(SoundID.Dig, Projectile.Center);
-					ChakraVFX.SpawnChakraBurst(Projectile.Center, 0.8f);
+					ChakraVFX.SpawnBurstEffect<ChakraBurstProjectile>(Projectile.Center, 0.8f);
 				}
 			}
 

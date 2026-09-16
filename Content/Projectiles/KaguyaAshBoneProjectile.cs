@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -43,13 +44,13 @@ namespace NarutoOverhaul.Content.Projectiles
 
 			if (Main.rand.NextBool(3))
 			{
-				Common.VFX.ChakraVFX.SpawnBoneBurst(Projectile.Center, 0.5f);
+				Common.VFX.ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(Projectile.Center, 0.5f);
 			}
 		}
 
 		public override void OnKill(int timeLeft)
 		{
-			Common.VFX.ChakraVFX.SpawnBoneBurst(Projectile.Center, 0.75f);
+			Common.VFX.ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(Projectile.Center, 0.75f);
 		}
 
 		// Explicit draw call (rather than relying on vanilla's default projectile draw) so

@@ -9,6 +9,7 @@ using Terraria.ID;
 using NarutoOverhaul.Content.Items.Consumables;
 using NarutoOverhaul.Content.Items.Materials;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.NPCs.Bosses
 {
@@ -303,7 +304,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		private void OnPhaseTransition()
 		{
 			NPC.velocity = Vector2.Zero;
-			Common.VFX.ChakraVFX.SpawnChakraBurst(NPC.Center, 2.5f);
+			Common.VFX.ChakraVFX.SpawnBurstEffect<ChakraBurstProjectile>(NPC.Center, 2.5f);
 			SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
 		}
 
@@ -388,7 +389,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		private void OnJumpLanding()
 		{
-			Common.VFX.ChakraVFX.SpawnChakraBurst(NPC.Center, 2.5f);
+			Common.VFX.ChakraVFX.SpawnBurstEffect<ChakraBurstProjectile>(NPC.Center, 2.5f);
 			SoundEngine.PlaySound(SoundID.Item14, NPC.Center);
 
 			for (int i = 0; i < Main.maxPlayers; i++)

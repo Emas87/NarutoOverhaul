@@ -13,6 +13,7 @@ using Terraria.ID;
 using NarutoOverhaul.Content.Items.Consumables;
 using NarutoOverhaul.Content.Items.Materials;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.NPCs.Bosses
 {
@@ -254,7 +255,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 			if (isProtectingTownNpc && !wasProtectingTownNpc)
 			{
-				ChakraVFX.SpawnGenjutsuBurst(NPC.Center, 3f);
+				ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(NPC.Center, 3f);
 				SoundEngine.PlaySound(SoundID.Item29, NPC.Center);
 			}
 
@@ -306,7 +307,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				CurrentPath = expected;
 				NPC.velocity = Vector2.Zero;
 				SubCounter = 0f;
-				ChakraVFX.SpawnGenjutsuBurst(NPC.Center, 2.5f);
+				ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(NPC.Center, 2.5f);
 				SoundEngine.PlaySound(SoundID.Item29, NPC.Center);
 			}
 		}
@@ -347,7 +348,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			// the first tick rather than an unreachable StateTimer == 0.
 			if (StateTimer == 1)
 			{
-				ChakraVFX.SpawnGenjutsuBurst(NPC.Center, 1.5f);
+				ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(NPC.Center, 1.5f);
 				SoundEngine.PlaySound(SoundID.Item29, NPC.Center);
 			}
 
@@ -379,7 +380,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				// and buff-icon handling carries over for free.
 				target.AddBuff(BuffID.Gravitation, DevaGravityFlipDuration);
 
-				ChakraVFX.SpawnGenjutsuBurst(NPC.Center, 2.4f, pushDirection.ToRotation());
+				ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(NPC.Center, 2.4f, pushDirection.ToRotation());
 				SoundEngine.PlaySound(SoundID.Item14, NPC.Center);
 			}
 
@@ -568,7 +569,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 					target.GetModPlayer<ChakraPlayer>().TrySpendChakra(8f);
 					ChakraPlayer.SendCorrection(target); // server-only drain - tell the owning client
 				}
-				ChakraVFX.SpawnGenjutsuBurst(target.Center, 0.5f);
+				ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(target.Center, 0.5f);
 			}
 
 			if (StateTimer >= 60)
@@ -585,7 +586,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			if (StateTimer == 20)
 			{
 				NPC.life = System.Math.Min(NPC.lifeMax, NPC.life + (int)(NPC.lifeMax * 0.05f));
-				ChakraVFX.SpawnHealingBurst(NPC.Center, 1.8f);
+				ChakraVFX.SpawnBurstEffect<HealingBurstProjectile>(NPC.Center, 1.8f);
 			}
 
 			if (StateTimer >= 50)
@@ -666,7 +667,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			if (CurrentPath == Path.Human)
 			{
 				NPC.life = System.Math.Min(NPC.lifeMax, NPC.life + hurtInfo.Damage / 2);
-				ChakraVFX.SpawnHealingBurst(NPC.Center, 0.75f);
+				ChakraVFX.SpawnBurstEffect<HealingBurstProjectile>(NPC.Center, 0.75f);
 			}
 		}
 
@@ -686,7 +687,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		public override void HitEffect(NPC.HitInfo hit)
 		{
-			ChakraVFX.SpawnGenjutsuBurst(NPC.Center, 0.5f);
+			ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(NPC.Center, 0.5f);
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

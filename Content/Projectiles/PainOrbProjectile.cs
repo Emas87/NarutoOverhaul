@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -25,10 +26,10 @@ namespace NarutoOverhaul.Content.Projectiles
 			switch (BoltElement)
 			{
 				case ElementalBoltProjectile.Element.Wind:
-					Common.VFX.ChakraVFX.SpawnWindBurst(Projectile.Center, scale);
+					Common.VFX.ChakraVFX.SpawnBurstEffect<WindBurstProjectile>(Projectile.Center, scale);
 					break;
 				default:
-					Common.VFX.ChakraVFX.SpawnCoreBurst(Projectile.Center, scale);
+					Common.VFX.ChakraVFX.SpawnBurstEffect<CoreBurstProjectile>(Projectile.Center, scale);
 					break;
 			}
 		}

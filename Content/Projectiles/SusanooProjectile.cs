@@ -4,6 +4,7 @@ using NarutoOverhaul.Common.Systems;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -86,7 +87,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 			if (Main.rand.NextBool(2))
 			{
-				Common.VFX.ChakraVFX.SpawnGenjutsuBurst(Projectile.Center, 0.6f);
+				Common.VFX.ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(Projectile.Center, 0.6f);
 			}
 
 			StateTimer++;
@@ -117,7 +118,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
-			Common.VFX.ChakraVFX.SpawnGenjutsuBurst(target.Center, 2.5f);
+			Common.VFX.ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(target.Center, 2.5f);
 		}
 
 		// The 170x130 sprite sheet frame is much bigger than the 64x64 hitbox. Terraria's default

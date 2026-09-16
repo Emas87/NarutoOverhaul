@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.Systems;
 using Terraria;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -29,13 +30,13 @@ namespace NarutoOverhaul.Content.Projectiles
 
 			if (Main.rand.NextBool(3))
 			{
-				Common.VFX.ChakraVFX.SpawnBoneBurst(Projectile.Center, 0.5f);
+				Common.VFX.ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(Projectile.Center, 0.5f);
 			}
 		}
 
 		public override void OnKill(int timeLeft)
 		{
-			Common.VFX.ChakraVFX.SpawnBoneBurst(Projectile.Center, 0.75f);
+			Common.VFX.ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(Projectile.Center, 0.75f);
 		}
 	}
 }

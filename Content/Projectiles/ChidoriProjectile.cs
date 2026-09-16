@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.Systems;
 using Terraria;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -76,7 +77,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 			if (Main.rand.NextBool(2))
 			{
-				Common.VFX.ChakraVFX.SpawnLightningBurst(Projectile.Center, 0.5f);
+				Common.VFX.ChakraVFX.SpawnBurstEffect<LightningBurstProjectile>(Projectile.Center, 0.5f);
 			}
 
 			StateTimer++;
@@ -107,7 +108,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
-			Common.VFX.ChakraVFX.SpawnLightningBurst(target.Center, 1.75f);
+			Common.VFX.ChakraVFX.SpawnBurstEffect<LightningBurstProjectile>(target.Center, 1.75f);
 		}
 	}
 }

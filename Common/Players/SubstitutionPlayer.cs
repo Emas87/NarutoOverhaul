@@ -3,6 +3,7 @@ using NarutoOverhaul.Common.VFX;
 using NarutoOverhaul.Content.Buffs;
 using Terraria;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Common.Players
 {
@@ -28,7 +29,7 @@ namespace NarutoOverhaul.Common.Players
 				return false;
 			}
 
-			ChakraVFX.SpawnWoodBurst(Player.Center, 2.4f);
+			ChakraVFX.SpawnBurstEffect<WoodBurstProjectile>(Player.Center, 2.4f);
 			ChakraVFX.SpawnSubstitutionLog(Player.Center, info.HitDirection);
 			// Kick away from the incoming hit instead of teleporting - no tile-clip risk.
 			Player.velocity.X = -info.HitDirection * 6f;

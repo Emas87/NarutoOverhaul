@@ -11,6 +11,7 @@ using Terraria.ID;
 using NarutoOverhaul.Content.Items.Consumables;
 using NarutoOverhaul.Content.Items.Materials;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.NPCs.Bosses
 {
@@ -171,12 +172,12 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		private void DoTeleport(Player target)
 		{
-			ChakraVFX.SpawnIceBurst(NPC.Center, 1.6f);
+			ChakraVFX.SpawnBurstEffect<IceBurstProjectile>(NPC.Center, 1.6f);
 
 			NPC.Center = FindClearTeleportCenter(target.Center, TeleportRadius);
 			NPC.velocity = Vector2.Zero;
 
-			ChakraVFX.SpawnIceBurst(NPC.Center, 1.6f);
+			ChakraVFX.SpawnBurstEffect<IceBurstProjectile>(NPC.Center, 1.6f);
 			SoundEngine.PlaySound(SoundID.Item28, NPC.Center);
 
 			CurrentAttack = Main.rand.NextBool() ? AttackState.Strike : AttackState.SenbonVolley;
@@ -368,7 +369,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		public override void HitEffect(NPC.HitInfo hit)
 		{
-			ChakraVFX.SpawnIceBurst(NPC.position, 0.5f);
+			ChakraVFX.SpawnBurstEffect<IceBurstProjectile>(NPC.position, 0.5f);
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

@@ -2,6 +2,7 @@ using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Content.Buffs;
 using Terraria;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -36,7 +37,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 			if (Main.rand.NextBool(2))
 			{
-				Common.VFX.ChakraVFX.SpawnGenjutsuBurst(Projectile.Center, 0.5f);
+				Common.VFX.ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(Projectile.Center, 0.5f);
 			}
 
 			animTicks++;
@@ -54,12 +55,12 @@ namespace NarutoOverhaul.Content.Projectiles
 			int duration = SleepDuration + owner.GetModPlayer<Common.Players.ChakraPlayer>().GenjutsuControlDurationBonus;
 
 			target.AddBuff(ModContent.BuffType<GenjutsuSleepDebuff>(), duration);
-			Common.VFX.ChakraVFX.SpawnGenjutsuBurst(target.Center, 1.5f);
+			Common.VFX.ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(target.Center, 1.5f);
 		}
 
 		public override void OnKill(int timeLeft)
 		{
-			Common.VFX.ChakraVFX.SpawnGenjutsuBurst(Projectile.Center, 0.75f);
+			Common.VFX.ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(Projectile.Center, 0.75f);
 		}
 	}
 }

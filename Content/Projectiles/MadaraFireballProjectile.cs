@@ -1,5 +1,6 @@
 using Terraria;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -37,7 +38,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 			if (Main.rand.NextBool(2))
 			{
-				Common.VFX.ChakraVFX.SpawnFireBurst(Projectile.Center, 0.6f);
+				Common.VFX.ChakraVFX.SpawnBurstEffect<FireBurstProjectile>(Projectile.Center, 0.6f);
 			}
 
 			animTicks++;
@@ -51,7 +52,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		public override void OnKill(int timeLeft)
 		{
-			Common.VFX.ChakraVFX.SpawnFireBurst(Projectile.Center, 1.75f);
+			Common.VFX.ChakraVFX.SpawnBurstEffect<FireBurstProjectile>(Projectile.Center, 1.75f);
 		}
 	}
 }

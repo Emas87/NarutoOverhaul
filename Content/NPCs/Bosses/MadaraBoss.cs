@@ -13,6 +13,7 @@ using Terraria.ID;
 using NarutoOverhaul.Content.Items.Consumables;
 using NarutoOverhaul.Content.Items.Materials;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.NPCs.Bosses
 {
@@ -218,7 +219,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				if (susanooPulseTimer >= SusanooPulseTicks)
 				{
 					susanooPulseTimer = 0;
-					ChakraVFX.SpawnGenjutsuBurst(NPC.Center, 0.5f);
+					ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(NPC.Center, 0.5f);
 				}
 			}
 
@@ -268,7 +269,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			// it) - Madara would visually go airborne and have to fall back down, reading as
 			// "still flies" after transforming.
 
-			ChakraVFX.SpawnGenjutsuBurst(NPC.Center, 4f);
+			ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(NPC.Center, 4f);
 			SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
 
 			CurrentAttack = AttackState.Recover;
@@ -545,7 +546,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		public override void HitEffect(NPC.HitInfo hit)
 		{
-			ChakraVFX.SpawnGenjutsuBurst(NPC.Center, 0.5f);
+			ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(NPC.Center, 0.5f);
 		}
 
 		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)

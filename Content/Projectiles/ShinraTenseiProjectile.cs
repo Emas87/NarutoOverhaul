@@ -3,6 +3,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -36,7 +37,7 @@ namespace NarutoOverhaul.Content.Projectiles
 		{
 			if (Projectile.timeLeft == LifetimeTicks)
 			{
-				Common.VFX.ChakraVFX.SpawnGenjutsuBurst(Projectile.Center, 2.5f);
+				Common.VFX.ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(Projectile.Center, 2.5f);
 				SoundEngine.PlaySound(SoundID.Item14, Projectile.Center);
 			}
 

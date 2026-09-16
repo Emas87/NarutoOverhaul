@@ -12,6 +12,7 @@ using Terraria.ID;
 using NarutoOverhaul.Content.Items.Consumables;
 using NarutoOverhaul.Content.Items.Materials;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.NPCs.Bosses
 {
@@ -224,19 +225,19 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				switch (expected)
 				{
 					case ElementalBoltProjectile.Element.Fire:
-						ChakraVFX.SpawnFireBurst(NPC.Center, 2.5f);
+						ChakraVFX.SpawnBurstEffect<FireBurstProjectile>(NPC.Center, 2.5f);
 						break;
 					case ElementalBoltProjectile.Element.Wind:
-						ChakraVFX.SpawnWindBurst(NPC.Center, 2.5f);
+						ChakraVFX.SpawnBurstEffect<WindBurstProjectile>(NPC.Center, 2.5f);
 						break;
 					case ElementalBoltProjectile.Element.Lightning:
-						ChakraVFX.SpawnLightningBurst(NPC.Center, 2.5f);
+						ChakraVFX.SpawnBurstEffect<LightningBurstProjectile>(NPC.Center, 2.5f);
 						break;
 					case ElementalBoltProjectile.Element.Earth:
-						ChakraVFX.SpawnEarthBurst(NPC.Center, 2.5f);
+						ChakraVFX.SpawnBurstEffect<EarthBurstProjectile>(NPC.Center, 2.5f);
 						break;
 					default:
-						ChakraVFX.SpawnCoreBurst(NPC.Center, 2.5f);
+						ChakraVFX.SpawnBurstEffect<CoreBurstProjectile>(NPC.Center, 2.5f);
 						break;
 				}
 
@@ -386,19 +387,19 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			switch (CurrentElement)
 			{
 				case ElementalBoltProjectile.Element.Fire:
-					ChakraVFX.SpawnFireBurst(NPC.Center, 2f);
+					ChakraVFX.SpawnBurstEffect<FireBurstProjectile>(NPC.Center, 2f);
 					break;
 				case ElementalBoltProjectile.Element.Wind:
-					ChakraVFX.SpawnWindBurst(NPC.Center, 2f);
+					ChakraVFX.SpawnBurstEffect<WindBurstProjectile>(NPC.Center, 2f);
 					break;
 				case ElementalBoltProjectile.Element.Lightning:
-					ChakraVFX.SpawnLightningBurst(NPC.Center, 2f);
+					ChakraVFX.SpawnBurstEffect<LightningBurstProjectile>(NPC.Center, 2f);
 					break;
 				case ElementalBoltProjectile.Element.Earth:
-					ChakraVFX.SpawnEarthBurst(NPC.Center, 2f);
+					ChakraVFX.SpawnBurstEffect<EarthBurstProjectile>(NPC.Center, 2f);
 					break;
 				default:
-					ChakraVFX.SpawnCoreBurst(NPC.Center, 2f);
+					ChakraVFX.SpawnBurstEffect<CoreBurstProjectile>(NPC.Center, 2f);
 					break;
 			}
 

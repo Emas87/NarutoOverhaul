@@ -8,6 +8,7 @@ using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Common.Players
 {
@@ -340,7 +341,7 @@ namespace NarutoOverhaul.Common.Players
 
 			if (eightGatesWindupTimer % 10 == 0)
 			{
-				ChakraVFX.SpawnFireBurst(Player.Center, 1.6f);
+				ChakraVFX.SpawnBurstEffect<FireBurstProjectile>(Player.Center, 1.6f);
 			}
 
 			if (eightGatesWindupTimer < EightGatesWindupTicks)

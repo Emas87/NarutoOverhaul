@@ -56,7 +56,9 @@ namespace NarutoOverhaul.Common.Systems
 			IList<int> xs = tag.GetList<int>("hiraishinMarkX");
 			IList<int> ys = tag.GetList<int>("hiraishinMarkY");
 
-			for (int i = 0; i < xs.Count; i++)
+			int count = System.Math.Min(xs.Count, ys.Count);
+
+			for (int i = 0; i < count; i++)
 			{
 				MarkedTiles.Add(new Point16(xs[i], ys[i]));
 			}

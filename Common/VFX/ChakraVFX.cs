@@ -40,7 +40,7 @@ namespace NarutoOverhaul.Common.VFX
 		// callbacks) - same reasoning already applied to this mod's other NPC-spawned projectiles
 		// (see MadaraBoss/PainBoss's `Main.netMode != NetmodeID.MultiplayerClient` guards). Centralizing
 		// the guard here means every call site below stays a plain one-liner.
-		private static void SpawnBurstEffect<T>(Vector2 position, float scale = 1f, float rotation = 0f) where T : ModProjectile
+		public static void SpawnBurstEffect<T>(Vector2 position, float scale = 1f, float rotation = 0f) where T : ModProjectile
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 			{
@@ -52,23 +52,6 @@ namespace NarutoOverhaul.Common.VFX
 			Main.projectile[index].scale = scale;
 			Main.projectile[index].rotation = rotation;
 		}
-
-		public static void SpawnChakraBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<ChakraBurstProjectile>(position, scale, rotation);
-		public static void SpawnGenjutsuBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<GenjutsuBurstProjectile>(position, scale, rotation);
-		public static void SpawnFireBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<FireBurstProjectile>(position, scale, rotation);
-		public static void SpawnLightningBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<LightningBurstProjectile>(position, scale, rotation);
-		public static void SpawnWindBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<WindBurstProjectile>(position, scale, rotation);
-		public static void SpawnEarthBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<EarthBurstProjectile>(position, scale, rotation);
-		public static void SpawnCoreBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<CoreBurstProjectile>(position, scale, rotation);
-		public static void SpawnWaterBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<WaterBurstProjectile>(position, scale, rotation);
-		public static void SpawnIceBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<IceBurstProjectile>(position, scale, rotation);
-		public static void SpawnBoneBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<BoneBurstProjectile>(position, scale, rotation);
-		public static void SpawnCorruptionBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<CorruptionBurstProjectile>(position, scale, rotation);
-		public static void SpawnSmokeBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<SmokeBurstProjectile>(position, scale, rotation);
-		public static void SpawnSharinganBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<SharinganBurstProjectile>(position, scale, rotation);
-		public static void SpawnHealingBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<HealingBurstProjectile>(position, scale, rotation);
-		public static void SpawnWoodBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<WoodBurstProjectile>(position, scale, rotation);
-		public static void SpawnImpactBurst(Vector2 position, float scale = 1f, float rotation = 0f) => SpawnBurstEffect<ImpactBurstProjectile>(position, scale, rotation);
 
 		// Player-tracking counterpart to SpawnBurstEffect<T> above, for the large Taijutsu kick/punch
 		// "blast" VFX that needs to follow the owner through their swing instead of flashing once at

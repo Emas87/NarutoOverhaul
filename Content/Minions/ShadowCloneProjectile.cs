@@ -3,6 +3,7 @@ using NarutoOverhaul.Common.Systems;
 using NarutoOverhaul.Common.VFX;
 using Terraria;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Minions
 {
@@ -69,7 +70,7 @@ namespace NarutoOverhaul.Content.Minions
 
 			if (Projectile.timeLeft <= 60 && Projectile.timeLeft % 10 == 0)
 			{
-				ChakraVFX.SpawnSmokeBurst(Projectile.Center, 0.5f);
+				ChakraVFX.SpawnBurstEffect<SmokeBurstProjectile>(Projectile.Center, 0.5f);
 			}
 		}
 
@@ -166,7 +167,7 @@ namespace NarutoOverhaul.Content.Minions
 
 		public override void OnKill(int timeLeft)
 		{
-			ChakraVFX.SpawnSmokeBurst(Projectile.Center, 1.95f);
+			ChakraVFX.SpawnBurstEffect<SmokeBurstProjectile>(Projectile.Center, 1.95f);
 		}
 	}
 }

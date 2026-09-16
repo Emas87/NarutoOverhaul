@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using NarutoOverhaul.Common.Systems;
 using Terraria;
 using Terraria.ModLoader;
+using NarutoOverhaul.Content.Projectiles.Bursts;
 
 namespace NarutoOverhaul.Content.Projectiles
 {
@@ -104,7 +105,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
-			Common.VFX.ChakraVFX.SpawnChakraBurst(target.Center, 1.2f);
+			Common.VFX.ChakraVFX.SpawnBurstEffect<ChakraBurstProjectile>(target.Center, 1.2f);
 		}
 	}
 }
