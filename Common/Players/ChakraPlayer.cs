@@ -177,6 +177,16 @@ namespace NarutoOverhaul.Common.Players
 		public static void HandleCorrectionPacket(BinaryReader reader)
 		{
 			ResourceCorrectionPacket.Receive(reader, out byte playerIndex, out float chakra);
+
+			// This packet type is only ever legitimately sent server -> client (see
+			// ResourceCorrectionPacket.Send's Main.netMode guard on the sending side). A copy
+			// received here while running as the server means a client forged one straight to
+			// us - drop it instead of overwriting our own authoritative Chakra value.
+			if (Main.netMode == NetmodeID.Server)
+			{
+				return;
+			}
+
 			Main.player[playerIndex].GetModPlayer<ChakraPlayer>().Chakra = chakra;
 		}
 	}

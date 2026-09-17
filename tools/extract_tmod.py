@@ -91,7 +91,16 @@ def extract_file(data, entry):
 
 def rawimg_to_pil(raw):
     version, width, height = struct.unpack("<iii", raw[:12])
-    body = bytearray(raw[12 : 12 + width * height * 4])
+    if width <= 0 or height <= 0:
+        raise ValueError(f".rawimg header gives invalid dimensions {width}x{height}")
+    needed = width * height * 4
+    available = len(raw) - 12
+    if available < needed:
+        raise ValueError(
+            f".rawimg entry truncated: {width}x{height} needs {needed} pixel-data bytes, "
+            f"only {available} present"
+        )
+    body = bytearray(raw[12 : 12 + needed])
     for i in range(0, len(body), 4):  # BGRA -> RGBA
         body[i], body[i + 2] = body[i + 2], body[i]
     return Image.frombytes("RGBA", (width, height), bytes(body)), version
@@ -110,6 +119,8 @@ def main():
             if filt.lower() in e[0].lower():
                 print(e[0], e[1], e[2])
     elif cmd == "extract":
+        if len(sys.argv) < 5:
+            sys.exit(__doc__)
         in_path, out_path = sys.argv[3], sys.argv[4]
         matches = [e for e in entries if e[0] == in_path]
         if not matches:

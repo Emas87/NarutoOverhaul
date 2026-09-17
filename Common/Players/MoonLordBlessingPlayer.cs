@@ -58,13 +58,18 @@ namespace NarutoOverhaul.Common.Players
 			byte playerIndex = reader.ReadByte();
 			bool hasBlessing = reader.ReadBoolean();
 
-			Main.player[playerIndex].GetModPlayer<MoonLordBlessingPlayer>().HasKaguyaBlessing = hasBlessing;
+			// On the server, whoAmI is the real sender - never trust the attacker-controlled
+			// playerIndex byte from the payload as the write target. On the client, the packet
+			// only ever arrives via the server's already-sanitized relay, so playerIndex is safe.
+			int targetIndex = Main.netMode == NetmodeID.Server ? whoAmI : playerIndex;
+
+			Main.player[targetIndex].GetModPlayer<MoonLordBlessingPlayer>().HasKaguyaBlessing = hasBlessing;
 
 			if (Main.netMode == NetmodeID.Server)
 			{
 				ModPacket relay = ModContent.GetInstance<NarutoOverhaul>().GetPacket();
 				relay.Write((byte)NetMessageType.SyncMoonLordBlessing);
-				relay.Write(playerIndex);
+				relay.Write((byte)targetIndex);
 				relay.Write(hasBlessing);
 				relay.Send(-1, whoAmI);
 			}

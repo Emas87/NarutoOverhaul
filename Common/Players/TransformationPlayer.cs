@@ -396,7 +396,12 @@ namespace NarutoOverhaul.Common.Players
 			int activeFormIndex = reader.ReadSByte();
 			int eightGatesLevel = reader.ReadByte();
 
-			TransformationPlayer transformationPlayer = Main.player[playerIndex].GetModPlayer<TransformationPlayer>();
+			// On the server, whoAmI is the real sender - never trust the attacker-controlled
+			// playerIndex byte from the payload as the write target. On the client, the packet
+			// only ever arrives via the server's already-sanitized relay, so playerIndex is safe.
+			int targetIndex = Main.netMode == NetmodeID.Server ? whoAmI : playerIndex;
+
+			TransformationPlayer transformationPlayer = Main.player[targetIndex].GetModPlayer<TransformationPlayer>();
 			transformationPlayer.ActiveFormIndex = activeFormIndex;
 			transformationPlayer.EightGatesLevel = eightGatesLevel;
 
@@ -404,7 +409,7 @@ namespace NarutoOverhaul.Common.Players
 			{
 				ModPacket relay = ModContent.GetInstance<NarutoOverhaul>().GetPacket();
 				relay.Write((byte)NetMessageType.SyncTransformation);
-				relay.Write(playerIndex);
+				relay.Write((byte)targetIndex);
 				relay.Write((sbyte)activeFormIndex);
 				relay.Write((byte)eightGatesLevel);
 				relay.Send(-1, whoAmI);

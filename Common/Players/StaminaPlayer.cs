@@ -189,6 +189,16 @@ namespace NarutoOverhaul.Common.Players
 		public static void HandleCorrectionPacket(BinaryReader reader)
 		{
 			ResourceCorrectionPacket.Receive(reader, out byte playerIndex, out float stamina);
+
+			// This packet type is only ever legitimately sent server -> client (see
+			// ResourceCorrectionPacket.Send's Main.netMode guard on the sending side). A copy
+			// received here while running as the server means a client forged one straight to
+			// us - drop it instead of overwriting our own authoritative Stamina value.
+			if (Main.netMode == NetmodeID.Server)
+			{
+				return;
+			}
+
 			Main.player[playerIndex].GetModPlayer<StaminaPlayer>().Stamina = stamina;
 		}
 	}
