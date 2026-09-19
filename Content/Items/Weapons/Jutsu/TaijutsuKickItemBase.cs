@@ -39,13 +39,13 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			}
 		}
 
-		private bool _staminaSpent;
+		protected bool StaminaSpent { get; private set; }
 
 		public override void UseAnimation(Player player)
 		{
-			_staminaSpent = player.GetModPlayer<StaminaPlayer>().TrySpendStamina(StaminaCost);
+			StaminaSpent = player.GetModPlayer<StaminaPlayer>().TrySpendStamina(StaminaCost);
 
-			if (!_staminaSpent)
+			if (!StaminaSpent)
 			{
 				return;
 			}
@@ -57,7 +57,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
 		{
-			return _staminaSpent;
+			return StaminaSpent;
 		}
 	}
 }

@@ -8,5 +8,6 @@ namespace NarutoOverhaul.Common.Systems
 		SyncTransformation,
 		SyncChakraCorrection,
 		SyncStaminaCorrection,
+		HiraishinAddMark,
 	}
 }

@@ -50,6 +50,10 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 		public override void UseAnimation(Player player)
 		{
 			chakraSpent = player.GetModPlayer<ChakraPlayer>().TrySpendChakra(ChakraCost);
+			if (!chakraSpent)
+			{
+				return;
+			}
 			ChakraVFX.SpawnBurstEffect<GenjutsuBurstProjectile>(player.Center, 1.2f);
 			// Large body-covering pulse - a warping eye-rift with shadow tendrils, centered on the
 			// caster (not offset toward a facing direction like the Taijutsu kicks - this is an

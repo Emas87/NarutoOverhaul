@@ -25,11 +25,6 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 		protected override float ImpactBurstOffsetX => 20f;
 		protected override float ImpactBurstScale => 0.9f;
 
-		// Set by UseAnimation, read by ModifyHitNPC/OnHitNPC — the armor-pen and
-		// impact VFX bonuses should only land when this swing actually paid its
-		// stamina cost, matching Rasengan's own TrySpendChakra gate.
-		private bool _staminaSpent;
-
 		public override void SetDefaults()
 		{
 			// Widened from the item's old 26x26 nominal hitbox - was noticeably tighter than the kick
@@ -58,21 +53,14 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 			return StoryProgressSystem.DownedShukaku && player.GetModPlayer<StaminaPlayer>().Stamina >= StaminaCost;
 		}
 
-		public override void UseAnimation(Player player)
-		{
-			_staminaSpent = player.GetModPlayer<StaminaPlayer>().TrySpendStamina(StaminaCost);
-			if (!_staminaSpent)
-			{
-				return;
-			}
-			// Large body-covering blast - thin precise chakra-point flares along the arm/torso rather
-			// than a big blunt kick blast, matching Gentle Fist's surgical/armor-pen flavor.
-			base.UseAnimation(player);
-		}
+		// Large body-covering blast - thin precise chakra-point flares along the arm/torso rather
+		// than a big blunt kick blast, matching Gentle Fist's surgical/armor-pen flavor. Stamina is
+		// spent once, by the inherited UseAnimation - StaminaSpent (from the base class) gates the
+		// armor-pen and impact VFX bonuses below.
 
 		public override void ModifyHitNPC(Player player, NPC target, ref NPC.HitModifiers modifiers)
 		{
-			if (!_staminaSpent)
+			if (!StaminaSpent)
 			{
 				return;
 			}
@@ -81,7 +69,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		public override void OnHitNPC(Player player, NPC target, NPC.HitInfo hit, int damageDone)
 		{
-			if (!_staminaSpent)
+			if (!StaminaSpent)
 			{
 				return;
 			}

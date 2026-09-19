@@ -101,6 +101,36 @@ namespace NarutoOverhaul.Common.Systems
 			SyncToClients();
 		}
 
+		// A non-host client's own WorldGen.PlaceObject call (MinatoKunaiProjectile.PlantSeal) only
+		// runs locally - it never reaches the server's HiraishinSealTile.PlaceInWorld, so the
+		// server-authoritative MarkedTiles registry above would otherwise never learn about a seal
+		// a non-host client planted. This packet is that missing client->server report, same
+		// request/relay shape as TransformationPlayer's SyncTransformation.
+		public static void SendAddMarkRequest(Point16 tile)
+		{
+			if (Main.netMode != NetmodeID.MultiplayerClient)
+			{
+				return;
+			}
+
+			ModPacket packet = ModContent.GetInstance<NarutoOverhaul>().GetPacket();
+			packet.Write((byte)NetMessageType.HiraishinAddMark);
+			packet.Write(tile.X);
+			packet.Write(tile.Y);
+			packet.Send();
+		}
+
+		public static void HandleAddMarkPacket(BinaryReader reader)
+		{
+			short x = reader.ReadInt16();
+			short y = reader.ReadInt16();
+
+			if (Main.netMode == NetmodeID.Server)
+			{
+				AddMark(new Point16(x, y));
+			}
+		}
+
 		public static void RemoveMark(Point16 tile)
 		{
 			if (MarkedTiles.Remove(tile))

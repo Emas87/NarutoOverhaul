@@ -25,6 +25,9 @@ namespace NarutoOverhaul
 				case NetMessageType.SyncStaminaCorrection:
 					StaminaPlayer.HandleCorrectionPacket(reader);
 					break;
+				case NetMessageType.HiraishinAddMark:
+					HiraishinMarkerSystem.HandleAddMarkPacket(reader);
+					break;
 			}
 		}
 	}

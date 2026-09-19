@@ -116,6 +116,11 @@ namespace NarutoOverhaul.Content.Projectiles
 					if (Main.netMode == NetmodeID.MultiplayerClient)
 					{
 						NetMessage.SendTileSquare(-1, tileCoord.X, tileCoord.Y, 1);
+						// PlaceInWorld only runs on this client's own local placement, never on the
+						// dedicated server (which never calls WorldGen.PlaceObject for a projectile it
+						// doesn't own) - so the server's authoritative MarkedTiles registry needs its
+						// own explicit report, same as Chakra/Stamina/Transformation client state.
+						HiraishinMarkerSystem.SendAddMarkRequest(tileCoord);
 					}
 
 					SoundEngine.PlaySound(SoundID.Dig, Projectile.Center);
