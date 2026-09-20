@@ -199,14 +199,10 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 			if (!target.active || target.dead)
 			{
-				// EncourageDespawn alone doesn't work here: vanilla's own per-tick despawn check
-				// resets timeLeft back to full (and clears despawnEncouraged) every tick the NPC's
-				// hitbox is still on ANY player's screen - including the player who just died, who
-				// is usually still looking right at it. boss=true also exempts it from the normal
-				// off-screen despawn entirely. Deactivating directly guarantees it actually leaves,
-				// without granting kill credit/loot the way NPC.checkDead() would.
-				NPC.active = false;
-				NPC.netUpdate = true;
+				// Matches HakuBoss/KakuzuBoss/MadaraBoss/OrochimaruBoss's no-target despawn pattern -
+				// float away and let EncourageDespawn handle it, instead of vanishing instantly.
+				NPC.velocity.Y -= 0.2f;
+				NPC.EncourageDespawn(10);
 				return;
 			}
 
@@ -240,6 +236,15 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		// every tick.
 		private const int GroundScanRangeTiles = 120;
 
+		// Caches the last ground-tile scan result, keyed by horizontal tile - re-scanning up to 120
+		// tiles every single tick is wasted work whenever the boss's centerTileX hasn't moved since
+		// the last tick (e.g. mid-attack-animation standing still). Invalidated the moment
+		// centerTileX changes, so walking across hills/valleys still re-tracks correctly; a tile
+		// destroyed/placed directly under a stationary boss between horizontal moves is the one edge
+		// case this doesn't catch, acceptable for a boss AI ground scan.
+		private int _cachedCenterTileX = int.MinValue;
+		private int _cachedGroundTileY = -1;
+
 		// DoChase/DoCharge/DoRecover only ever touch velocity.X - this owns all of Y. Scans downward
 		// from the NPC's own top edge (not vanilla's undersized-for-this-hitbox TileCollision) for the
 		// nearest solid tile at its horizontal center and either falls toward it or snaps onto it,
@@ -249,15 +254,28 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		{
 			int centerTileX = (int)(NPC.Center.X / 16f);
 			int topTileY = (int)(NPC.position.Y / 16f);
-			int groundTileY = -1;
+			int groundTileY;
 
-			for (int tileY = System.Math.Max(topTileY, 0); tileY < topTileY + GroundScanRangeTiles; tileY++)
+			// Never reuse a cached "no ground found" (-1) result: the boss is still falling in that
+			// case, topTileY keeps changing every tick even while centerTileX doesn't (a straight
+			// vertical fall), and the real ground can come within scan range on a later tick.
+			if (centerTileX == _cachedCenterTileX && _cachedGroundTileY >= 0)
 			{
-				if (WorldGen.SolidTile(centerTileX, tileY))
+				groundTileY = _cachedGroundTileY;
+			}
+			else
+			{
+				groundTileY = -1;
+				for (int tileY = System.Math.Max(topTileY, 0); tileY < topTileY + GroundScanRangeTiles; tileY++)
 				{
-					groundTileY = tileY;
-					break;
+					if (WorldGen.SolidTile(centerTileX, tileY))
+					{
+						groundTileY = tileY;
+						break;
+					}
 				}
+				_cachedCenterTileX = centerTileX;
+				_cachedGroundTileY = groundTileY;
 			}
 
 			if (groundTileY < 0)
