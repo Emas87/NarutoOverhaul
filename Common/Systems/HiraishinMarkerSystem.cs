@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using NarutoOverhaul.Content.Tiles;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -21,6 +22,14 @@ namespace NarutoOverhaul.Common.Systems
 		// to free a slot. Keeps the shared network from growing unbounded and the Hiraishin Warp
 		// cycle from getting unwieldy to page through.
 		public const int MaxMarks = 10;
+
+		// Per-sender cooldown for HandleAddMarkPacket, keyed by whoAmI - stops a client from
+		// spamming redundant SyncToClients() broadcasts by repeatedly requesting a mark for a
+		// real seal tile it just watched someone else place (AddMark already no-ops on
+		// duplicates, this just stops the wasted network chatter getting there).
+		private const int AddMarkCooldownTicks = 60;
+
+		private static readonly Dictionary<int, int> lastAddMarkRequestTick = new Dictionary<int, int>();
 
 		public static List<Point16> MarkedTiles { get; private set; } = new List<Point16>();
 
@@ -120,15 +129,35 @@ namespace NarutoOverhaul.Common.Systems
 			packet.Send();
 		}
 
-		public static void HandleAddMarkPacket(BinaryReader reader)
+		public static void HandleAddMarkPacket(BinaryReader reader, int whoAmI)
 		{
 			short x = reader.ReadInt16();
 			short y = reader.ReadInt16();
 
-			if (Main.netMode == NetmodeID.Server)
+			if (Main.netMode != NetmodeID.Server)
 			{
-				AddMark(new Point16(x, y));
+				return;
 			}
+
+			int tick = (int)Main.GameUpdateCount;
+			if (lastAddMarkRequestTick.TryGetValue(whoAmI, out int lastTick) && tick - lastTick < AddMarkCooldownTicks)
+			{
+				return;
+			}
+			lastAddMarkRequestTick[whoAmI] = tick;
+
+			if (!WorldGen.InWorld(x, y))
+			{
+				return;
+			}
+
+			Tile tileTarget = Main.tile[x, y];
+			if (!tileTarget.HasTile || tileTarget.TileType != ModContent.TileType<HiraishinSealTile>())
+			{
+				return;
+			}
+
+			AddMark(new Point16(x, y));
 		}
 
 		public static void RemoveMark(Point16 tile)

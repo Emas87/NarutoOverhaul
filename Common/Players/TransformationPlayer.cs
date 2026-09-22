@@ -396,6 +396,18 @@ namespace NarutoOverhaul.Common.Players
 			int activeFormIndex = reader.ReadSByte();
 			int eightGatesLevel = reader.ReadByte();
 
+			// Mirror the bounds check ToggleForm already applies to every other write path
+			// for these fields - HandlePacket is the only path that skipped it, letting an
+			// attacker-controlled value crash every client (and the server) on assignment.
+			if (activeFormIndex != -1 && (activeFormIndex < 0 || activeFormIndex >= TransformationSystem.RegisteredForms.Count))
+			{
+				return;
+			}
+			if (eightGatesLevel < 0 || eightGatesLevel > 8)
+			{
+				return;
+			}
+
 			// On the server, whoAmI is the real sender - never trust the attacker-controlled
 			// playerIndex byte from the payload as the write target. On the client, the packet
 			// only ever arrives via the server's already-sanitized relay, so playerIndex is safe.

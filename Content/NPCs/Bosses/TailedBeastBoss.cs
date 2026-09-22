@@ -239,9 +239,10 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		// Caches the last ground-tile scan result, keyed by horizontal tile - re-scanning up to 120
 		// tiles every single tick is wasted work whenever the boss's centerTileX hasn't moved since
 		// the last tick (e.g. mid-attack-animation standing still). Invalidated the moment
-		// centerTileX changes, so walking across hills/valleys still re-tracks correctly; a tile
-		// destroyed/placed directly under a stationary boss between horizontal moves is the one edge
-		// case this doesn't catch, acceptable for a boss AI ground scan.
+		// centerTileX changes, so walking across hills/valleys still re-tracks correctly. The cached
+		// tile itself is still cheaply re-verified every tick (a single WorldGen.SolidTile check) so
+		// a tile mined out from directly under a stationary boss is caught immediately instead of
+		// trusting a stale cache; only a miss falls back to the full scan below.
 		private int _cachedCenterTileX = int.MinValue;
 		private int _cachedGroundTileY = -1;
 
@@ -259,7 +260,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			// Never reuse a cached "no ground found" (-1) result: the boss is still falling in that
 			// case, topTileY keeps changing every tick even while centerTileX doesn't (a straight
 			// vertical fall), and the real ground can come within scan range on a later tick.
-			if (centerTileX == _cachedCenterTileX && _cachedGroundTileY >= 0)
+			if (centerTileX == _cachedCenterTileX && _cachedGroundTileY >= 0 && WorldGen.SolidTile(centerTileX, _cachedGroundTileY))
 			{
 				groundTileY = _cachedGroundTileY;
 			}

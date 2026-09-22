@@ -26,7 +26,7 @@ namespace NarutoOverhaul
 					StaminaPlayer.HandleCorrectionPacket(reader);
 					break;
 				case NetMessageType.HiraishinAddMark:
-					HiraishinMarkerSystem.HandleAddMarkPacket(reader);
+					HiraishinMarkerSystem.HandleAddMarkPacket(reader, whoAmI);
 					break;
 			}
 		}
