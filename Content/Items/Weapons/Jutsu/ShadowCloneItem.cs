@@ -17,6 +17,25 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 	{
 		public const float ChakraCost = 35f;
 		public const int CloneCount = 2;
+		// Unlike other minions, ShadowCloneItem had no cooldown beyond its Chakra cost and no
+		// check for existing clones before spawning more - re-casting quickly could stack clones
+		// (and their per-tick target scans) without bound. Cap total concurrent clones per owner.
+		public const int MaxConcurrentClones = 3;
+
+		private static int CountOwnedClones(int owner)
+		{
+			int type = ModContent.ProjectileType<ShadowCloneProjectile>();
+			int count = 0;
+			for (int i = 0; i < Main.maxProjectiles; i++)
+			{
+				Projectile p = Main.projectile[i];
+				if (p.active && p.type == type && p.owner == owner)
+				{
+					count++;
+				}
+			}
+			return count;
+		}
 
 		public override void SetDefaults()
 		{
@@ -35,11 +54,18 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 		public override bool CanUseItem(Player player)
 		{
-			return player.GetModPlayer<ChakraPlayer>().Chakra >= ChakraCost;
+			return player.GetModPlayer<ChakraPlayer>().Chakra >= ChakraCost
+				&& CountOwnedClones(player.whoAmI) < MaxConcurrentClones;
 		}
 
 		public override bool? UseItem(Player player)
 		{
+			int existing = CountOwnedClones(player.whoAmI);
+			if (existing >= MaxConcurrentClones)
+			{
+				return false;
+			}
+
 			if (!player.GetModPlayer<ChakraPlayer>().TrySpendChakra(ChakraCost))
 			{
 				return false;
@@ -47,7 +73,8 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 
 			if (player.whoAmI == Main.myPlayer)
 			{
-				for (int i = 0; i < CloneCount; i++)
+				int toSpawn = System.Math.Min(CloneCount, MaxConcurrentClones - existing);
+				for (int i = 0; i < toSpawn; i++)
 				{
 					Vector2 offset = new Vector2(Main.rand.NextFloat(-40f, 40f), 0f);
 					Projectile.NewProjectile(player.GetSource_ItemUse(Item, "ShadowClone"), player.Center + offset, Vector2.Zero, ModContent.ProjectileType<ShadowCloneProjectile>(), Item.damage, 0f, player.whoAmI);
@@ -61,6 +88,7 @@ namespace NarutoOverhaul.Content.Items.Weapons.Jutsu
 		{
 			tooltips.Add(new TooltipLine(Mod, "ChakraCost", $"Uses {ChakraCost} Chakra"));
 			tooltips.Add(new TooltipLine(Mod, "Clones", $"Summons {CloneCount} shadow clones that fight for a short time"));
+			tooltips.Add(new TooltipLine(Mod, "CloneCap", $"Max {MaxConcurrentClones} clones active at once"));
 		}
 	}
 }

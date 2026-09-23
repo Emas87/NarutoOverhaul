@@ -24,6 +24,15 @@ namespace NarutoOverhaul.Content.Minions
 
 		private Player visualClone;
 
+		// FindTarget scans every live NPC (Main.maxNPCs = 200) with no early-out, and N clones
+		// alive means N full scans every tick with no amortization (ShadowCloneItem has no
+		// upper bound on concurrent clones). Re-scan only every RescanIntervalTicks and coast on
+		// the cached target in between; the cache is dropped as soon as it's no longer chaseable
+		// so a killed/despawned target doesn't leave the clone chasing nothing until the next scan.
+		private const int RescanIntervalTicks = 10;
+		private NPC cachedTarget;
+		private int scanCooldown;
+
 		public override void SetDefaults()
 		{
 			Projectile.width = 20;
@@ -76,6 +85,18 @@ namespace NarutoOverhaul.Content.Minions
 
 		private NPC FindTarget(Player owner)
 		{
+			if (cachedTarget != null && !cachedTarget.CanBeChasedBy(Projectile, false))
+			{
+				cachedTarget = null;
+			}
+
+			if (scanCooldown > 0)
+			{
+				scanCooldown--;
+				return cachedTarget;
+			}
+			scanCooldown = RescanIntervalTicks;
+
 			NPC closest = null;
 			float closestDistance = AttackRange;
 
@@ -97,6 +118,7 @@ namespace NarutoOverhaul.Content.Minions
 				}
 			}
 
+			cachedTarget = closest;
 			return closest;
 		}
 
