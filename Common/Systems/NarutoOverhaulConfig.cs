@@ -3,12 +3,13 @@ using Terraria.ModLoader.Config;
 
 namespace NarutoOverhaul.Common.Systems
 {
-	// Client-side only - nothing here affects gameplay balance in a way that needs to be
-	// server-authoritative (the boss scaling toggle only affects the reading client's own local
-	// experience of an already-existing, purely additive difficulty nudge).
+	// Server-side: OnSpawn only runs on whichever machine calls NPC.NewNPC (the server in
+	// dedicated/host-and-play multiplayer), so EnableSoftBossScaling is inherently one shared,
+	// session-wide decision baked into boss stats at spawn - not a genuine per-client toggle
+	// (2026-09-24 /fix-unfixes decision: matches what the code already does).
 	public class NarutoOverhaulConfig : ModConfig
 	{
-		public override ConfigScope Mode => ConfigScope.ClientSide;
+		public override ConfigScope Mode => ConfigScope.ServerSide;
 
 		// Tooltip text lives in Localization/en-US_Mods.NarutoOverhaul.hjson under Configs -
 		// TooltipAttribute is obsolete in favor of the auto-generated localization key.
