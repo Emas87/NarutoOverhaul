@@ -74,6 +74,10 @@ def b64_to_png(data_uri, out_path, width=None, height=None):
     img.save(out_path)
 
 
+# edit_image() polls a background job; give up instead of polling forever if it never finishes.
+EDIT_IMAGE_MAX_WAIT_S = 900
+
+
 def edit_image(base_png, out_png, ref_w, ref_h, out_w, out_h, desc, no_bg, key, seed=None):
     payload = {
         "image": {"base64": png_to_b64(base_png)},
@@ -89,7 +93,10 @@ def edit_image(base_png, out_png, ref_w, ref_h, out_w, out_h, desc, no_bg, key, 
     resp = _post("/edit-image", payload, key)
     job_id = resp["background_job_id"]
     print(f"  job {job_id} submitted, polling...")
+    deadline = time.monotonic() + EDIT_IMAGE_MAX_WAIT_S
     while True:
+        if time.monotonic() > deadline:
+            raise RuntimeError(f"Job {job_id} still not finished after {EDIT_IMAGE_MAX_WAIT_S}s - giving up")
         time.sleep(5)
         status = _get(f"/background-jobs/{job_id}", key)
         st = status["status"]

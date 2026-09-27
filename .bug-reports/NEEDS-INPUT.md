@@ -8,22 +8,11 @@ found and reviewed each run but always discarded unverified - this repo gets aud
 automatic fixes. Options: add a headless/CLI build step that can run in this environment - apply the
 fixes below manually - drop this repo from the fixer routine.
 
-The newest report (.bug-reports/2026-09-25.md) found 1 low-severity bug and 4 improvements. All 5
-were reviewed and a fix was written and verified by re-reading the diff this run, then discarded
-unverified per the policy above:
-- `GenjutsuGlobalNPC.FleeMovement` (Common/GlobalNPCs/GenjutsuGlobalNPC.cs:79) didn't stop fleeing a
-  caster who died mid-fear - added `|| Main.player[ControllingPlayerIndex].dead` to match
-  `PuppetMovement`'s existing guard exactly.
-- `AnimalMinionProjectile.FindTarget` (Content/Minions/AnimalMinionProjectile.cs:246) got the same
-  cache-and-throttle port already shipped for `ShadowCloneProjectile.FindTarget` (2026-09-23):
-  10-tick rescan interval, cached target dropped the instant it's no longer chaseable.
-- `HitDebugLoggerPlayer` (Common/Players/HitDebugLoggerPlayer.cs) deleted - its own header comment
-  already said to remove it once the `TailedBeastBoss` investigation closed (it did, 2026-09-21/22),
-  and nothing else references the class.
-- `tools/smoke_test_server.sh` now `exit 1`s when either failure branch is hit, instead of always
-  returning 0.
-- `tools/pixellab_generate.py`'s `edit_image` polling loop now raises `RuntimeError` past a 900s max
-  wait instead of polling forever.
+The 2026-09-25 report's 5 cloud-discarded fixes (Genjutsu flee dead-caster guard, AnimalMinion
+FindTarget scan throttle, HitDebugLoggerPlayer removal, smoke_test_server.sh non-zero exit,
+pixellab edit_image 900s poll timeout) were applied and verified locally on 2026-09-25 by
+/fix-unfixes (`dotnet build` via `~/.dotnet`: 0 warnings, 0 errors; fresh NarutoOverhaul.tmod).
+Nothing from this report is left pending.
 
 ## Unfixed high-severity bugs
 None - the newest report found 0 high/medium-severity bugs (1 low-severity bug, fix reviewed above).

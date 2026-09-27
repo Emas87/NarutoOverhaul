@@ -29,12 +29,18 @@ echo "--- last 40 lines ---"
 tail -40 "$LOG"
 echo "---"
 
+status=0
 if grep -q "Server started" "$LOG"; then
 	echo "PASS: server started cleanly."
 else
 	echo "FAIL: server did not report a clean start - check the log above."
+	status=1
 fi
 
 if grep -qiE "exception|unhandled" "$LOG"; then
 	echo "WARNING: exception-like text found in the log - review above."
+	status=1
 fi
+
+# Non-zero on either failure branch so callers/CI can't mistake a failed start for a pass.
+exit "$status"

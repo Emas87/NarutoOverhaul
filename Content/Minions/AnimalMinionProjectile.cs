@@ -71,6 +71,13 @@ namespace NarutoOverhaul.Content.Minions
 		private bool inAttackBlock;
 		private int animFrame;
 		private int animTicks;
+
+		// Same scan throttle as ShadowCloneProjectile.FindTarget: re-scan all NPCs only every
+		// RescanIntervalTicks and coast on the cached target in between, dropping the cache as
+		// soon as it's no longer chaseable.
+		private const int RescanIntervalTicks = 10;
+		private NPC cachedTarget;
+		private int scanCooldown;
 		private float stepSpeed;
 
 		// True on ticks where the minion is resting on solid ground (velocity.Y settled to 0 by
@@ -245,6 +252,18 @@ namespace NarutoOverhaul.Content.Minions
 
 		private NPC FindTarget(Player owner)
 		{
+			if (cachedTarget != null && !cachedTarget.CanBeChasedBy(Projectile, false))
+			{
+				cachedTarget = null;
+			}
+
+			if (scanCooldown > 0)
+			{
+				scanCooldown--;
+				return cachedTarget;
+			}
+			scanCooldown = RescanIntervalTicks;
+
 			NPC closest = null;
 			float closestDistance = AttackRange;
 
@@ -266,6 +285,7 @@ namespace NarutoOverhaul.Content.Minions
 				}
 			}
 
+			cachedTarget = closest;
 			return closest;
 		}
 

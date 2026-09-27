@@ -76,7 +76,7 @@ namespace NarutoOverhaul.Common.GlobalNPCs
 
 		private bool FleeMovement(NPC npc)
 		{
-			if (ControllingPlayerIndex < 0 || !Main.player[ControllingPlayerIndex].active)
+			if (ControllingPlayerIndex < 0 || !Main.player[ControllingPlayerIndex].active || Main.player[ControllingPlayerIndex].dead)
 			{
 				return true;
 			}
