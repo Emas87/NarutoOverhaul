@@ -16,6 +16,7 @@ namespace NarutoOverhaul.Content.Minions
 
 		private int lungeTimer;
 		private bool retreating;
+		private int retreatDirection;
 
 		protected override void SetMinionSize()
 		{
@@ -39,14 +40,20 @@ namespace NarutoOverhaul.Content.Minions
 				{
 					retreating = !retreating;
 					lungeTimer = 0;
+					if (retreating)
+					{
+						// Pick the retreat direction once, when the phase starts: away from the facing
+						// at that moment (-spriteDirection, not -velocity.X, so a retreat that starts
+						// while velocity.X is momentarily 0 still gets a direction). Re-deriving it
+						// every tick flipped it every tick, so the snake vibrated instead of retreating.
+						retreatDirection = Projectile.spriteDirection == 1 ? -1 : 1;
+					}
 				}
 
 				if (retreating)
 				{
-					// -spriteDirection (not -velocity.X) so a retreat that starts exactly when
-					// velocity.X is momentarily 0 (e.g. just landed a hop) still picks a direction.
-					Projectile.velocity.X = -Projectile.spriteDirection * MoveSpeed * 0.75f;
-					Projectile.spriteDirection = Projectile.velocity.X < 0 ? -1 : 1;
+					Projectile.velocity.X = retreatDirection * MoveSpeed * 0.75f;
+					Projectile.spriteDirection = retreatDirection;
 				}
 			}
 			else
