@@ -68,6 +68,20 @@ namespace NarutoOverhaul.Common.Players
 			HiraishinWarpKeybind = KeybindLoader.RegisterKeybind(Mod, "Hiraishin Warp", "H");
 		}
 
+		// Static ModKeybinds keep the mod loaded after unload; see StaminaPlayer.Unload.
+		public override void Unload()
+		{
+			ToggleSageModeKeybind = null;
+			ToggleTailedBeastModeKeybind = null;
+			ToggleSixPathsSageModeKeybind = null;
+			ToggleEightGatesKeybind = null;
+			ToggleChakraControlKeybind = null;
+			ToggleKamuiPhaseKeybind = null;
+			ToggleByakuganKeybind = null;
+			ToggleCurseMarkKeybind = null;
+			HiraishinWarpKeybind = null;
+		}
+
 		public override void ProcessTriggers(TriggersSet triggersSet)
 		{
 			if (ToggleSageModeKeybind.JustPressed)

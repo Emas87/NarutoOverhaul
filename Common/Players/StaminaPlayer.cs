@@ -48,6 +48,14 @@ namespace NarutoOverhaul.Common.Players
 			SprintKeybind = KeybindLoader.RegisterKeybind(Mod, "Sprint", "LeftShift");
 		}
 
+		// A ModKeybind holds the Mod, so a static one left set after unload keeps the
+		// whole mod assembly in memory ("NarutoOverhaul mod class still using memory"
+		// in client.log on every reload). Same fix in TransformationPlayer.
+		public override void Unload()
+		{
+			SprintKeybind = null;
+		}
+
 		public override void Initialize()
 		{
 			Stamina = BaseMaxStamina;
