@@ -1,3 +1,4 @@
+using NarutoOverhaul.Common.Systems;
 using Terraria;
 using Terraria.ModLoader;
 using NarutoOverhaul.Content.Projectiles.Bursts;
@@ -20,6 +21,7 @@ namespace NarutoOverhaul.Content.Projectiles
 			Projectile.aiStyle = -1;
 			Projectile.friendly = true;
 			Projectile.hostile = false;
+			Projectile.DamageType = ModContent.GetInstance<NinjutsuDamageClass>();
 			Projectile.penetrate = 1;
 			Projectile.timeLeft = 120;
 			Projectile.tileCollide = true;

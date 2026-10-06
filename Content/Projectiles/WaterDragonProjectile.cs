@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using NarutoOverhaul.Common.Projectiles;
+using NarutoOverhaul.Common.Systems;
 using Terraria;
 using Terraria.GameContent;
 using Terraria.ModLoader;
@@ -29,6 +30,7 @@ namespace NarutoOverhaul.Content.Projectiles
 			Projectile.aiStyle = -1;
 			Projectile.friendly = true;
 			Projectile.hostile = false;
+			Projectile.DamageType = ModContent.GetInstance<NinjutsuDamageClass>();
 			Projectile.penetrate = 4;
 			Projectile.timeLeft = 150;
 			Projectile.tileCollide = false;

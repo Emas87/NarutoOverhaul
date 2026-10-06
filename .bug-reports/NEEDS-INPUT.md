@@ -19,11 +19,7 @@ and the town-NPC animation/chat-bubble duplication across the 4 class-vendor NPC
 2026-09-22).
 
 ## Unfixed high-severity bugs
-### Fireball, Great Breakthrough, and Water Dragon projectiles never set `Projectile.DamageType`, so they get none of the player's Ninjutsu damage bonuses
-- Report: .bug-reports/2026-10-06.md (first found 2026-10-01)
-- Location: `Content/Projectiles/FireballProjectile.cs:16-28`, `Content/Projectiles/GreatBreakthroughProjectile.cs:11-21`, `Content/Projectiles/WaterDragonProjectile.cs:24-35` (all in `SetDefaults`)
-- Why unfixed: discarded-unverified (no build/test runner available in this environment)
-- What the fix would be: add `Projectile.DamageType = ModContent.GetInstance<NinjutsuDamageClass>();` inside each `SetDefaults()`, matching the line already present in `RasenganProjectile.cs:50` and `ChidoriProjectile.cs:49`. Requires `using NarutoOverhaul.Common.Systems;` in each file (not yet imported in any of the 3).
+None - the missing `Projectile.DamageType` bug (Fireball / Great Breakthrough / Water Dragon) was fixed and verified with `dotnet build` on 2026-10-06 via `/fix-unfixes`.
 
 ## Design decisions
 None pending.
