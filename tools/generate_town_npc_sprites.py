@@ -282,7 +282,7 @@ def build_frames(ch):
         frames.append(render_frame(
             ch, bob=bob,
             leg_l=off, leg_r=-off,
-            arm_l=-off // 2, arm_r=off // 2,
+            arm_l=-int(off / 2), arm_r=int(off / 2),
         ))
     # 20-24: talk/gesture
     frames.append(render_frame(ch, tilt=1))

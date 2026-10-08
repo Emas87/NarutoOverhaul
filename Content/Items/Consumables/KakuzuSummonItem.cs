@@ -8,42 +8,13 @@ namespace NarutoOverhaul.Content.Items.Consumables
 {
 	// First Shippuden-era boss - Hardmode gated. Forest/river borderlands - no distinctive
 	// vanilla biome match, so no biome gate.
-	public class KakuzuSummonItem : ModItem
+	public class KakuzuSummonItem : BossSummonItem
 	{
-		public override void SetDefaults()
-		{
-			Item.width = 32;
-			Item.height = 32;
-			Item.maxStack = 20;
-			Item.consumable = true;
-			Item.useStyle = ItemUseStyleID.HoldUp;
-			Item.useAnimation = 30;
-			Item.useTime = 30;
-			Item.useTurn = true;
-			Item.UseSound = SoundID.Item44;
-			Item.value = Item.sellPrice(gold: 2);
-			Item.rare = ItemRarityID.LightRed;
-		}
+		protected override int BossNPCType => ModContent.NPCType<KakuzuBoss>();
 
 		public override bool CanUseItem(Player player)
 		{
 			return Main.hardMode && !NPC.AnyNPCs(ModContent.NPCType<KakuzuBoss>());
-		}
-
-		public override bool? UseItem(Player player)
-		{
-			if (player.whoAmI == Main.myPlayer)
-			{
-				// NPC.SpawnOnPlayer's generic fallback picks a random surface tile within a wide
-				// radius and drops the NPC's top-left corner exactly on it, with no guarantee the
-				// spot isn't buried in solid ground (see TailedBeastSummonItem/OrochimaruSummonItem
-				// for the original "boss doesn't show up" reports this caused). Spawning directly
-				// above the player guarantees he's on-screen and falls into view under normal
-				// gravity.
-				NPC.NewNPC(player.GetSource_ItemUse(Item), (int)player.Center.X, (int)player.Center.Y - 300, ModContent.NPCType<KakuzuBoss>());
-			}
-
-			return true;
 		}
 
 		public override void AddRecipes()
