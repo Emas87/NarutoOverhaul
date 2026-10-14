@@ -23,7 +23,7 @@ namespace NarutoOverhaul.Content.Projectiles
 		// See KunaiProjectile.SetDefaults - small square hitbox decoupled from the taller 8x24 art
 		// so it doesn't stay upright (and clip the floor) once the sprite visually rotates to point
 		// at its target. tileCollide starts off and only turns on once clear of the spawn point.
-		private readonly DelayedTileCollide delayedTileCollide = new(clearanceDistance: 24f);
+		private DelayedTileCollide delayedTileCollide = new(clearanceDistance: 24f);
 
 		public override void SetDefaults()
 		{

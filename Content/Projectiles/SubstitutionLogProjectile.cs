@@ -20,7 +20,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 		// Spawns overlapping the player's own hitbox - same spawn-clipping problem KunaiProjectile/
 		// ExplosiveKunaiProjectile solve with this helper.
-		private readonly DelayedTileCollide delayedTileCollide = new(clearanceDistance: 12f, fallbackTicks: 6);
+		private DelayedTileCollide delayedTileCollide = new(clearanceDistance: 12f, fallbackTicks: 6);
 
 		private int ticksAlive;
 		private bool landed;

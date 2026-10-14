@@ -20,7 +20,7 @@ namespace NarutoOverhaul.Content.Projectiles
 		private const int TicksPerFrame = 8;
 		private int animFrame;
 		private int animTicks;
-		private readonly DelayedTileCollide delayedTileCollide = new(clearanceDistance: 48f);
+		private DelayedTileCollide delayedTileCollide = new(clearanceDistance: 48f);
 
 		public override void SetDefaults()
 		{

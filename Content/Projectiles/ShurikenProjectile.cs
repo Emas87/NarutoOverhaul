@@ -13,7 +13,7 @@ namespace NarutoOverhaul.Content.Projectiles
 	{
 		// Hitbox stays at the native 14x14 art size - see KunaiProjectile.SetDefaults for why an
 		// inflated hitbox causes spawn/collision problems. Scale alone controls visual size.
-		private readonly DelayedTileCollide delayedTileCollide = new(clearanceDistance: 24f);
+		private DelayedTileCollide delayedTileCollide = new(clearanceDistance: 24f);
 
 		public override void SetDefaults()
 		{

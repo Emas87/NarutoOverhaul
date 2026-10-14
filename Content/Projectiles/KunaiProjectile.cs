@@ -17,7 +17,7 @@ namespace NarutoOverhaul.Content.Projectiles
 		// the native portrait-shaped 8x24 box was staying tall/upright even once the kunai visually
 		// rotated to point sideways at its target, which meant it kept clipping the floor almost
 		// immediately on anything but a dead-flat throw.
-		private readonly DelayedTileCollide delayedTileCollide = new(clearanceDistance: 24f);
+		private DelayedTileCollide delayedTileCollide = new(clearanceDistance: 24f);
 
 		public override void SetDefaults()
 		{

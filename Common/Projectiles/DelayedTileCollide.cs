@@ -8,7 +8,10 @@ namespace NarutoOverhaul.Common.Projectiles
 	// Call Update(Projectile) once per AI tick with tileCollide left off in SetDefaults - it flips
 	// tileCollide on once the projectile has actually traveled clear of its spawn point (or after
 	// fallbackTicks, as a safety net for anything that spawns with near-zero velocity).
-	public class DelayedTileCollide
+	// A struct (not a class) on purpose: ModProjectile.Clone() is a shallow MemberwiseClone, so a class
+	// field would be one instance shared by every live projectile of the type. Holders must declare the
+	// field non-readonly so Update() mutates the real field, not a defensive copy.
+	public struct DelayedTileCollide
 	{
 		private readonly float clearanceDistance;
 		private readonly int fallbackTicks;

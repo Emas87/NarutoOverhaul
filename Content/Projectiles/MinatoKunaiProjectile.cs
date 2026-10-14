@@ -20,7 +20,7 @@ namespace NarutoOverhaul.Content.Projectiles
 	// CanDamage() is false, same as SubstitutionLogProjectile/BurstEffectProjectile.
 	public class MinatoKunaiProjectile : ModProjectile
 	{
-		private readonly DelayedTileCollide delayedTileCollide = new(clearanceDistance: 24f);
+		private DelayedTileCollide delayedTileCollide = new(clearanceDistance: 24f);
 
 		// Leftover from copying ExplosiveKunaiProjectile's template - that projectile's native art
 		// is a tiny 10x10, so it needs 3.5x scale to read on screen. This one's art is already
