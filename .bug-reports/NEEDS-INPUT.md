@@ -12,18 +12,7 @@ routine.
 Today's newest report (`.bug-reports/2026-10-19.md`) found 0 bugs and 0
 improvements, so there was nothing to apply or discard this run.
 
-The one previously-known issue is still open in source but was not re-verified
-today (today's report explicitly didn't re-check that file):
-- **KakuzuBoss's elemental phase transition can fake a mid-air "landing"
-  during his Jump attack** (medium) - `Content/NPCs/Bosses/KakuzuBoss.cs:220-245`
-  (`UpdateElementPhase`) and `:353-380` (`IsGrounded`/`DoJump`). Report:
-  `.bug-reports/2026-10-18.md`. Proposed fix: force
-  `CurrentAttack = AttackState.Recover` (and reset `jumpLaunched`/
-  `StateTimer`) inside `UpdateElementPhase` when a threshold crossing fires
-  while `CurrentAttack == AttackState.Jump` - mirrors the existing
-  `OrochimaruBoss.UpdatePhase` precedent. A more invasive alternative (replace
-  the `velocity.Y == 0f` grounded-proxy with a real tile-contact flag) is also
-  on the table but was judged unnecessary for this fix.
+✅ No known open issues as of 2026-10-19 (KakuzuBoss fake-landing fix applied locally and verified with `dotnet build`).
 
 ## Unfixed high-severity bugs
 None in the newest report (`.bug-reports/2026-10-19.md` has 0 bugs).

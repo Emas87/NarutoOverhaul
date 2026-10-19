@@ -222,6 +222,15 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				CurrentElement = expected;
 				NPC.velocity = Vector2.Zero;
 
+				// Zeroed velocity.Y reads as "grounded" to DoJump's velocity-based check, which would
+				// fake a mid-air landing (and fire OnJumpLanding) - end the jump here instead.
+				if (CurrentAttack == AttackState.Jump)
+				{
+					CurrentAttack = AttackState.Recover;
+					StateTimer = 0f;
+					jumpLaunched = false;
+				}
+
 				switch (expected)
 				{
 					case ElementalBoltProjectile.Element.Fire:
