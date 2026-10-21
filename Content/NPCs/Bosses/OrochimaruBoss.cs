@@ -310,6 +310,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			CurrentAttack = AttackState.Recover;
 			StateTimer = 0f;
 			SnakesFired = 0f;
+			jumpLaunched = false;
 		}
 
 		// The old code teleported straight to target.Center + a random offset with no check that the

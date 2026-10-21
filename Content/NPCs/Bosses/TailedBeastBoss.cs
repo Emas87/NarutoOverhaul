@@ -322,6 +322,12 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		private void OnPhaseTransition()
 		{
+			if (CurrentAttack == AttackState.Jump)
+			{
+				CurrentAttack = AttackState.Recover;
+				StateTimer = 0f;
+				jumpLaunched = false;
+			}
 			NPC.velocity = Vector2.Zero;
 			Common.VFX.ChakraVFX.SpawnBurstEffect<ChakraBurstProjectile>(NPC.Center, 2.5f);
 			SoundEngine.PlaySound(SoundID.Roar, NPC.Center);
