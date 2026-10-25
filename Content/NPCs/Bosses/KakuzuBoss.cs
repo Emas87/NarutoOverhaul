@@ -221,15 +221,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			{
 				CurrentElement = expected;
 				NPC.velocity = Vector2.Zero;
-
-				// Zeroed velocity.Y reads as "grounded" to DoJump's velocity-based check, which would
-				// fake a mid-air landing (and fire OnJumpLanding) - end the jump here instead.
-				if (CurrentAttack == AttackState.Jump)
-				{
-					CurrentAttack = AttackState.Recover;
-					StateTimer = 0f;
-					jumpLaunched = false;
-				}
+				AbortJumpIfActive();
 
 				switch (expected)
 				{
@@ -291,6 +283,17 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			return NPC.Center - new Vector2(0f, 150f);
 		}
 
+		// Zeroed velocity.Y reads as "grounded" to DoJump's velocity-based check, which would fake a
+		// mid-air landing (and fire OnJumpLanding) - any code that teleports/zeroes velocity must end
+		// an in-progress jump first.
+		private void AbortJumpIfActive()
+		{
+			if (CurrentAttack != AttackState.Jump) return;
+			CurrentAttack = AttackState.Recover;
+			StateTimer = 0f;
+			jumpLaunched = false;
+		}
+
 		private void UpdateStuckState()
 		{
 			bool embedded = !IsAreaClear(NPC.position, NPC.width, NPC.height);
@@ -319,6 +322,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			{
 				NPC.Center = FindEscapeSpot();
 				NPC.velocity = Vector2.Zero;
+				AbortJumpIfActive();
 				stuckTimer = 0;
 			}
 		}

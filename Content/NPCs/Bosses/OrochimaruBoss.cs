@@ -343,6 +343,17 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			return true;
 		}
 
+		// Zeroed velocity.Y reads as "grounded" to DoJump's velocity-based check, which would fake a
+		// mid-air landing (and fire OnJumpLanding) - any code that teleports/zeroes velocity must end
+		// an in-progress jump first.
+		private void AbortJumpIfActive()
+		{
+			if (CurrentAttack != AttackState.Jump) return;
+			CurrentAttack = AttackState.Recover;
+			StateTimer = 0f;
+			jumpLaunched = false;
+		}
+
 		private void UpdateStuckState()
 		{
 			bool embedded = !IsAreaClear(NPC.position, NPC.width, NPC.height);
@@ -371,6 +382,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			{
 				NPC.Center = FindClearTeleportCenter(NPC.Center, EscapeSearchRadius);
 				NPC.velocity = Vector2.Zero;
+				AbortJumpIfActive();
 				stuckTimer = 0;
 			}
 		}
