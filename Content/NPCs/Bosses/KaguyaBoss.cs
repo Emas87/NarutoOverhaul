@@ -44,32 +44,12 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		private const int RecoverTicks = 40;
 		private const float TeleportRadius = 260f;
-		private const int TeleportClearAttempts = 8;
 		private const int PortalCount = 3;
 		private const int PortalTelegraphTicks = 40;
 		private const int PortalDetonateTicks = 60;
 
-		// Universal "don't stay wedged/bouncing in place forever" safety net. "Stuck" covers two
-		// cases: (1) the hitbox literally overlapping solid tiles (bad teleport/knockback), and
-		// (2) repeatedly attempting to move (nonzero velocity - e.g. a Jump attack landing) without
-		// ever making real net progress (e.g. bouncing between the same spot against a wall it can't
-		// clear) - being stationary while genuinely idle (casting/recovering, near-zero velocity) is
-		// NOT stuck and must not trigger this, or a boss calmly casting a spell could suddenly sink
-		// through the floor for no reason. Once either condition holds for StuckToleranceTicks (3s)
-		// with less than StuckMovementThreshold net displacement, nudge it to a nearby clear-air spot
-		// and let gravity/collision (which stay ON throughout - never touching NPC.noTileCollide)
-		// settle it onto whatever ground is below, same as any normal fall/landing. An earlier version
-		// used NPC.noTileCollide to phase through terrain, but that disables collision in EVERY
-		// direction including straight down, so a stuck boss fell clean through the floor instead of
-		// escaping sideways/upward while still landing on solid ground - this reposition approach
-		// can't do that since normal collision never turns off. Reuses the IsAreaClear/
-		// FindClearTeleportCenter helpers already below (added for the safe-teleport fix).
-		private const int StuckToleranceTicks = 180;
-		private const float StuckMovementThreshold = 60f;
-		private const float MovingVelocityThreshold = 1.5f;
-		private const float EscapeSearchRadius = 150f;
-		private int stuckTimer;
-		private Vector2 stuckWindowStartPosition;
+		// Stuck-escape safety net, shared with the other walking bosses - see BossStuckEscape.
+		private BossStuckEscape stuckEscape;
 
 		// "Banish to another dimension" - her canon ability. Rather than a one-sided banishment
 		// (player flung away, has to fight back), both Kaguya and the player relocate together in the
@@ -236,7 +216,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 
 			UpdatePhase();
-			UpdateStuckState();
+			stuckEscape.Update(NPC, null);
 			ApplyFinalPhaseGravity(target);
 			NPC.spriteDirection = target.Center.X < NPC.Center.X ? -1 : 1;
 
@@ -329,7 +309,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				NetMessage.SendData(MessageID.SyncPlayer, -1, -1, null, target.whoAmI);
 			}
 
-			NPC.Center = FindClearTeleportCenter(originSpot, TeleportRadius);
+			NPC.Center = BossStuckEscape.FindClearCenter(NPC, originSpot, TeleportRadius);
 			NPC.velocity = Vector2.Zero;
 		}
 
@@ -378,50 +358,13 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		// landing spot was actually open - could land Kaguya's hitbox partway inside solid terrain,
 		// where she'd stay wedged permanently. Retrying several random offsets and only committing to
 		// one with a fully clear hitbox footprint fixes this at the source; falling back to straight
-		// above the target if every attempt is blocked. Same pattern as
-		// OrochimaruBoss.FindClearTeleportCenter.
-		private bool IsAreaClear(Vector2 topLeft, int width, int height)
-		{
-			int tileX1 = (int)(topLeft.X / 16f);
-			int tileY1 = (int)(topLeft.Y / 16f);
-			int tileX2 = (int)((topLeft.X + width) / 16f);
-			int tileY2 = (int)((topLeft.Y + height) / 16f);
-
-			for (int x = tileX1; x <= tileX2; x++)
-			{
-				for (int y = tileY1; y <= tileY2; y++)
-				{
-					if (WorldGen.SolidTile(x, y))
-					{
-						return false;
-					}
-				}
-			}
-
-			return true;
-		}
-
-		private Vector2 FindClearTeleportCenter(Vector2 targetCenter, float radius)
-		{
-			for (int i = 0; i < TeleportClearAttempts; i++)
-			{
-				Vector2 candidateCenter = targetCenter + Main.rand.NextVector2CircularEdge(radius, radius);
-				Vector2 candidateTopLeft = candidateCenter - new Vector2(NPC.width / 2f, NPC.height / 2f);
-
-				if (IsAreaClear(candidateTopLeft, NPC.width, NPC.height))
-				{
-					return candidateCenter;
-				}
-			}
-
-			return targetCenter - new Vector2(0f, 150f);
-		}
-
+		// above the target if every attempt is blocked. Done by
+		// BossStuckEscape.FindClearCenter, shared with OrochimaruBoss's substitution.
 		private void DoTeleport(Player target)
 		{
 			ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(NPC.Center, 1.6f);
 
-			NPC.Center = FindClearTeleportCenter(target.Center, TeleportRadius);
+			NPC.Center = BossStuckEscape.FindClearCenter(NPC, target.Center, TeleportRadius);
 			NPC.velocity = Vector2.Zero;
 
 			ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(NPC.Center, 1.6f);
@@ -758,7 +701,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		}
 
 		// "Banish to another dimension" - both Kaguya and the player relocate together in the same
-		// instant (Kaguya via the existing FindClearTeleportCenter, landing near the player's new
+		// instant (Kaguya via BossStuckEscape.FindClearCenter, landing near the player's new
 		// spot) rather than the player being flung away alone, so it reads as the whole scene
 		// changing around them instead of a one-sided banishment.
 		private void DoDimensionShift(Player target)
@@ -792,7 +735,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 					NetMessage.SendData(MessageID.SyncPlayer, -1, -1, null, target.whoAmI);
 				}
 
-				NPC.Center = FindClearTeleportCenter(landingSpot.Value, TeleportRadius);
+				NPC.Center = BossStuckEscape.FindClearCenter(NPC, landingSpot.Value, TeleportRadius);
 				NPC.velocity = Vector2.Zero;
 
 				ChakraVFX.SpawnBurstEffect<BoneBurstProjectile>(NPC.Center, 2.5f);
@@ -801,38 +744,6 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 			CurrentAttack = AttackState.Recover;
 			StateTimer = 0f;
-		}
-
-		private void UpdateStuckState()
-		{
-			bool embedded = !IsAreaClear(NPC.position, NPC.width, NPC.height);
-			bool attemptingMovement = NPC.velocity.LengthSquared() > MovingVelocityThreshold * MovingVelocityThreshold;
-
-			if (!embedded && !attemptingMovement)
-			{
-				stuckTimer = 0;
-				return;
-			}
-
-			if (stuckTimer == 0)
-			{
-				stuckWindowStartPosition = NPC.Center;
-			}
-
-			stuckTimer++;
-
-			if (Vector2.Distance(NPC.Center, stuckWindowStartPosition) >= StuckMovementThreshold)
-			{
-				stuckTimer = 0;
-				return;
-			}
-
-			if (embedded || stuckTimer >= StuckToleranceTicks)
-			{
-				NPC.Center = FindClearTeleportCenter(NPC.Center, EscapeSearchRadius);
-				NPC.velocity = Vector2.Zero;
-				stuckTimer = 0;
-			}
 		}
 
 		public override void FindFrame(int frameCounter)

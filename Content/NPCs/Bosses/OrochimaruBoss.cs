@@ -61,26 +61,8 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 
 		private int hopCooldown;
 
-		// Universal "don't stay wedged/bouncing in place forever" safety net. "Stuck" covers two
-		// cases: (1) the hitbox literally overlapping solid tiles (bad teleport/knockback), and
-		// (2) repeatedly attempting to move (nonzero velocity) without ever making real net progress.
-		// Being stationary while genuinely idle (casting/recovering, near-zero velocity) is NOT stuck
-		// and must not trigger this, or a boss calmly casting could suddenly sink through the floor
-		// for no reason. Once either condition holds for StuckToleranceTicks (3s) with less than
-		// StuckMovementThreshold net displacement, nudge it to a nearby clear-air spot and let
-		// gravity/collision (which stay ON throughout - never touching NPC.noTileCollide) settle it
-		// onto whatever ground is below, same as any normal fall/landing. An earlier version of this
-		// used NPC.noTileCollide to phase through terrain, but that disables collision in EVERY
-		// direction including straight down, so a stuck boss fell clean through the floor instead of
-		// escaping sideways/upward while still landing on solid ground - this reposition approach
-		// can't do that since normal collision never turns off. Reuses the IsAreaClear/
-		// FindClearTeleportCenter helpers already below (added for the safe-substitution fix).
-		private const int StuckToleranceTicks = 180;
-		private const float StuckMovementThreshold = 60f;
-		private const float MovingVelocityThreshold = 1.5f;
-		private const float EscapeSearchRadius = 150f;
-		private int stuckTimer;
-		private Vector2 stuckWindowStartPosition;
+		// Stuck-escape safety net, shared with the other walking bosses - see BossStuckEscape.
+		private BossStuckEscape stuckEscape;
 
 		// A telegraphed leap attack (EoC-style slam): plant for JumpTelegraphTicks, launch toward the
 		// target with a single big velocity impulse, let vanilla's normal gravity/tile collision carry
@@ -236,7 +218,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			}
 
 			UpdatePhase();
-			UpdateStuckState();
+			stuckEscape.Update(NPC, AbortJumpIfActive);
 
 			// Set once per tick regardless of attack state (matching MadaraBoss/PainBoss/KaguyaBoss)
 			// instead of only inside DoLunge - previously spriteDirection went stale for the entire
@@ -294,14 +276,23 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		}
 
 		private const float SubstitutionTeleportRadius = 260f;
-		private const int TeleportClearAttempts = 8;
 
+		// The old code teleported straight to target.Center + a random offset with no check that the
+		// landing spot was actually open - a substitution at a bad HP-threshold moment (player fighting
+		// in a cave, tunnel, etc.) could land Orochimaru's hitbox partway inside solid terrain, where
+		// he'd stay wedged permanently (no state ever un-embeds him - Recover/SnakeSummon never move
+		// him, and TryHopOverObstacle only fires during Lunge and only helps when blocked ahead while
+		// already grounded, not when already overlapping solid tiles). Retrying several random offsets
+		// and only committing to one with a fully clear hitbox footprint fixes this at the source
+		// (BossStuckEscape.FindClearCenter);
+		// falling back to straight above the target (virtually always open air mid-fight) if every
+		// attempt is blocked, rather than ever risking a blind teleport into terrain.
 		private void DoSubstitution(Player target)
 		{
 			ChakraVFX.SpawnBurstEffect<CorruptionBurstProjectile>(NPC.Center, 2.5f);
 			SoundEngine.PlaySound(SoundID.Item29, NPC.Center);
 
-			NPC.Center = FindClearTeleportCenter(target.Center, SubstitutionTeleportRadius);
+			NPC.Center = BossStuckEscape.FindClearCenter(NPC, target.Center, SubstitutionTeleportRadius);
 			NPC.velocity = Vector2.Zero;
 			NPC.life = System.Math.Min(NPC.lifeMax, NPC.life + (int)(NPC.lifeMax * SubstitutionHealFraction));
 
@@ -313,36 +304,6 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			jumpLaunched = false;
 		}
 
-		// The old code teleported straight to target.Center + a random offset with no check that the
-		// landing spot was actually open - a substitution at a bad HP-threshold moment (player fighting
-		// in a cave, tunnel, etc.) could land Orochimaru's hitbox partway inside solid terrain, where
-		// he'd stay wedged permanently (no state ever un-embeds him - Recover/SnakeSummon never move
-		// him, and TryHopOverObstacle only fires during Lunge and only helps when blocked ahead while
-		// already grounded, not when already overlapping solid tiles). Retrying several random offsets
-		// and only committing to one with a fully clear hitbox footprint fixes this at the source;
-		// falling back to straight above the target (virtually always open air mid-fight) if every
-		// attempt is blocked, rather than ever risking a blind teleport into terrain.
-		private bool IsAreaClear(Vector2 topLeft, int width, int height)
-		{
-			int tileX1 = (int)(topLeft.X / 16f);
-			int tileY1 = (int)(topLeft.Y / 16f);
-			int tileX2 = (int)((topLeft.X + width) / 16f);
-			int tileY2 = (int)((topLeft.Y + height) / 16f);
-
-			for (int x = tileX1; x <= tileX2; x++)
-			{
-				for (int y = tileY1; y <= tileY2; y++)
-				{
-					if (WorldGen.SolidTile(x, y))
-					{
-						return false;
-					}
-				}
-			}
-
-			return true;
-		}
-
 		// Zeroed velocity.Y reads as "grounded" to DoJump's velocity-based check, which would fake a
 		// mid-air landing (and fire OnJumpLanding) - any code that teleports/zeroes velocity must end
 		// an in-progress jump first.
@@ -352,55 +313,6 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			CurrentAttack = AttackState.Recover;
 			StateTimer = 0f;
 			jumpLaunched = false;
-		}
-
-		private void UpdateStuckState()
-		{
-			bool embedded = !IsAreaClear(NPC.position, NPC.width, NPC.height);
-			bool attemptingMovement = NPC.velocity.LengthSquared() > MovingVelocityThreshold * MovingVelocityThreshold;
-
-			if (!embedded && !attemptingMovement)
-			{
-				stuckTimer = 0;
-				return;
-			}
-
-			if (stuckTimer == 0)
-			{
-				stuckWindowStartPosition = NPC.Center;
-			}
-
-			stuckTimer++;
-
-			if (Vector2.Distance(NPC.Center, stuckWindowStartPosition) >= StuckMovementThreshold)
-			{
-				stuckTimer = 0;
-				return;
-			}
-
-			if (embedded || stuckTimer >= StuckToleranceTicks)
-			{
-				NPC.Center = FindClearTeleportCenter(NPC.Center, EscapeSearchRadius);
-				NPC.velocity = Vector2.Zero;
-				AbortJumpIfActive();
-				stuckTimer = 0;
-			}
-		}
-
-		private Vector2 FindClearTeleportCenter(Vector2 targetCenter, float radius)
-		{
-			for (int i = 0; i < TeleportClearAttempts; i++)
-			{
-				Vector2 candidateCenter = targetCenter + Main.rand.NextVector2CircularEdge(radius, radius);
-				Vector2 candidateTopLeft = candidateCenter - new Vector2(NPC.width / 2f, NPC.height / 2f);
-
-				if (IsAreaClear(candidateTopLeft, NPC.width, NPC.height))
-				{
-					return candidateCenter;
-				}
-			}
-
-			return targetCenter - new Vector2(0f, 150f);
 		}
 
 		private void DoLunge(Player target)

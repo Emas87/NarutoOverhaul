@@ -79,26 +79,8 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		private int hopCooldown;
 		private int susanooPulseTimer;
 
-		// Universal "don't stay wedged/bouncing in place forever" safety net. "Stuck" covers two
-		// cases: (1) the hitbox literally overlapping solid tiles (bad teleport/knockback), and
-		// (2) repeatedly attempting to move (nonzero velocity) without ever making real net progress.
-		// Being stationary while genuinely idle (casting/recovering, near-zero velocity) is NOT stuck
-		// and must not trigger this, or a boss calmly casting could suddenly sink through the floor
-		// for no reason. Once either condition holds for StuckToleranceTicks (3s) with less than
-		// StuckMovementThreshold net displacement, nudge it to a nearby clear-air spot and let
-		// gravity/collision (which stay ON throughout - never touching NPC.noTileCollide) settle it
-		// onto whatever ground is below, same as any normal fall/landing. An earlier version used
-		// NPC.noTileCollide to phase through terrain, but that disables collision in EVERY direction
-		// including straight down, so a stuck boss fell clean through the floor instead of escaping
-		// sideways/upward while still landing on solid ground - this reposition approach can't do
-		// that since normal collision never turns off.
-		private const int StuckToleranceTicks = 180;
-		private const float StuckMovementThreshold = 60f;
-		private const float MovingVelocityThreshold = 1.5f;
-		private const float EscapeSearchRadius = 150f;
-		private const int EscapeSearchAttempts = 8;
-		private int stuckTimer;
-		private Vector2 stuckWindowStartPosition;
+		// Stuck-escape safety net, shared with the other walking bosses - see BossStuckEscape.
+		private BossStuckEscape stuckEscape;
 
 		// Sheet layout from the nano-banana-generated MadaraBoss.png: idle(5)/melee(4)/cast(4).
 		private const int IdleFrameStart = 0;
@@ -199,7 +181,7 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 				return;
 			}
 
-			UpdateStuckState();
+			stuckEscape.Update(NPC, null);
 
 			if (CurrentPhase == Phase.Base && (float)NPC.life / NPC.lifeMax <= 0.5f)
 			{
@@ -304,75 +286,6 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		}
 
 		private bool IsGrounded() => NPC.velocity.Y == 0f;
-
-		private bool IsAreaClear(Vector2 topLeft, int width, int height)
-		{
-			int tileX1 = (int)(topLeft.X / 16f);
-			int tileY1 = (int)(topLeft.Y / 16f);
-			int tileX2 = (int)((topLeft.X + width) / 16f);
-			int tileY2 = (int)((topLeft.Y + height) / 16f);
-
-			for (int x = tileX1; x <= tileX2; x++)
-			{
-				for (int y = tileY1; y <= tileY2; y++)
-				{
-					if (WorldGen.SolidTile(x, y))
-					{
-						return false;
-					}
-				}
-			}
-
-			return true;
-		}
-
-		private Vector2 FindEscapeSpot()
-		{
-			for (int i = 0; i < EscapeSearchAttempts; i++)
-			{
-				Vector2 candidateCenter = NPC.Center + Main.rand.NextVector2CircularEdge(EscapeSearchRadius, EscapeSearchRadius);
-				Vector2 candidateTopLeft = candidateCenter - new Vector2(NPC.width / 2f, NPC.height / 2f);
-
-				if (IsAreaClear(candidateTopLeft, NPC.width, NPC.height))
-				{
-					return candidateCenter;
-				}
-			}
-
-			return NPC.Center - new Vector2(0f, 150f);
-		}
-
-		private void UpdateStuckState()
-		{
-			bool embedded = !IsAreaClear(NPC.position, NPC.width, NPC.height);
-			bool attemptingMovement = NPC.velocity.LengthSquared() > MovingVelocityThreshold * MovingVelocityThreshold;
-
-			if (!embedded && !attemptingMovement)
-			{
-				stuckTimer = 0;
-				return;
-			}
-
-			if (stuckTimer == 0)
-			{
-				stuckWindowStartPosition = NPC.Center;
-			}
-
-			stuckTimer++;
-
-			if (Vector2.Distance(NPC.Center, stuckWindowStartPosition) >= StuckMovementThreshold)
-			{
-				stuckTimer = 0;
-				return;
-			}
-
-			if (embedded || stuckTimer >= StuckToleranceTicks)
-			{
-				NPC.Center = FindEscapeSpot();
-				NPC.velocity = Vector2.Zero;
-				stuckTimer = 0;
-			}
-		}
 
 		private bool IsWallAhead(int direction)
 		{

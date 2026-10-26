@@ -15,17 +15,14 @@ zeroing velocity mid-`Jump` without aborting the jump state first, which faked
 `DoJump`'s `IsGrounded()` landing check) and found no new issues in a fresh sweep
 of the repo's least-previously-audited files.
 
-## Design decisions
-### Shared `UpdateStuckState`/`AbortJumpIfActive` logic duplicated across bosses
-- Report: .bug-reports/2026-10-24.md (bug), .bug-reports/2026-10-25.md / 2026-10-26.md (fix verified, unchanged)
-- Location: Content/NPCs/Bosses/KakuzuBoss.cs, Content/NPCs/Bosses/OrochimaruBoss.cs
-- The decision: the stuck-escape mid-jump bug itself is fixed (`786b80e`) - each
-  boss now has its own private `AbortJumpIfActive()` guarding the teleport/
-  velocity-zero path. The duplication is unchanged: `UpdateStuckState` and
-  `AbortJumpIfActive` are separately hand-copied into both classes, the same
-  idiom that has now needed a matching fix in both places multiple times
-  (substitution/phase-transition paths, and now the stuck-escape path).
-- Options: A) leave as parallel per-class copies (status quo, lowest risk,
-  matches the fix just applied). B) extract a shared helper/base so this bug
-  class can't be introduced in only one copy again. C) do nothing further -
-  duplication-only risk, no live bug remains.
+## Resolved locally (2026-10-26, /fix-unfixes)
+- Duplicated `UpdateStuckState`/`AbortJumpIfActive`: user chose option B. The stuck tracker,
+  clear-spot search and area check now live once in `Content/NPCs/Bosses/BossStuckEscape.cs`
+  (a struct, since tModLoader `MemberwiseClone`s ModNPCs). It replaced the copies in Kakuzu,
+  Orochimaru, Pain, Madara and Kaguya (stuck logic) and Haku (clear-spot teleport). The jump
+  abort runs as the `onEscaped` callback, so the teleport -> velocity reset -> abort order can no
+  longer drift between copies. `AbortJumpIfActive` stays per-boss (Kakuzu/Orochimaru only; it
+  depends on each boss's own `AttackState`). Verified with `tools/build.sh` (0 errors, 0
+  warnings) and `tools/smoke_test_server.sh` (PASS); boss fights have not been playtested.
+
+Nothing else needs your input.

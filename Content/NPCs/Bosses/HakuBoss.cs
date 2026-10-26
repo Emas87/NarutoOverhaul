@@ -43,7 +43,6 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		// other second, especially in Phase Two at half this) to give a real window to hit her.
 		private const int RecoverTicks = 70;
 		private const float TeleportRadius = 220f;
-		private const int TeleportClearAttempts = 8;
 
 		// Sheet layout from the nano-banana-generated HakuBoss.png (idle/melee/cast rows, each a
 		// real posed sequence rather than one hero frame repeated): 10 idle frames, then 7 melee
@@ -174,7 +173,9 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 		{
 			ChakraVFX.SpawnBurstEffect<IceBurstProjectile>(NPC.Center, 1.6f);
 
-			NPC.Center = FindClearTeleportCenter(target.Center, TeleportRadius);
+			// Never a blind target.Center + offset: that could land Haku partway inside solid terrain
+			// (cave/tunnel fights) where she'd stay wedged permanently.
+			NPC.Center = BossStuckEscape.FindClearCenter(NPC, target.Center, TeleportRadius);
 			NPC.velocity = Vector2.Zero;
 
 			ChakraVFX.SpawnBurstEffect<IceBurstProjectile>(NPC.Center, 1.6f);
@@ -183,49 +184,6 @@ namespace NarutoOverhaul.Content.NPCs.Bosses
 			CurrentAttack = Main.rand.NextBool() ? AttackState.Strike : AttackState.SenbonVolley;
 			StateTimer = 0f;
 			VolleyShotsFired = 0f;
-		}
-
-		// The old code teleported straight to target.Center + a random offset with no check that the
-		// landing spot was actually open - could land Haku's hitbox partway inside solid terrain
-		// (cave/tunnel fights), where she'd stay wedged permanently. Retrying several random offsets
-		// and only committing to one with a fully clear hitbox footprint fixes this at the source;
-		// falling back to straight above the target if every attempt is blocked. Same pattern as
-		// OrochimaruBoss.FindClearTeleportCenter.
-		private bool IsAreaClear(Vector2 topLeft, int width, int height)
-		{
-			int tileX1 = (int)(topLeft.X / 16f);
-			int tileY1 = (int)(topLeft.Y / 16f);
-			int tileX2 = (int)((topLeft.X + width) / 16f);
-			int tileY2 = (int)((topLeft.Y + height) / 16f);
-
-			for (int x = tileX1; x <= tileX2; x++)
-			{
-				for (int y = tileY1; y <= tileY2; y++)
-				{
-					if (WorldGen.SolidTile(x, y))
-					{
-						return false;
-					}
-				}
-			}
-
-			return true;
-		}
-
-		private Vector2 FindClearTeleportCenter(Vector2 targetCenter, float radius)
-		{
-			for (int i = 0; i < TeleportClearAttempts; i++)
-			{
-				Vector2 candidateCenter = targetCenter + Main.rand.NextVector2CircularEdge(radius, radius);
-				Vector2 candidateTopLeft = candidateCenter - new Vector2(NPC.width / 2f, NPC.height / 2f);
-
-				if (IsAreaClear(candidateTopLeft, NPC.width, NPC.height))
-				{
-					return candidateCenter;
-				}
-			}
-
-			return targetCenter - new Vector2(0f, 150f);
 		}
 
 		private void DoStrike(Player target)
