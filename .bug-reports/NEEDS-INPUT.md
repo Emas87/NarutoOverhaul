@@ -8,13 +8,19 @@ discarded unverified - this repo gets audit reports, not automatic fixes. Option
 add a headless/CLI test runner - apply the fixes below manually - drop this repo
 from the fixer routine.
 
-The newest report (.bug-reports/2026-10-26.md) found no new bugs or improvements:
-it re-verified that `786b80e` correctly fixed the two medium-severity bugs from
-2026-10-24 (`KakuzuBoss`/`OrochimaruBoss` `UpdateStuckState` teleporting and
-zeroing velocity mid-`Jump` without aborting the jump state first, which faked
-`DoJump`'s `IsGrounded()` landing check) and found no new issues in a fresh sweep
-of the repo's least-previously-audited files.
+The newest report (.bug-reports/2026-10-27.md) found one low-severity bug:
+`PaperBombProjectile` (`Content/Projectiles/PaperBombProjectile.cs`) tracks the
+NPC it is stuck to only by `whoAmI` index, not by type, so if an unrelated NPC
+is assigned that exact array slot in the same tick the original target dies
+(normal Terraria behavior when slots get reused), the bomb can silently ride
+and detonate on the new NPC instead of fizzling in place. Worst case is a
+stray, harmless-to-players explosion in an unexpected spot - no crash, no
+damage exploit. A guard was written this run (cache `target.type` alongside
+`stuckNpcIndex`, require `npc.type == stuckNpcType` before riding along,
+`Explode()` on mismatch) but discarded unverified per the no-test-runner
+policy above, so it is not in the tree. It also re-verified `e8c935c`'s
+`BossStuckEscape` consolidation line-by-line (all five call sites, the
+`AbortJumpIfActive`/`null` split, ordering before `switch (CurrentAttack)`) as
+a faithful, correct refactor with no regressions.
 
-Nothing else needs your input. The standing duplicated `UpdateStuckState`/
-`AbortJumpIfActive` item is resolved: `BossStuckEscape.cs` now holds the shared
-stuck tracker/clear-spot search/area-check logic for all six bosses.
+Nothing else needs your input.
