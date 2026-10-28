@@ -22,6 +22,8 @@ namespace NarutoOverhaul.Content.Projectiles
 		// Not synced over ai[] (already full at 2 slots) - fine for this mod's current netcode
 		// scope, same as the other single-player-assumed projectile state elsewhere in the mod.
 		private int stuckNpcIndex = -1;
+		// Guards against a different NPC reusing the dead target's slot in the same tick.
+		private int stuckNpcType = -1;
 		private Vector2 stuckOffsetFromNpcCenter;
 
 		public override void SetDefaults()
@@ -49,7 +51,7 @@ namespace NarutoOverhaul.Content.Projectiles
 				if (stuckNpcIndex != -1)
 				{
 					NPC npc = Main.npc[stuckNpcIndex];
-					if (!npc.active)
+					if (!npc.active || npc.type != stuckNpcType)
 					{
 						Explode();
 						return;
@@ -118,6 +120,7 @@ namespace NarutoOverhaul.Content.Projectiles
 
 			Projectile.ai[0] = 1f;
 			stuckNpcIndex = target.whoAmI;
+			stuckNpcType = target.type;
 			stuckOffsetFromNpcCenter = Projectile.Center - target.Center;
 			// Stops dealing the direct throwing hit every tick while riding along - the fuse
 			// explosion (which re-enables friendly) is what actually punishes the target.
